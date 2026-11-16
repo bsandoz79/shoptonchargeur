@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type KeyboardEvent } from 'react';
-import { chercher } from '../moteur/recherche';
-import type { Telephone } from '../moteur/types';
+import { chercher, normaliser } from '../moteur/recherche';
+import type { Appareil } from '../moteur/types';
 import { Icone } from './Icone';
 import styles from './Recherche.module.css';
 
@@ -9,7 +9,7 @@ import styles from './Recherche.module.css';
  * (flèches, Entrée, Échap). `saisie` est pilotée par le parent (les raccourcis de marque la remplissent).
  */
 export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
-  telephones: Telephone[]; saisie: string; onSaisie: (texte: string) => void; onChoisir: (telephone: Telephone) => void;
+  telephones: Appareil[]; saisie: string; onSaisie: (texte: string) => void; onChoisir: (telephone: Appareil) => void;
 }) {
   const id = useId();
   const [ouvert, setOuvert] = useState(false);
@@ -17,7 +17,7 @@ export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
   const resultats = useMemo(() => chercher(telephones, saisie), [telephones, saisie]);
   const visible = ouvert && saisie.trim() !== '';
 
-  const choisir = (t: Telephone) => { setOuvert(false); onChoisir(t); };
+  const choisir = (t: Appareil) => { setOuvert(false); onChoisir(t); };
   const auClavier = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') { setOuvert(false); return; }
     if (!resultats.length) return;
@@ -32,7 +32,7 @@ export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
       <div className={styles.champ}>
         <span className={styles.loupe}><Icone nom="loupe" /></span>
         <input id={`${id}-champ`} type="search" role="combobox" autoComplete="off" spellCheck={false} enterKeyHint="search"
-          placeholder="Marque et modèle, ex. Galaxy S24" value={saisie}
+          placeholder="Ex. s24 ultra, iphone 15, pixel 8" value={saisie}
           aria-expanded={visible} aria-controls={`${id}-liste`} aria-autocomplete="list"
           aria-activedescendant={visible && resultats.length ? `${id}-option-${Math.min(actif, resultats.length - 1)}` : undefined}
           onChange={(e) => { onSaisie(e.target.value); setActif(0); setOuvert(true); }}
@@ -43,8 +43,8 @@ export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
           <li key={t.id} id={`${id}-option-${i}`} role="option" aria-selected={i === actif} className={styles.option}
             // « mousedown » : avant que le champ ne perde le focus.
             onMouseDown={(e) => { e.preventDefault(); choisir(t); }} onMouseEnter={() => setActif(i)}>
-            <span><span className={styles.marque}>{t.marque}</span> {t.modele}</span>
-            <span className={styles.annee}>{t.annee}</span>
+            <span>{!normaliser(t.modele).startsWith(normaliser(t.marque)) && <span className={styles.marque}>{t.marque} </span>}{t.modele}</span>
+            {t.annee && <span className={styles.annee}>{t.annee}</span>}
           </li>
         ))}
       </ul>

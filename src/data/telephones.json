@@ -478,9 +478,9 @@
   "cable5A": true
  },
  {
-  "id": "samsung-galaxy-s21",
+  "id": "samsung-galaxy-s21-5g",
   "marque": "Samsung",
-  "modele": "Galaxy S21",
+  "modele": "Galaxy S21 5G",
   "annee": 2021,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -491,9 +491,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-s21-plus",
+  "id": "samsung-galaxy-s21-plus-5g",
   "marque": "Samsung",
-  "modele": "Galaxy S21+",
+  "modele": "Galaxy S21+ 5G",
   "annee": 2021,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -504,9 +504,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-s21-ultra",
+  "id": "samsung-galaxy-s21-ultra-5g",
   "marque": "Samsung",
-  "modele": "Galaxy S21 Ultra",
+  "modele": "Galaxy S21 Ultra 5G",
   "annee": 2021,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -569,9 +569,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-a56",
+  "id": "samsung-galaxy-a56-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A56",
+  "modele": "Galaxy A56 5G",
   "annee": 2025,
   "port": "usb-c",
   "puissanceMaxW": 45,
@@ -583,9 +583,9 @@
   "cable5A": true
  },
  {
-  "id": "samsung-galaxy-a36",
+  "id": "samsung-galaxy-a36-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A36",
+  "modele": "Galaxy A36 5G",
   "annee": 2025,
   "port": "usb-c",
   "puissanceMaxW": 45,
@@ -597,9 +597,9 @@
   "cable5A": true
  },
  {
-  "id": "samsung-galaxy-a55",
+  "id": "samsung-galaxy-a55-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A55",
+  "modele": "Galaxy A55 5G",
   "annee": 2024,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -610,9 +610,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-a35",
+  "id": "samsung-galaxy-a35-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A35",
+  "modele": "Galaxy A35 5G",
   "annee": 2024,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -623,9 +623,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-a54",
+  "id": "samsung-galaxy-a54-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A54",
+  "modele": "Galaxy A54 5G",
   "annee": 2023,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -636,9 +636,9 @@
   "puissanceSansProtocoleW": 15
  },
  {
-  "id": "samsung-galaxy-a34",
+  "id": "samsung-galaxy-a34-5g",
   "marque": "Samsung",
-  "modele": "Galaxy A34",
+  "modele": "Galaxy A34 5G",
   "annee": 2023,
   "port": "usb-c",
   "puissanceMaxW": 25,
@@ -901,9 +901,9 @@
   "techno": "SUPERVOOC"
  },
  {
-  "id": "oneplus-oneplus-11",
+  "id": "oneplus-oneplus-11-5g",
   "marque": "OnePlus",
-  "modele": "OnePlus 11",
+  "modele": "OnePlus 11 5G",
   "annee": 2023,
   "port": "usb-c",
   "puissanceMaxW": 100,
@@ -911,9 +911,9 @@
   "techno": "SUPERVOOC"
  },
  {
-  "id": "oneplus-oneplus-nord-3",
+  "id": "oneplus-oneplus-nord-3-5g",
   "marque": "OnePlus",
-  "modele": "OnePlus Nord 3",
+  "modele": "OnePlus Nord 3 5G",
   "annee": 2023,
   "port": "usb-c",
   "puissanceMaxW": 80,

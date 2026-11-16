@@ -4,7 +4,7 @@
 « Chope ton chargeur » : outil web qui associe un téléphone à son chargeur compatible, monétisé par affiliation (pas de stock, pas de vente directe). Site statique React + Vite + TypeScript, hébergé chez o2switch (choptonchargeur.bsandoz.fr).
 
 ## Architecture
-- `src/data/*.json` : les données (téléphones, chargeurs). Format et sources : `docs/donnees.md`.
+- `src/data/*.json` : `catalogue.json` (tous les téléphones, généré par `npm run catalogue`, ne pas modifier à la main), `telephones.json` (fiches de charge vérifiées), `chargeurs.json`. Format et sources : `docs/donnees.md`.
 - `src/moteur/` : logique pure, sans React, entièrement testée (compatibilité, recherche, détection, liens).
 - `src/components/` : un composant = `Nom.tsx` + `Nom.module.css`. Aucune règle de compatibilité dans les composants.
 - `src/styles/tokens.css` : seules couleurs et tailles du site.
