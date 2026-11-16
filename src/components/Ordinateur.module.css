@@ -1,0 +1,8 @@
+.choix { display: grid; gap: 1.1rem; }
+.condition { padding: .8rem 1rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); font-size: .95rem; }
+.groupe { display: grid; gap: .5rem; }
+.groupeTitre { font-weight: 700; }
+.puces { display: flex; flex-wrap: wrap; gap: .45rem; }
+.puce { min-height: 46px; padding: 0 1rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 700; cursor: pointer; }
+.puce:hover { border-color: var(--c-accent-fonce); background: var(--c-accent-doux); }
+.astuce { font-size: .9rem; color: var(--c-texte-doux); }

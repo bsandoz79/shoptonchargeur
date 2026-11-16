@@ -1,6 +1,6 @@
 # Chope ton chargeur
 
-Outil web qui associe un téléphone à son chargeur : puissance acceptée (watts), type de charge rapide (Power Delivery, PPS, charge propre à la marque), port et câble. Les chargeurs proposés mènent au marchand par des liens d'affiliation. Aucun stock, aucune vente directe.
+Outil web qui associe un téléphone (ou un ordinateur portable rechargé en USB-C) à son chargeur, et explique pourquoi il convient : puissance acceptée (watts), type de charge rapide (Power Delivery, PPS, charge propre à la marque), port et câble. Les chargeurs proposés mènent au marchand par des liens d'affiliation. Aucun stock, aucune vente directe.
 
 Adresse prévue : https://choptonchargeur.bsandoz.fr
 

@@ -1,0 +1,22 @@
+[
+ {"id": "apple-70w", "marque": "Apple", "nom": "Adaptateur secteur USB-C 70 W", "puissanceW": 70, "protocoles": ["pd"], "fiabilite": 3, "budget": 2,
+  "requete": "Apple adaptateur secteur USB-C 70W"},
+ {"id": "apple-96w", "marque": "Apple", "nom": "Adaptateur secteur USB-C 96 W", "puissanceW": 96, "protocoles": ["pd"], "fiabilite": 3, "budget": 3,
+  "requete": "Apple adaptateur secteur USB-C 96W"},
+ {"id": "apple-140w", "marque": "Apple", "nom": "Adaptateur secteur USB-C 140 W", "puissanceW": 140, "protocoles": ["pd"], "fiabilite": 3, "budget": 3,
+  "requete": "Apple adaptateur secteur USB-C 140W"},
+ {"id": "anker-nano-45w", "marque": "Anker", "nom": "Anker Nano 45 W", "puissanceW": 45, "ppsMaxW": 45, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 1,
+  "requete": "Anker Nano chargeur USB-C 45W PPS"},
+ {"id": "ugreen-nexode-45w", "marque": "UGREEN", "nom": "UGREEN Nexode 45 W", "puissanceW": 45, "ppsMaxW": 45, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 1,
+  "requete": "UGREEN Nexode chargeur USB-C 45W PPS"},
+ {"id": "ugreen-nexode-65w", "marque": "UGREEN", "nom": "UGREEN Nexode 65 W GaN", "puissanceW": 65, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 2,
+  "requete": "UGREEN Nexode chargeur USB-C 65W GaN", "ports": 3},
+ {"id": "anker-65w", "marque": "Anker", "nom": "Anker 65 W GaN", "puissanceW": 65, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 2,
+  "requete": "Anker chargeur USB-C 65W GaN", "ports": 3},
+ {"id": "ugreen-nexode-100w", "marque": "UGREEN", "nom": "UGREEN Nexode 100 W GaN", "puissanceW": 100, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 2,
+  "requete": "UGREEN Nexode chargeur USB-C 100W GaN", "ports": 4},
+ {"id": "anker-prime-100w", "marque": "Anker", "nom": "Anker Prime 100 W GaN", "puissanceW": 100, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 3,
+  "requete": "Anker Prime chargeur USB-C 100W GaN", "ports": 3},
+ {"id": "ugreen-nexode-140w", "marque": "UGREEN", "nom": "UGREEN Nexode 140 W GaN", "puissanceW": 140, "protocoles": ["pd", "pps"], "fiabilite": 2, "budget": 3,
+  "requete": "UGREEN Nexode chargeur USB-C 140W GaN", "ports": 3}
+]

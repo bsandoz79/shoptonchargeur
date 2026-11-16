@@ -30,8 +30,8 @@ describe('données', () => {
     for (const t of TELEPHONES) expect(proposer(t, CHARGEURS)[0].maximale, t.id).toBe(true);
   });
 
-  it('catalogue : des milliers de téléphones, identifiants uniques, fiches vérifiées gardées et enrichies', () => {
-    expect(TOUS.length).toBeGreaterThan(5000);
+  it('catalogue : plus de mille téléphones, identifiants uniques, fiches vérifiées gardées et enrichies', () => {
+    expect(TOUS.length).toBeGreaterThan(1000);
     expect(new Set(TOUS.map((a) => a.id)).size).toBe(TOUS.length);
     expect(TOUS.filter(estVerifie)).toHaveLength(TELEPHONES.length);
     // Le Galaxy S24 vérifié n'est pas doublé par celui du catalogue, et récupère ses références exactes.

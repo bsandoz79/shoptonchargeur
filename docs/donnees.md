@@ -4,12 +4,15 @@ Trois fichiers JSON dans `src/data/`. Les types sont décrits dans `src/moteur/t
 
 | Fichier | Contenu | Mise à jour |
 | --- | --- | --- |
-| `catalogue.json` | tous les téléphones : marque, nom, références de modèle (7 613 au 17/11/2026) | automatique : `npm run catalogue` |
+| `catalogue.json` | les iPhone et les téléphones Android à port USB-C : marque, nom, références de modèle (1 566 au 17/11/2026) | automatique : `npm run catalogue` |
+| `ordinateurs.json`, `chargeurs-ordinateur.json` | ordinateurs portables rechargés en USB-C et leurs chargeurs | à la main |
 | `telephones.json` | les fiches de charge vérifiées (83) | à la main |
 | `chargeurs.json` | les chargeurs conseillés (10) | à la main |
 
 ## `catalogue.json` : tous les téléphones
-Construit par `scripts/catalogue.mjs` à partir de la **liste officielle des appareils Android de Google** (`supported_devices.csv`, publiée pour les développeurs) : nom commercial et références de modèle de 37 marques. Le script écarte tablettes, montres, téléviseurs et ordinateurs. Les iPhone, absents de cette liste, sont ajoutés dans le script.
+Construit par `scripts/catalogue.mjs` à partir de la **liste officielle des appareils Android de Google** (`supported_devices.csv`, publiée pour les développeurs) : nom commercial et références de modèle de 23 marques. Le script écarte tablettes, montres, téléviseurs et ordinateurs. Les iPhone, absents de cette liste, sont ajoutés dans le script.
+
+**Seulement l'USB-C et les iPhone.** La liste Google ne donne pas le port. Le script garde donc les gammes connues pour être en USB-C, reconnues par leur nom (table `USB_C` du script) : par exemple les Galaxy S8 et suivants, A11 à A99, tous les Pixel, tous les noms contenant « 5G ». Les règles sont prudentes : une gamme douteuse (entrée de gamme encore en micro-USB) est écartée. Elles restent une approximation : quelques modèles micro-USB peuvent passer, et quelques modèles USB-C manquer. Pour ajouter une gamme, compléter la table puis relancer `npm run catalogue`.
 
 Cette liste ne contient **aucune donnée de charge**. Aucune base libre et à jour ne donne la puissance de charge de tous les téléphones : les bases complètes (GSMArena et ses dérivés) sont payantes ou interdisent la copie. D'où deux niveaux :
 - téléphone avec fiche dans `telephones.json` : puissance, protocole, vitesse obtenue par chargeur ;
@@ -60,6 +63,16 @@ Le chargeur d'origine des marques à charge propriétaire (Xiaomi, OnePlus, OPPO
 - Galaxy 45 W (`cable5A`) : 45 W seulement avec un chargeur `pps5A`, 25 W avec un autre chargeur PPS.
 - Charge propriétaire : seul le chargeur de la marque donne la puissance maximale.
 - Le chargeur d'un constructeur (Apple, Samsung, Google) n'est proposé que pour ses propres téléphones.
+
+## Ordinateurs portables
+`ordinateurs.json` : `besoinW` est la puissance du chargeur d'origine, `rapideW` celle qui déclenche la recharge rapide quand elle est connue. Les entrées `generique` sont des choix par puissance (« PC portable avec chargeur de 65 W »), pas des modèles : aucune base ne donne la puissance de tous les PC, et elle est écrite sur le chargeur d'origine.
+
+Règle (`src/moteur/ordinateur.ts`) : chargeur d'au moins `besoinW` → recharge normale ; d'au moins `rapideW` → recharge rapide ; en dessous → « Trop faible : recharge lente », classé en dernier. Les chargeurs Apple ne sont proposés que pour les Mac.
+
+À recouper avant l'ouverture : les puissances des MacBook (Air : 30 W, rapide à 70 W ; Pro 14 pouces : 70 W, rapide à 96 W ; Pro 16 pouces : 140 W) et les chargeurs de `chargeurs-ordinateur.json` (noms, nombre de ports), saisis de mémoire.
+
+## Explications
+`src/moteur/explications.ts` : `pourquoi()` écrit la phrase « Pourquoi ? » de chaque chargeur à partir du même cas que `puissanceObtenue()` ; toute nouvelle règle de calcul doit y avoir sa phrase. `GUIDE` contient les questions du guide en bas de page.
 
 ## Recherche
 `src/moteur/recherche.ts`. Chaque mot saisi doit commencer un mot de la marque ou du modèle. Ordre des résultats : le nom exact ; puis les modèles dont chaque mot saisi est un mot entier ou le début d'un numéro (« s » trouve « S25 », pas « Sidekick ») ; puis les autres. À égalité : grandes marques d'abord, numéros décroissants (S26, S25, S24…), iPhone par année. 30 résultats au plus.

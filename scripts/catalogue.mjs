@@ -1,5 +1,6 @@
-// Construit src/data/catalogue.json : tous les téléphones Android des marques suivies, à partir de la liste officielle des
-// appareils Google Play (nom commercial et références de modèle). Cette liste ne donne aucune donnée de charge : les fiches
+// Construit src/data/catalogue.json : les téléphones Android récents (port USB-C) des marques suivies, à partir de la liste
+// officielle des appareils Google Play (nom commercial et références de modèle), plus les iPhone. Cette liste ne donne ni
+// le port ni la charge : les gammes à port USB-C sont reconnues par leur nom (règles ci-dessous), et les fiches de charge
 // vérifiées restent dans telephones.json.
 //   node scripts/catalogue.mjs [chemin/vers/supported_devices.csv]
 // Sans chemin, la liste est téléchargée chez Google.
@@ -11,14 +12,38 @@ const SORTIE = new URL('../src/data/catalogue.json', import.meta.url);
 /** Marques suivies : nom dans la liste Google → nom affiché. */
 const MARQUES = {
   Samsung: 'Samsung', Google: 'Google', Xiaomi: 'Xiaomi', Redmi: 'Xiaomi', POCO: 'POCO', OnePlus: 'OnePlus', Oppo: 'OPPO', OPPO: 'OPPO',
-  realme: 'realme', Realme: 'realme', Honor: 'HONOR', HONOR: 'HONOR', Huawei: 'Huawei', Motorola: 'Motorola', Nothing: 'Nothing', Sony: 'Sony',
-  Asus: 'ASUS', Vivo: 'vivo', vivo: 'vivo', Fairphone: 'Fairphone', Nokia: 'Nokia', 'HMD Global': 'Nokia', HMD: 'HMD', TCL: 'TCL', Wiko: 'Wiko',
-  Crosscall: 'Crosscall', ZTE: 'ZTE', nubia: 'nubia', Nubia: 'nubia', Tecno: 'TECNO', TECNO: 'TECNO', Infinix: 'Infinix', LGE: 'LG',
-  'TCT (Alcatel)': 'Alcatel', Blackview: 'Blackview', Ulefone: 'Ulefone', Doogee: 'DOOGEE', Oukitel: 'OUKITEL', Lenovo: 'Lenovo', HTC: 'HTC',
-  Doro: 'Doro', Cat: 'Cat', Meizu: 'Meizu', Sharp: 'Sharp', iQOO: 'iQOO', CMF: 'Nothing',
+  realme: 'realme', Realme: 'realme', Honor: 'HONOR', HONOR: 'HONOR', Huawei: 'Huawei', Motorola: 'Motorola', Nothing: 'Nothing', CMF: 'Nothing',
+  Sony: 'Sony', Asus: 'ASUS', Vivo: 'vivo', vivo: 'vivo', iQOO: 'iQOO', Fairphone: 'Fairphone', Nokia: 'Nokia', 'HMD Global': 'Nokia', HMD: 'HMD',
+  TCL: 'TCL', ZTE: 'ZTE', nubia: 'nubia', Nubia: 'nubia', Tecno: 'TECNO', TECNO: 'TECNO', Infinix: 'Infinix',
+};
+
+/**
+ * Gammes à port USB-C, par marque. Un nom qui contient « 5G » est toujours gardé (tous les téléphones 5G sont en USB-C).
+ * Les règles sont volontairement prudentes : une gamme douteuse (entrée de gamme encore en micro-USB) est écartée.
+ */
+const USB_C = {
+  // S8 et suivants, Note 8 et suivants, pliants, A11 à A99 (pas A0x ni A10), M11 et suivants, XCover récents.
+  Samsung: /^Galaxy (S([89]|[1-9]\d)\b|Note ?([89]|[12]0)\b|Z (Flip|Fold)|Fold|A(1[1-9]|[2-9]\d)\b|M(1[1-9]|[2-9]\d)\b|F(1[2-9]|[2-9]\d)\b|XCover ?([5-9]|Pro))/i,
+  Google: /^Pixel\b/i,
+  OnePlus: /^OnePlus\b/i,
+  Nothing: /./,
+  Fairphone: /Fairphone ?[3-9]/i,
+  HMD: /./,
+  // Hors « 5G » : les gammes principales. Entrées de gamme en micro-USB écartées (Redmi 9A/9C/10A/12C/A1/A2, POCO C).
+  Xiaomi: /^(Xiaomi (1\d|MIX)|Mi (9|1\d)\b|Redmi (Note (8|9|1\d)\b|1[0-5]\b(?!A|C)|K\d|Turbo)|REDMI (Note|K|Turbo))/i,
+  POCO: /^POCO [FXM]\d/i,
+  OPPO: /^(Find|Reno)/i,
+  realme: /^realme (GT|[6-9]\b|1\d\b)/i,
+  HONOR: /^HONOR (Magic|\d{2,3}\b)/i,
+  Huawei: /^(HUAWEI )?(P[2-6]0|Mate ?([1-6]0|X)|Pura|nova (\d\d|[5-9])\b)/i,
+  Motorola: /(edge|razr|thinkphone|moto g ?(\d{2,3}|[6-9])\b)/i,
+  Sony: /^Xperia (1|5|10|PRO|XZ)/i,
+  ASUS: /(ROG Phone|Zenfone ([5-9]|1\d)\b)/i,
+  vivo: /^(vivo )?(X\d|V[2-9]\d)/i,
+  iQOO: /./,
 };
 /** Ce qui n'est pas un téléphone : tablettes, montres, téléviseurs, ordinateurs, objets connectés. */
-const PAS_UN_TELEPHONE = /\b(emulator|emualtor|chromebox|chromebase|pixelbook|detachable|reference|sdk|on pc|play edition|tab|tablet|tablette|pad|matepad|mediapad|watch|gear|wear|tv|bravia|book|chromebook|laptop|box|stick|buds|band|fit|projector|soundbar|hub|glass|vr|auto|car|kids|galaxy view|smart display|home|nest|chromecast|glasses|camera|walkman|xperia tablet|zenpad|yoga|thinkpad|ideapad|transformer|memo pad|nexus [0-9]+ ?(?:\(|$)|pixel c|pixel slate|pixel tablet)\b|\d{1,2}\.\d ?(?:"|inch|pouces)?$|\b(?:7|8|10|11|12)\.\d\b/i;
+const PAS_UN_TELEPHONE = /\b(emulator|emualtor|chromebox|chromebase|pixelbook|detachable|reference|sdk|on pc|play edition|tab|tablet|tablette|pad|matepad|mediapad|watch|gear|wear|tv|book|chromebook|laptop|box|stick|buds|band|fit|projector|hub|glass|vr|auto|car|kids|pixel c|pixel slate|pixel tablet)\b/i;
 
 const normaliser = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\+/g, ' plus ').replace(/[^a-z0-9]+/g, ' ').trim();
 
@@ -47,10 +72,12 @@ for (const [marqueGoogle, nomBrut = '', , code = ''] of lignes) {
   const marque = MARQUES[marqueGoogle?.trim()];
   const nom = nomBrut.replace(/\s+/g, ' ').trim();
   if (!marque || nom.length < 2 || nom.length > 40 || !code.trim()) continue;
-  if (PAS_UN_TELEPHONE.test(nom)) continue;
+  // Une taille d'écran dans le nom (« Galaxy Note 10.1 ») : une tablette.
+  if (PAS_UN_TELEPHONE.test(nom) || /\b\d{1,2}\.\d\b/.test(nom)) continue;
   // Nom commercial absent : la liste répète la référence (« SM-G950F ») ou un nom de code.
   // (Un nom en plusieurs mots identique à la référence est un vrai nom : « Pixel 8 ».)
   if (!/\s/.test(nom) && (normaliser(nom) === normaliser(code) || (/^[A-Z]{1,4}[-_]?[A-Z0-9]{3,}$/.test(nom) && /\d{3}/.test(nom)))) continue;
+  if (!/\b5G\b/i.test(nom) && !USB_C[marque]?.test(nom)) continue;
   const cle = `${marque}|${normaliser(nom)}`;
   const fiche = modeles.get(cle) ?? { marque, modele: nom, codes: new Set() };
   fiche.codes.add(code.trim());
@@ -58,7 +85,7 @@ for (const [marqueGoogle, nomBrut = '', , code = ''] of lignes) {
 }
 
 // Les iPhone ne figurent pas dans la liste Google (Android) : ceux sans fiche vérifiée sont ajoutés ici, sans référence.
-// Leur année de sortie sert à les ranger parmi les autres iPhone.
+// Leur année de sortie sert à les ranger parmi les autres iPhone. Tous ont un port Lightning ou USB-C.
 const IPHONE = { 'iPhone 17': 2025, 'iPhone 17 Pro': 2025, 'iPhone 17 Pro Max': 2025, 'iPhone Air': 2025, 'iPhone 7': 2016, 'iPhone 7 Plus': 2016,
   'iPhone SE (2016)': 2016, 'iPhone 6s': 2015, 'iPhone 6s Plus': 2015 };
 for (const [nom, annee] of Object.entries(IPHONE)) {
@@ -73,4 +100,4 @@ writeFileSync(SORTIE, `[\n${catalogue.map((l) => JSON.stringify(l)).join(',\n')}
 
 const parMarque = {};
 for (const [marque] of catalogue) parMarque[marque] = (parMarque[marque] ?? 0) + 1;
-console.log(`${catalogue.length} téléphones`, parMarque);
+console.log(`${catalogue.length} téléphones`, JSON.stringify(parMarque));
