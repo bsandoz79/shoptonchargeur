@@ -1,0 +1,64 @@
+# Tests, build, puis envoi sur o2switch (choptonchargeur.bsandoz.fr) en FTPS avec lftp.
+# À régler dans GitHub → Settings → Secrets and variables → Actions :
+#   secrets   FTP_USERNAME, FTP_PASSWORD : compte FTP limité au dossier du sous-domaine
+#   variable  VITE_AMAZON_TAG            : identifiant Partenaires Amazon (facultatif)
+# Sans les secrets FTP, les tests et le build tournent, l'envoi est sauté.
+name: Déploiement o2switch
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-o2switch
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+        env:
+          VITE_AMAZON_TAG: ${{ vars.VITE_AMAZON_TAG }}
+
+      - name: Envoi FTPS vers o2switch
+        env:
+          FTP_SERVER: muguet.o2switch.net
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          if [ -z "$FTP_USERNAME" ] || [ -z "$LFTP_PASSWORD" ]; then
+            echo "Secrets FTP absents : envoi sauté (voir docs/mise-en-ligne.md)."
+            exit 0
+          fi
+          sudo apt-get install -y -qq lftp > /dev/null
+          # Retire espaces et retours à la ligne collés par erreur dans les secrets
+          FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '[:space:]')
+          export LFTP_PASSWORD=$(printf '%s' "$LFTP_PASSWORD" | tr -d '\r\n')
+          # Chaîne Let's Encrypt (YR1 → Root YR → ISRG Root X1) ajoutée aux autorités du système : la vérification TLS reste active
+          curl -fsS http://yr1.i.lencr.org/ | openssl x509 -inform der > /tmp/yr1.pem
+          curl -fsS http://yr.i.lencr.org/  | openssl x509 -inform der > /tmp/yr.pem
+          cat /etc/ssl/certs/ca-certificates.crt /tmp/yr1.pem /tmp/yr.pem > /tmp/ca-bundle.pem
+          lftp -c "
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate true;
+            set ssl:ca-file /tmp/ca-bundle.pem;
+            set ftp:passive-mode true;
+            set net:max-retries 5;
+            set net:reconnect-interval-base 5;
+            set net:timeout 30;
+            open --env-password -u \"$FTP_USERNAME\" \"$FTP_SERVER\";
+            mirror --reverse --verbose --parallel=4 dist/ ./
+          "

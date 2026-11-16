@@ -1,0 +1,37 @@
+.entete { border-bottom: 1px solid var(--c-bord); background: var(--c-surface); }
+.logo { display: flex; align-items: center; gap: .55rem; max-width: var(--largeur); margin-inline: auto; min-height: 56px; padding: 0 1rem; font-weight: 800; font-size: 1.05rem;
+  color: var(--c-texte); text-decoration: none; }
+.logoIcone { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--c-accent); color: #fff; }
+
+.page { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 3rem; }
+.accueil { display: grid; gap: 1.25rem; }
+.accueil h1 { font-size: clamp(1.7rem, 7vw, 2.5rem); line-height: 1.1; letter-spacing: -.01em; }
+.accroche { font-size: 1.08rem; color: var(--c-texte-doux); }
+
+/* Appareil détecté. */
+.detecte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; padding: .9rem 1rem; border-radius: var(--rayon);
+  background: var(--c-accent-doux); border: 1px solid color-mix(in srgb, var(--c-accent-fonce) 35%, transparent); font-weight: 700; }
+.detecteLibelle { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-fonce); }
+
+/* Raccourcis : modèles de la marque détectée, marques. */
+.raccourcis { display: grid; gap: .5rem; }
+.raccourcisTitre { font-size: .9rem; font-weight: 700; color: var(--c-texte-doux); }
+.puces { display: flex; flex-wrap: wrap; gap: .4rem; }
+.puce { min-height: 42px; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; cursor: pointer; }
+.puce:hover { border-color: var(--c-accent-fonce); background: var(--c-accent-doux); }
+
+/* Les trois étapes. */
+.etapes { list-style: none; counter-reset: etape; margin: .5rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.etapes li { counter-increment: etape; display: grid; grid-template-columns: auto 1fr; column-gap: .8rem; align-items: start; }
+.etapes li::before { content: counter(etape); grid-row: span 2; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--c-texte);
+  font-weight: 800; font-size: .9rem; }
+.etapes span { grid-column: 2; font-size: .92rem; color: var(--c-texte-doux); }
+@media (min-width: 720px) { .etapes { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+
+.aide { padding: .8rem 1rem; border-radius: var(--rayon); border: 1px solid var(--c-bord); background: var(--c-surface); }
+.aide summary { font-weight: 700; cursor: pointer; }
+.aide p { margin-top: .6rem; color: var(--c-texte-doux); }
+
+.pied { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 2.5rem; display: grid; gap: .7rem; border-top: 1px solid var(--c-bord); font-size: .85rem; color: var(--c-texte-doux); }
+.pied summary { cursor: pointer; font-weight: 700; }
+.pied details p { margin-top: .5rem; }

@@ -1,0 +1,20 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--police); font-size: 1rem; line-height: 1.5; color: var(--c-texte); background: var(--c-fond); overflow-x: clip; }
+h1, h2, h3, p { margin: 0; }
+a { color: var(--c-accent-fonce); }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--c-accent-fonce); outline-offset: 2px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Bouton principal et bouton secondaire (contour). */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 46px; padding: 0 1.1rem; border-radius: var(--rayon-petit);
+  border: 1px solid transparent; background: var(--c-accent); color: #fff; font-weight: 700; text-decoration: none; cursor: pointer; transition: background .15s ease; }
+.btn:hover { background: color-mix(in srgb, var(--c-accent) 82%, #000); }
+.btn--contour { background: transparent; color: var(--c-texte); border-color: var(--c-bord); }
+.btn--contour:hover { background: var(--c-accent-doux); border-color: var(--c-accent-fonce); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }

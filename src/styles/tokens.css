@@ -1,0 +1,32 @@
+/* Variables de design : seules couleurs, tailles et rayons du site. Version sombre selon le réglage de l'appareil. */
+:root {
+  color-scheme: light dark;
+  --c-fond: #f6f7f4;
+  --c-surface: #ffffff;
+  --c-texte: #14201a;
+  --c-texte-doux: #55635b;
+  --c-bord: #d9dfd8;
+  --c-accent: #0b6b3c;        /* vert « batterie chargée » : contraste AA avec le blanc */
+  --c-accent-fonce: #084f2c;
+  --c-accent-doux: #e4f3ea;
+  --c-alerte-doux: #fff3d6;
+  --c-alerte-texte: #6b4a00;
+  --rayon: 12px;
+  --rayon-petit: 8px;
+  --largeur: 46rem;
+  --police: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-fond: #0e1512;
+    --c-surface: #17211c;
+    --c-texte: #e8efe9;
+    --c-texte-doux: #a5b3aa;
+    --c-bord: #2c3a32;
+    --c-accent: #0b6b3c;
+    --c-accent-fonce: #7fd6a4;  /* textes d'accent sur fond sombre */
+    --c-accent-doux: #173526;
+    --c-alerte-doux: #3a2f10;
+    --c-alerte-texte: #f3d58a;
+  }
+}

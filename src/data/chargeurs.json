@@ -1,0 +1,129 @@
+[
+ {
+  "id": "apple-20w",
+  "marque": "Apple",
+  "nom": "Adaptateur secteur USB-C 20 W",
+  "puissanceW": 20,
+  "protocoles": [
+   "pd"
+  ],
+  "fiabilite": 3,
+  "budget": 2,
+  "requete": "Apple adaptateur secteur USB-C 20W"
+ },
+ {
+  "id": "samsung-25w",
+  "marque": "Samsung",
+  "nom": "Chargeur ultra rapide 25 W",
+  "puissanceW": 25,
+  "ppsMaxW": 25,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 3,
+  "budget": 2,
+  "requete": "Samsung chargeur 25W USB-C super fast charging"
+ },
+ {
+  "id": "samsung-45w",
+  "marque": "Samsung",
+  "nom": "Chargeur ultra rapide 45 W",
+  "puissanceW": 45,
+  "ppsMaxW": 45,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 3,
+  "budget": 3,
+  "requete": "Samsung chargeur 45W USB-C super fast charging 2.0"
+ },
+ {
+  "id": "google-30w",
+  "marque": "Google",
+  "nom": "Chargeur USB-C 30 W",
+  "puissanceW": 30,
+  "ppsMaxW": 30,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 3,
+  "budget": 2,
+  "requete": "Google chargeur USB-C 30W Pixel"
+ },
+ {
+  "id": "google-45w",
+  "marque": "Google",
+  "nom": "Chargeur USB-C 45 W",
+  "puissanceW": 45,
+  "ppsMaxW": 45,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 3,
+  "budget": 3,
+  "requete": "Google chargeur USB-C 45W Pixel"
+ },
+ {
+  "id": "generique-20w-pd",
+  "marque": "Marques reconnues (Anker, UGREEN, Belkin…)",
+  "nom": "Chargeur USB-C 20 W Power Delivery",
+  "puissanceW": 20,
+  "protocoles": [
+   "pd"
+  ],
+  "fiabilite": 2,
+  "budget": 1,
+  "requete": "chargeur USB-C 20W Power Delivery",
+  "generique": true
+ },
+ {
+  "id": "generique-30w-pps",
+  "marque": "Marques reconnues (Anker, UGREEN, Belkin…)",
+  "nom": "Chargeur USB-C 30 W Power Delivery + PPS",
+  "puissanceW": 30,
+  "ppsMaxW": 30,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 2,
+  "budget": 1,
+  "requete": "chargeur USB-C 30W PPS Power Delivery",
+  "generique": true
+ },
+ {
+  "id": "generique-45w-pps",
+  "marque": "Marques reconnues (Anker, UGREEN, Belkin…)",
+  "nom": "Chargeur USB-C 45 W Power Delivery + PPS",
+  "puissanceW": 45,
+  "ppsMaxW": 45,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 2,
+  "budget": 2,
+  "requete": "chargeur USB-C 45W PPS Power Delivery",
+  "generique": true
+ },
+ {
+  "id": "generique-65w-pps",
+  "marque": "Marques reconnues (Anker, UGREEN, Belkin…)",
+  "nom": "Chargeur USB-C 65 W GaN Power Delivery + PPS",
+  "puissanceW": 65,
+  "ppsMaxW": 45,
+  "protocoles": [
+   "pd",
+   "pps"
+  ],
+  "fiabilite": 2,
+  "budget": 3,
+  "requete": "chargeur USB-C 65W GaN PPS",
+  "generique": true,
+  "note": "Assez puissant pour recharger aussi un ordinateur portable."
+ }
+]
