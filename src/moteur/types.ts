@@ -2,11 +2,18 @@
 export type Protocole = 'pd' | 'pps' | 'proprietaire';
 export type Port = 'usb-c' | 'lightning';
 
-/** Un téléphone et ses besoins de charge (src/data/telephones.json). */
-export interface Telephone {
+/** Un téléphone du catalogue : son nom et ses références, sans données de charge (src/data/catalogue.json). */
+export interface Appareil {
   id: string;
   marque: string;
   modele: string;
+  annee?: number;
+  /** Références de modèle annoncées par le navigateur (« SM-S921B », ou un début comme « SM-S921 »), pour la détection. */
+  codes?: string[];
+}
+
+/** Un téléphone dont la fiche de charge est vérifiée (src/data/telephones.json). */
+export interface Telephone extends Appareil {
   annee: number;
   port: Port;
   /** Puissance maximale acceptée en filaire, en watts (donnée du constructeur). */
@@ -17,11 +24,11 @@ export interface Telephone {
   puissanceSansProtocoleW?: number;
   /** Nom de la charge rapide propre à la marque (protocole « proprietaire »). */
   techno?: string;
-  /** Câble 5 A nécessaire pour la puissance maximale. */
+  /** La puissance maximale demande un PPS à 5 A, côté chargeur et côté câble (Samsung 45 W). */
   cable5A?: boolean;
-  /** Débuts des références de modèle envoyées par le navigateur (ex. « SM-S921 »), pour la détection automatique. */
-  codes?: string[];
 }
+
+export const estVerifie = (a: Appareil): a is Telephone => 'puissanceMaxW' in a;
 
 /** Un chargeur conseillé (src/data/chargeurs.json), ou le chargeur d'origine d'une marque (créé par le moteur). */
 export interface Chargeur {
@@ -31,15 +38,15 @@ export interface Chargeur {
   puissanceW: number;
   /** Puissance maximale en PPS, si le chargeur le prend en charge. */
   ppsMaxW?: number;
+  /** PPS à 5 A : nécessaire aux téléphones `cable5A` pour dépasser 25 W. */
+  pps5A?: boolean;
   protocoles: Protocole[];
-  /** 3 : chargeur du constructeur ; 2 : marque reconnue ; 1 : autre. */
-  fiabilite: 1 | 2 | 3;
+  /** 3 : chargeur du constructeur ; 2 : grande marque d'accessoires. */
+  fiabilite: 2 | 3;
   /** Niveau de prix indicatif, de 1 (le moins cher) à 3. Pas de prix affiché : ils changent sans cesse chez le marchand. */
   budget: 1 | 2 | 3;
   /** Recherche envoyée au marchand. */
   requete: string;
-  /** Famille de chargeurs (plusieurs marques) plutôt qu'un produit précis. */
-  generique?: boolean;
   note?: string;
   /** Chargeur d'origine de cette marque (charge rapide propriétaire). */
   origineDe?: string;
@@ -48,7 +55,7 @@ export interface Chargeur {
 /** Un chargeur évalué pour un téléphone. */
 export interface Proposition {
   chargeur: Chargeur;
-  /** Puissance réellement obtenue avec ce téléphone ; `null` : charge plus lente, vitesse non communiquée. */
+  /** Puissance réellement obtenue avec ce téléphone ; `null` : vitesse non communiquée. */
   puissanceObtenueW: number | null;
   /** Le téléphone charge à sa vitesse maximale. */
   maximale: boolean;

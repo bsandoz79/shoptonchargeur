@@ -27,7 +27,7 @@ Le serveur FTP du fichier (`muguet.o2switch.net`) est celui des autres sites : �
 Autres marchands (Fnac, Boulanger, marques) : passer par une régie d'affiliation (Awin, Effinity…) et ajouter le marchand dans `src/moteur/affiliation.ts`.
 
 ## 4. Avant l'ouverture au public
-- [ ] Recouper `telephones.json` avec les fiches des constructeurs (`docs/donnees.md`).
+- [ ] Recouper `telephones.json` et `chargeurs.json` avec les fiches des constructeurs (`docs/donnees.md`), et ajouter des fiches vérifiées pour les modèles les plus vendus.
 - [ ] Vérifier chaque `requete` de `chargeurs.json` : la recherche Amazon doit montrer le bon produit en tête.
 - [ ] Remplacer les `[à compléter]` des mentions légales (éditeur, contact, hébergeur) dans `src/App.tsx`.
 - [ ] Tester la détection sur de vrais téléphones (Android Chrome, iPhone Safari).

@@ -10,6 +10,7 @@ npm install
 npm run test    # tests du moteur et de l'interface
 npm run lint    # analyse du code
 npm run build   # version de production dans dist/
+npm run catalogue   # met à jour la liste de tous les téléphones
 ```
 
 ## Comment ça marche
@@ -20,7 +21,8 @@ npm run build   # version de production dans dist/
 ## Organisation
 | Dossier | Contenu |
 | --- | --- |
-| `src/data/` | `telephones.json` et `chargeurs.json` : les seules données à tenir à jour |
+| `src/data/` | `catalogue.json` (tous les téléphones, généré), `telephones.json` (fiches de charge vérifiées) et `chargeurs.json` |
+| `scripts/` | `catalogue.mjs` : reconstruit le catalogue depuis la liste Google (`npm run catalogue`) |
 | `src/moteur/` | logique pure et testée : compatibilité, recherche, détection, liens |
 | `src/components/` | recherche, fiche du téléphone, liste des chargeurs, icônes |
 | `src/styles/` | variables de design (`tokens.css`) et styles communs |

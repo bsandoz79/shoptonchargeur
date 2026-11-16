@@ -2,39 +2,53 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icone } from './components/Icone';
 import { Recherche } from './components/Recherche';
 import { Resultat } from './components/Resultat';
-import { CHARGEURS, TELEPHONES } from './data';
+import { CHARGEURS, TELEPHONES, chargerCatalogue } from './data';
 import { detecter, type Detection } from './moteur/detection';
-import type { Telephone } from './moteur/types';
+import { chercher, nomComplet } from './moteur/recherche';
+import type { Appareil } from './moteur/types';
 import styles from './App.module.css';
 
-const MARQUES = [...new Set(TELEPHONES.map((t) => t.marque))];
-const telephoneDeLUrl = () => TELEPHONES.find((t) => t.id === new URLSearchParams(window.location.search).get('tel'));
+const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
+const idDeLUrl = () => new URLSearchParams(window.location.search).get('tel') ?? undefined;
 
 /**
  * Page unique : on choisit un téléphone (détecté ou cherché), on voit ses chargeurs. Le téléphone choisi est dans l'adresse
  * (`?tel=…`) : la page se partage et le bouton « Retour » fonctionne.
  */
 export function App() {
-  const [telephone, setTelephone] = useState<Telephone | undefined>(telephoneDeLUrl);
+  // Les fiches vérifiées tout de suite ; le catalogue complet (tous les téléphones) arrive juste après.
+  const [appareils, setAppareils] = useState<Appareil[]>(TELEPHONES);
+  const [catalogueCharge, setCatalogueCharge] = useState(false);
+  const [id, setId] = useState(idDeLUrl);
   const [saisie, setSaisie] = useState('');
   const [detection, setDetection] = useState<Detection>({});
   const resultat = useRef<HTMLDivElement>(null);
+  const telephone = useMemo(() => appareils.find((a) => a.id === id), [appareils, id]);
 
   useEffect(() => {
     let annule = false;
-    detecter(TELEPHONES).then((d) => { if (!annule) setDetection(d); }).catch(() => undefined);
-    const retour = () => setTelephone(telephoneDeLUrl());
+    // La détection attend le catalogue : ses références reconnaissent bien plus de modèles.
+    chargerCatalogue()
+      .catch(() => TELEPHONES as Appareil[])
+      .then((tous) => {
+        if (annule) return undefined;
+        setAppareils(tous);
+        setCatalogueCharge(true);
+        return detecter(tous).then((d) => { if (!annule) setDetection(d); });
+      })
+      .catch(() => undefined);
+    const retour = () => setId(idDeLUrl());
     window.addEventListener('popstate', retour);
     return () => { annule = true; window.removeEventListener('popstate', retour); };
   }, []);
 
-  const choisir = (t: Telephone | undefined) => {
-    setTelephone(t);
+  const choisir = (t: Appareil | undefined) => {
+    setId(t?.id);
     setSaisie('');
     const url = new URL(window.location.href);
     if (t) url.searchParams.set('tel', t.id); else url.searchParams.delete('tel');
     window.history.pushState(null, '', url);
-    document.title = t ? `Chargeur pour ${t.marque} ${t.modele} | Chope ton chargeur` : 'Chope ton chargeur : le bon chargeur pour ton téléphone';
+    document.title = t ? `Chargeur pour ${nomComplet(t)} | Chope ton chargeur` : 'Chope ton chargeur : le bon chargeur pour ton téléphone';
   };
 
   // Nouveau téléphone affiché : on amène son titre à l'écran et au lecteur d'écran.
@@ -47,9 +61,11 @@ export function App() {
 
   const marqueDetectee = !detection.telephone ? detection.marque : undefined;
   const modelesMarque = useMemo(
-    () => (marqueDetectee ? TELEPHONES.filter((t) => t.marque === marqueDetectee).slice(0, 8) : []),
-    [marqueDetectee],
+    () => (marqueDetectee ? chercher(appareils.filter((a) => a.marque === marqueDetectee), marqueDetectee, 8) : []),
+    [appareils, marqueDetectee],
   );
+  // Adresse partagée vers un téléphone du catalogue : on attend qu'il soit chargé avant de conclure qu'il n'existe pas.
+  const enAttente = id !== undefined && !telephone && !catalogueCharge;
 
   return (
     <>
@@ -61,19 +77,20 @@ export function App() {
       </header>
 
       <main className={styles.page}>
-        {!telephone && (
+        {enAttente && <p role="status">Chargement du téléphone…</p>}
+        {!telephone && !enAttente && (
           <section className={styles.accueil} aria-labelledby="titre-accueil">
             <h1 id="titre-accueil">Le bon chargeur pour ton téléphone, sans te tromper.</h1>
             <p className={styles.accroche}>Choisis ton modèle : on te dit quelle puissance il accepte et quels chargeurs le rechargent à pleine vitesse.</p>
 
             {detection.telephone && (
               <div className={styles.detecte} role="status">
-                <p><span className={styles.detecteLibelle}>Appareil détecté</span>{detection.telephone.marque} {detection.telephone.modele}</p>
+                <p><span className={styles.detecteLibelle}>Appareil détecté</span>{nomComplet(detection.telephone)}</p>
                 <button type="button" className="btn" onClick={() => choisir(detection.telephone)}>Voir ses chargeurs</button>
               </div>
             )}
 
-            <Recherche telephones={TELEPHONES} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} />
+            <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} />
 
             {modelesMarque.length > 0 && (
               <div className={styles.raccourcis}>
@@ -102,19 +119,19 @@ export function App() {
 
             <details className={styles.aide}>
               <summary>Mon téléphone n’est pas dans la liste</summary>
-              <p>Cherche sur la fiche du constructeur la puissance de charge (en watts, « W ») et le type de charge rapide. À défaut, un chargeur USB-C « Power Delivery » avec « PPS » de 30 à 45 W est le choix le plus polyvalent : il convient à la plupart des téléphones récents, à leur vitesse normale ou rapide.</p>
+              <p>Essaie avec le nom écrit sur la boîte, ou seulement une partie (« s24 », « note 13 »). Sinon, cherche sur la fiche du constructeur la puissance de charge (en watts, « W ») : à défaut, un chargeur USB-C « Power Delivery » avec « PPS » de 30 à 45 W est le choix le plus polyvalent.</p>
             </details>
           </section>
         )}
 
         <div ref={resultat}>
-          {telephone && <Resultat key={telephone.id} telephone={telephone} chargeurs={CHARGEURS} onChanger={() => choisir(undefined)} />}
+          {telephone && <Resultat key={telephone.id} appareil={telephone} chargeurs={CHARGEURS} onChanger={() => choisir(undefined)} />}
         </div>
       </main>
 
       <footer className={styles.pied}>
         <p><strong>Liens affiliés.</strong> Les boutons « Voir sur Amazon » sont des liens partenaires : si tu achètes après avoir cliqué, le site peut toucher une commission, sans surcoût pour toi. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.</p>
-        <p>Les puissances viennent des fiches des constructeurs. Vérifie toujours la fiche du produit avant d’acheter. Aucun prix n’est affiché ici : ils changent sans cesse chez le marchand.</p>
+        <p>Les puissances viennent des fiches des constructeurs ; la liste des téléphones, de la liste officielle des appareils Android de Google. Vérifie toujours la fiche du produit avant d’acheter. Aucun prix n’est affiché ici : ils changent sans cesse chez le marchand.</p>
         <details>
           <summary>Mentions légales et données personnelles</summary>
           <p>Éditeur du site : [à compléter]. Contact : [à compléter]. Hébergeur : [à compléter].</p>

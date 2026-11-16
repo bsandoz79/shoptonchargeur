@@ -1,11 +1,15 @@
-import { CHARGEURS, TELEPHONES } from '../data';
+import { CHARGEURS, TELEPHONES, chargerCatalogue } from '../data';
 import { lienMarchand } from './affiliation';
-import { chargeurOrigine, proposer, puissanceObtenue } from './compatibilite';
+import { chargeurOrigine, proposer, proposerSansFiche, puissanceObtenue } from './compatibilite';
 import { analyser, modeleDepuisUA, trouverParModele } from './detection';
+import { conseilMarque } from './marques';
 import { chercher, normaliser } from './recherche';
+import { estVerifie, type Appareil } from './types';
 
 const tel = (id: string) => TELEPHONES.find((t) => t.id === id)!;
 const chargeur = (id: string) => CHARGEURS.find((c) => c.id === id)!;
+let TOUS: Appareil[] = [];
+beforeAll(async () => { TOUS = await chargerCatalogue(); });
 
 describe('données', () => {
   it('identifiants uniques, puissances et protocoles cohérents', () => {
@@ -22,15 +26,26 @@ describe('données', () => {
     }
   });
 
-  it('chaque téléphone a au moins un chargeur qui le charge à sa vitesse maximale', () => {
+  it('chaque téléphone vérifié a au moins un chargeur qui le charge à sa vitesse maximale', () => {
     for (const t of TELEPHONES) expect(proposer(t, CHARGEURS)[0].maximale, t.id).toBe(true);
+  });
+
+  it('catalogue : des milliers de téléphones, identifiants uniques, fiches vérifiées gardées et enrichies', () => {
+    expect(TOUS.length).toBeGreaterThan(5000);
+    expect(new Set(TOUS.map((a) => a.id)).size).toBe(TOUS.length);
+    expect(TOUS.filter(estVerifie)).toHaveLength(TELEPHONES.length);
+    // Le Galaxy S24 vérifié n'est pas doublé par celui du catalogue, et récupère ses références exactes.
+    expect(TOUS.filter((a) => a.marque === 'Samsung' && a.modele === 'Galaxy S24')).toHaveLength(1);
+    expect(tel('samsung-galaxy-s24').codes).toContain('SM-S921B');
+    // Pas de tablette ni de montre.
+    expect(TOUS.some((a) => /\b(tab|watch|pad)\b/i.test(a.modele))).toBe(false);
   });
 });
 
 describe('puissance obtenue', () => {
   it('Power Delivery : le plus petit des deux, téléphone ou chargeur', () => {
     expect(puissanceObtenue(tel('apple-iphone-15'), chargeur('apple-20w'))).toBe(20);
-    expect(puissanceObtenue(tel('apple-iphone-15'), chargeur('generique-65w-pps'))).toBe(20);
+    expect(puissanceObtenue(tel('apple-iphone-15'), chargeur('anker-nano-45w'))).toBe(20);
     expect(puissanceObtenue(tel('apple-iphone-11'), chargeur('apple-20w'))).toBe(18);
   });
 
@@ -38,13 +53,19 @@ describe('puissance obtenue', () => {
     const s24Ultra = tel('samsung-galaxy-s24-ultra');
     expect(puissanceObtenue(s24Ultra, chargeur('samsung-45w'))).toBe(45);
     expect(puissanceObtenue(s24Ultra, chargeur('samsung-25w'))).toBe(25);
-    expect(puissanceObtenue(s24Ultra, chargeur('apple-20w'))).toBe(15);
-    // Un 65 W dont le PPS plafonne à 45 W donne 45 W, pas 65.
-    expect(puissanceObtenue(s24Ultra, chargeur('generique-65w-pps'))).toBe(45);
+    expect(puissanceObtenue(s24Ultra, chargeur('anker-nano-20w'))).toBe(15);
+  });
+
+  it('Samsung 45 W : sans PPS à 5 A, un chargeur 45 W ne donne que 25 W', () => {
+    const s24Ultra = tel('samsung-galaxy-s24-ultra');
+    expect(puissanceObtenue(s24Ultra, chargeur('anker-nano-45w'))).toBe(25);
+    expect(puissanceObtenue(s24Ultra, chargeur('ugreen-nexode-45w'))).toBe(45);
+    // Un Pixel 9 Pro XL (37 W) n'a pas cette contrainte.
+    expect(puissanceObtenue(tel('google-pixel-9-pro-xl'), chargeur('anker-nano-45w'))).toBe(37);
   });
 
   it('PPS : vitesse non communiquée sans PPS → null', () => {
-    expect(puissanceObtenue(tel('google-pixel-8'), chargeur('generique-20w-pd'))).toBeNull();
+    expect(puissanceObtenue(tel('google-pixel-8'), chargeur('anker-nano-20w'))).toBeNull();
   });
 
   it('charge propriétaire : seul le chargeur d’origine donne la vitesse maximale', () => {
@@ -52,7 +73,7 @@ describe('puissance obtenue', () => {
     const origine = chargeurOrigine(xiaomi)!;
     expect(origine.nom).toBe('Chargeur d’origine 120 W HyperCharge');
     expect(puissanceObtenue(xiaomi, origine)).toBe(120);
-    expect(puissanceObtenue(xiaomi, chargeur('generique-65w-pps'))).toBeNull();
+    expect(puissanceObtenue(xiaomi, chargeur('anker-nano-45w'))).toBeNull();
     expect(chargeurOrigine(tel('apple-iphone-15'))).toBeNull();
   });
 });
@@ -65,14 +86,14 @@ describe('propositions', () => {
     const marques = new Set(p.map((x) => x.chargeur.marque));
     expect(marques.has('Apple')).toBe(false);
     expect(marques.has('Google')).toBe(false);
-    // Les chargeurs des fabricants d'accessoires restent proposés.
-    expect(p.find((x) => x.chargeur.id === 'generique-30w-pps')?.puissanceObtenueW).toBe(25);
+    // Les grandes marques d'accessoires restent proposées.
+    expect(p.find((x) => x.chargeur.id === 'anker-nano-30w')?.puissanceObtenueW).toBe(25);
   });
 
   it('tris : prix croissant, puissance décroissante, fiabilité décroissante', () => {
     const s24 = tel('samsung-galaxy-s24');
     expect(proposer(s24, CHARGEURS, 'prix')[0].chargeur.budget).toBe(1);
-    expect(proposer(s24, CHARGEURS, 'puissance')[0].chargeur.puissanceW).toBe(65);
+    expect(proposer(s24, CHARGEURS, 'puissance')[0].chargeur.puissanceW).toBe(45);
     const fiables = proposer(s24, CHARGEURS, 'fiabilite');
     expect(fiables[0].chargeur.fiabilite).toBe(3);
     expect(fiables[0].chargeur.id).toBe('samsung-25w');
@@ -83,6 +104,19 @@ describe('propositions', () => {
     expect(p[0].chargeur.origineDe).toBe('OnePlus');
     expect(p[0].puissanceObtenueW).toBe(100);
   });
+
+  it('sans fiche vérifiée : aucune vitesse annoncée, chargeur de la marque puis chargeurs PPS', () => {
+    const galaxy = TOUS.find((a) => a.marque === 'Samsung' && !estVerifie(a))!;
+    const p = proposerSansFiche(galaxy, CHARGEURS);
+    expect(p.every((x) => x.puissanceObtenueW === null && !x.maximale)).toBe(true);
+    expect(p[0].chargeur.marque).toBe('Samsung');
+    expect(p.some((x) => x.chargeur.marque === 'Apple' || x.chargeur.marque === 'Google')).toBe(false);
+
+    const oppo = TOUS.find((a) => a.marque === 'OPPO')!;
+    expect(proposerSansFiche(oppo, CHARGEURS)[0].chargeur.origineDe).toBe('OPPO');
+    expect(conseilMarque('OPPO')).toMatch(/sa propre charge rapide/);
+    expect(conseilMarque('Sony')).toMatch(/Power Delivery/);
+  });
 });
 
 describe('recherche', () => {
@@ -92,22 +126,43 @@ describe('recherche', () => {
     expect(chercher(TELEPHONES, 'IPHONE 15 pro')[0].id).toBe('apple-iphone-15-pro');
   });
 
-  it('cherche par marque, par début de mot, et met le modèle exact en tête', () => {
-    expect(chercher(TELEPHONES, 'pixel 8')[0].id).toBe('google-pixel-8');
-    expect(chercher(TELEPHONES, 'sams s23').every((t) => t.marque === 'Samsung')).toBe(true);
-    expect(chercher(TELEPHONES, 'xiaomi').length).toBeGreaterThan(0);
-    expect(chercher(TELEPHONES, '')).toEqual([]);
-    expect(chercher(TELEPHONES, 'nokia 3310')).toEqual([]);
+  it('« s » propose les Galaxy S, les plus récents d’abord, avant les autres Samsung', () => {
+    const noms = chercher(TOUS, 's').map((a) => a.modele);
+    expect(noms[0]).toMatch(/^Galaxy S\d\d/);
+    const rang = (modele: string) => noms.indexOf(modele);
+    const ordre = ['Galaxy S25 Ultra', 'Galaxy S25+', 'Galaxy S25 FE', 'Galaxy S25 Edge', 'Galaxy S25', 'Galaxy S24 Ultra', 'Galaxy S24', 'Galaxy S23 Ultra'];
+    expect(ordre.map(rang)).toEqual([...ordre.map(rang)].sort((a, b) => a - b));
+    expect(ordre.map(rang).every((i) => i >= 0)).toBe(true);
+    for (const modele of ['Galaxy S24', 'Galaxy S24 Ultra', 'Galaxy S23', 'Galaxy S22']) expect(noms).toContain(modele);
+    expect(noms.some((n) => /^Galaxy A/.test(n))).toBe(false);
+  });
+
+  it('le nom seul suffit, sans la marque', () => {
+    expect(chercher(TOUS, 's24 ultra')[0].id).toBe('samsung-galaxy-s24-ultra');
+    expect(chercher(TOUS, 'pixel 8')[0].id).toBe('google-pixel-8');
+    expect(chercher(TOUS, 'note 13 pro')[0].modele).toMatch(/Note 13 Pro/);
+    expect(chercher(TOUS, 'sams s23').every((t) => t.marque === 'Samsung')).toBe(true);
+    expect(chercher(TOUS, '')).toEqual([]);
+    expect(chercher(TOUS, 'zzzz introuvable')).toEqual([]);
+  });
+
+  it('trouve aussi les téléphones sans fiche vérifiée', () => {
+    const edge = chercher(TOUS, 's25 edge')[0];
+    expect(edge.modele).toBe('Galaxy S25 Edge');
+    expect(estVerifie(edge)).toBe(false);
+    expect(chercher(TOUS, 'nothing phone').length).toBeGreaterThan(2);
   });
 });
 
 describe('détection', () => {
   it('reconnaît un modèle par sa référence, la plus précise d’abord', () => {
     expect(trouverParModele(TELEPHONES, 'SM-S921B')?.id).toBe('samsung-galaxy-s24');
-    expect(trouverParModele(TELEPHONES, 'Pixel 8 Pro')?.id).toBe('google-pixel-8-pro');
-    expect(trouverParModele(TELEPHONES, 'Pixel 8')?.id).toBe('google-pixel-8');
-    expect(trouverParModele(TELEPHONES, 'Pixel 8a')?.id).toBe('google-pixel-8a');
-    expect(trouverParModele(TELEPHONES, 'Inconnu')).toBeUndefined();
+    expect(trouverParModele(TELEPHONES, 'SM-S921XYZ')?.id).toBe('samsung-galaxy-s24');
+    expect(trouverParModele(TOUS, 'Pixel 8 Pro')?.id).toBe('google-pixel-8-pro');
+    expect(trouverParModele(TOUS, 'Pixel 8')?.id).toBe('google-pixel-8');
+    expect(trouverParModele(TOUS, 'Pixel 8a')?.id).toBe('google-pixel-8a');
+    expect(trouverParModele(TOUS, 'A065')?.modele).toBe('Nothing Phone (2)');
+    expect(trouverParModele(TOUS, 'Inconnu')).toBeUndefined();
   });
 
   it('lit le modèle dans le « user agent » Android, sauf s’il est masqué', () => {
@@ -116,10 +171,10 @@ describe('détection', () => {
   });
 
   it('iPhone : seulement la marque ; Android : le modèle, ou la marque à défaut', () => {
-    expect(analyser(TELEPHONES, 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)')).toEqual({ marque: 'Apple' });
-    expect(analyser(TELEPHONES, 'Mozilla/5.0 (Linux; Android 10; K)', 'SM-A556B').telephone?.id).toBe('samsung-galaxy-a55');
-    expect(analyser(TELEPHONES, 'Mozilla/5.0 (Linux; Android 10; K)', 'SM-X999')).toEqual({ marque: 'Samsung' });
-    expect(analyser(TELEPHONES, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)')).toEqual({});
+    expect(analyser(TOUS, 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)')).toEqual({ marque: 'Apple' });
+    expect(analyser(TOUS, 'Mozilla/5.0 (Linux; Android 10; K)', 'SM-A556B').telephone?.id).toBe('samsung-galaxy-a55-5g');
+    expect(analyser(TOUS, 'Mozilla/5.0 (Linux; Android 10; K)', 'SM-X999Z')).toEqual({ marque: 'Samsung' });
+    expect(analyser(TOUS, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)')).toEqual({});
   });
 });
 

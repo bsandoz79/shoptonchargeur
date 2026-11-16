@@ -65,7 +65,7 @@ describe('App', () => {
     poserUA('Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15');
     render(<App />);
     expect(await screen.findByText('Tu es sur un iPhone : lequel ?')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'iPhone 16 Pro' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'iPhone 16 Pro' }));
     expect(screen.getByRole('heading', { level: 2, name: 'iPhone 16 Pro' })).toBeInTheDocument();
   });
 
@@ -75,6 +75,24 @@ describe('App', () => {
     const premiere = screen.getAllByRole('listitem')[0];
     expect(within(premiere).getByRole('heading', { name: 'Chargeur d’origine 100 W SUPERVOOC' })).toBeInTheDocument();
     expect(screen.getByText(/seul un chargeur OnePlus donne les 100 W/)).toBeInTheDocument();
+  });
+
+  it('téléphone sans fiche vérifiée : trouvé dans le catalogue, conseil de marque, aucune vitesse annoncée', async () => {
+    render(<App />);
+    await userEvent.type(screen.getByRole('combobox'), 's25 edge');
+    await userEvent.click(await screen.findByRole('option', { name: /Galaxy S25 Edge/ }));
+    expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S25 Edge' })).toBeInTheDocument();
+    expect(screen.getByText(/Fiche de charge pas encore vérifiée/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Chargeurs polyvalents' })).toBeInTheDocument();
+    expect(screen.queryByText(/vitesse maximale/)).not.toBeInTheDocument();
+    expect(screen.queryByText('Charge plus lente')).not.toBeInTheDocument();
+    expect(within(screen.getAllByRole('listitem')[0]).getByText('Samsung')).toBeInTheDocument();
+  });
+
+  it('adresse partagée vers un téléphone du catalogue : affiché une fois le catalogue chargé', async () => {
+    window.history.replaceState(null, '', '/?tel=samsung-galaxy-s25-edge');
+    render(<App />);
+    expect(await screen.findByRole('heading', { level: 2, name: 'Galaxy S25 Edge' })).toBeInTheDocument();
   });
 
   it('affiche la mention des liens affiliés', () => {
