@@ -44,3 +44,6 @@
 /* Téléphone sans fiche vérifiée. */
 .sansFiche { padding: .7rem .8rem; border-radius: var(--rayon-petit); background: var(--c-alerte-doux); color: var(--c-alerte-texte); font-size: .95rem; }
 .astuce { font-size: .9rem; color: var(--c-texte-doux); }
+
+/* Explication du verdict, sous chaque chargeur. */
+.pourquoi { font-size: .92rem; padding: .6rem .75rem; border-radius: var(--rayon-petit); background: var(--c-fond); }

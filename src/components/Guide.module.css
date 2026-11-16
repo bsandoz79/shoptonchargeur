@@ -1,0 +1,10 @@
+.guide { display: grid; gap: .75rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--c-bord); }
+.guide h2 { font-size: 1.25rem; }
+.intro { color: var(--c-texte-doux); }
+.questions { display: grid; gap: .5rem; }
+.question { border-radius: var(--rayon); border: 1px solid var(--c-bord); background: var(--c-surface); }
+.question summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1rem; font-weight: 700; cursor: pointer; list-style: none; }
+.question summary::-webkit-details-marker { display: none; }
+.question summary::after { content: '+'; flex: none; font-size: 1.3rem; font-weight: 400; color: var(--c-texte-doux); }
+.question[open] summary::after { content: '−'; }
+.question p { padding: 0 1rem 1rem; color: var(--c-texte-doux); }

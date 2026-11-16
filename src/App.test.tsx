@@ -23,6 +23,11 @@ describe('App', () => {
     expect(within(cartes[0]).getByText('Notre conseil')).toBeInTheDocument();
     expect(within(cartes[0]).getByRole('heading', { name: 'Chargeur ultra rapide 45 W' })).toBeInTheDocument();
     expect(within(cartes[0]).getByText('45 W : vitesse maximale')).toBeInTheDocument();
+    // Chaque chargeur explique son verdict.
+    expect(within(cartes[0]).getByText(/Ce chargeur a le « PPS »/)).toBeInTheDocument();
+    const anker45 = cartes.find((c) => within(c).queryByRole('heading', { name: 'Anker Nano 45 W' }))!;
+    expect(within(anker45).getByText('25 W sur 45 W possibles')).toBeInTheDocument();
+    expect(within(anker45).getByText(/pas avec assez de courant \(5 A\)/)).toBeInTheDocument();
     const lien = within(cartes[0]).getByRole('link', { name: /Voir sur Amazon/ });
     expect(lien).toHaveAttribute('href', expect.stringContaining('https://www.amazon.fr/s?k=Samsung+chargeur+45W'));
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
@@ -84,8 +89,9 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S25 Edge' })).toBeInTheDocument();
     expect(screen.getByText(/Fiche de charge pas encore vérifiée/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Chargeurs polyvalents' })).toBeInTheDocument();
-    expect(screen.queryByText(/vitesse maximale/)).not.toBeInTheDocument();
-    expect(screen.queryByText('Charge plus lente')).not.toBeInTheDocument();
+    for (const carte of screen.getAllByRole('listitem')) {
+      expect(within(carte).queryByText(/vitesse maximale|Charge plus lente|Pourquoi/)).not.toBeInTheDocument();
+    }
     expect(within(screen.getAllByRole('listitem')[0]).getByText('Samsung')).toBeInTheDocument();
   });
 
@@ -93,6 +99,40 @@ describe('App', () => {
     window.history.replaceState(null, '', '/?tel=samsung-galaxy-s25-edge');
     render(<App />);
     expect(await screen.findByRole('heading', { level: 2, name: 'Galaxy S25 Edge' })).toBeInTheDocument();
+  });
+
+  it('ordinateur portable : choix par la puissance du chargeur d’origine, verdict expliqué', async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole('button', { name: 'Ordinateur portable' }));
+    expect(screen.getByText(/se rechargent par un port/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '65 W' }));
+    expect(screen.getByRole('heading', { level: 2, name: 'PC portable avec chargeur de 65 W' })).toBeInTheDocument();
+    expect(window.location.search).toBe('?pc=pc-65w');
+
+    const cartes = screen.getAllByRole('listitem');
+    expect(within(cartes[0]).getByText('Notre conseil')).toBeInTheDocument();
+    expect(within(cartes[0]).getByText('Recharge normale')).toBeInTheDocument();
+    expect(within(cartes[0]).getByText(/au moins les 65 W du chargeur d’origine/)).toBeInTheDocument();
+    // Pas de chargeur Apple pour un PC ; les chargeurs trop faibles sont signalés, en dernier.
+    expect(screen.queryByText('Adaptateur secteur USB-C 96 W')).not.toBeInTheDocument();
+    const dernier = cartes[cartes.length - 1];
+    expect(within(dernier).getByText('Trop faible : recharge lente')).toBeInTheDocument();
+    expect(screen.getByText(/câble USB-C « 5 A »/)).toBeInTheDocument();
+  });
+
+  it('MacBook : recharge rapide à partir de la puissance annoncée', async () => {
+    window.history.replaceState(null, '', '/?pc=macbook-pro-14');
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 2, name: 'MacBook Pro 14 pouces' })).toBeInTheDocument();
+    const apple96 = screen.getAllByRole('listitem').find((c) => within(c).queryByRole('heading', { name: 'Adaptateur secteur USB-C 96 W' }))!;
+    expect(within(apple96).getByText('Recharge rapide')).toBeInTheDocument();
+  });
+
+  it('guide : explique les watts, le Power Delivery et le PPS', async () => {
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Comment ça marche, un chargeur ?' })).toBeInTheDocument();
+    await userEvent.click(screen.getByText('C’est quoi, le PPS ?'));
+    expect(screen.getByText(/Le PPS est une option du Power Delivery/)).toBeVisible();
   });
 
   it('affiche la mention des liens affiliés', () => {

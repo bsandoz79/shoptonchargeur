@@ -1,0 +1,9 @@
+[
+ {"id": "pc-45w", "marque": "PC portable", "nom": "PC portable avec chargeur de 45 W", "besoinW": 45, "generique": true},
+ {"id": "pc-65w", "marque": "PC portable", "nom": "PC portable avec chargeur de 65 W", "besoinW": 65, "generique": true},
+ {"id": "pc-100w", "marque": "PC portable", "nom": "PC portable avec chargeur de 90 ou 100 W", "besoinW": 100, "generique": true},
+ {"id": "pc-140w", "marque": "PC portable", "nom": "PC portable avec chargeur de 140 W", "besoinW": 140, "generique": true},
+ {"id": "macbook-air", "marque": "Apple", "nom": "MacBook Air (puce M2 et suivantes)", "besoinW": 30, "rapideW": 70},
+ {"id": "macbook-pro-14", "marque": "Apple", "nom": "MacBook Pro 14 pouces", "besoinW": 70, "rapideW": 96},
+ {"id": "macbook-pro-16", "marque": "Apple", "nom": "MacBook Pro 16 pouces", "besoinW": 140}
+]

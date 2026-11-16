@@ -2,6 +2,14 @@
 
 ## [Non publié]
 ### Ajouté
+- Explications : sous chaque chargeur, « Pourquoi ? » dit en clair d'où vient la vitesse annoncée (Power Delivery commun, PPS, PPS sans 5 A, charge de la marque, puissance insuffisante). Les textes suivent exactement le calcul du moteur (`src/moteur/explications.ts`).
+- Guide « Comment ça marche, un chargeur ? » en bas de page : watts, Power Delivery, PPS, charge propre aux marques, câble, ralentissement en fin de charge, GaN, chargeur d'ordinateur sur un téléphone.
+- Ordinateurs portables rechargés en USB-C : choix par la puissance du chargeur d'origine (45, 65, 90 à 100, 140 W) ou parmi les MacBook, chargeurs récents (GaN) de 45 à 140 W, verdict expliqué (recharge rapide, normale, trop faible), câble conseillé.
+
+### Modifié
+- Catalogue limité aux iPhone et aux téléphones Android à port USB-C : 1 566 modèles récents au lieu de 7 613 (gammes reconnues par leur nom, voir `scripts/catalogue.mjs`).
+
+### Ajouté (catalogue)
 - Catalogue complet : 7 613 téléphones de 37 marques dans la recherche, tirés de la liste officielle des appareils Android de Google (`npm run catalogue`), chargé à part de la page. Les téléphones sans fiche de charge vérifiée affichent un conseil général par marque et des chargeurs polyvalents, sans annoncer de vitesse.
 - Recherche par le nom seul : « s24 ultra » suffit, « s » propose les Galaxy S du plus récent au plus ancien.
 - Détection plus précise : références de modèle exactes du catalogue.

@@ -1,29 +1,38 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Guide } from './components/Guide';
 import { Icone } from './components/Icone';
+import { ChoixOrdinateur, ResultatOrdinateur } from './components/Ordinateur';
 import { Recherche } from './components/Recherche';
 import { Resultat } from './components/Resultat';
-import { CHARGEURS, TELEPHONES, chargerCatalogue } from './data';
+import { CHARGEURS, CHARGEURS_ORDINATEUR, ORDINATEURS, TELEPHONES, chargerCatalogue } from './data';
 import { detecter, type Detection } from './moteur/detection';
 import { chercher, nomComplet } from './moteur/recherche';
 import type { Appareil } from './moteur/types';
 import styles from './App.module.css';
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
-const idDeLUrl = () => new URLSearchParams(window.location.search).get('tel') ?? undefined;
+const TITRE = 'Chope ton chargeur : le bon chargeur pour ton téléphone ou ton ordinateur';
+/** Ce que dit l'adresse : `?tel=<téléphone>`, ou `?pc=<ordinateur>` (`?pc=choix` : la partie ordinateurs, rien de choisi). */
+const lireAdresse = () => {
+  const params = new URLSearchParams(window.location.search);
+  return { tel: params.get('tel') ?? undefined, pc: params.get('pc') ?? undefined };
+};
 
 /**
- * Page unique : on choisit un téléphone (détecté ou cherché), on voit ses chargeurs. Le téléphone choisi est dans l'adresse
- * (`?tel=…`) : la page se partage et le bouton « Retour » fonctionne.
+ * Page unique : on choisit un appareil (téléphone détecté ou cherché, ou ordinateur portable), on voit ses chargeurs et
+ * pourquoi ils conviennent. Le choix est dans l'adresse : la page se partage et le bouton « Retour » fonctionne.
  */
 export function App() {
-  // Les fiches vérifiées tout de suite ; le catalogue complet (tous les téléphones) arrive juste après.
+  // Les fiches vérifiées tout de suite ; le catalogue complet arrive juste après.
   const [appareils, setAppareils] = useState<Appareil[]>(TELEPHONES);
   const [catalogueCharge, setCatalogueCharge] = useState(false);
-  const [id, setId] = useState(idDeLUrl);
+  const [adresse, setAdresse] = useState<{ tel?: string; pc?: string }>(lireAdresse);
   const [saisie, setSaisie] = useState('');
   const [detection, setDetection] = useState<Detection>({});
   const resultat = useRef<HTMLDivElement>(null);
-  const telephone = useMemo(() => appareils.find((a) => a.id === id), [appareils, id]);
+  const telephone = useMemo(() => appareils.find((a) => a.id === adresse.tel), [appareils, adresse.tel]);
+  const ordinateur = ORDINATEURS.find((o) => o.id === adresse.pc);
+  const partieOrdinateur = adresse.pc !== undefined && !telephone;
 
   useEffect(() => {
     let annule = false;
@@ -37,27 +46,31 @@ export function App() {
         return detecter(tous).then((d) => { if (!annule) setDetection(d); });
       })
       .catch(() => undefined);
-    const retour = () => setId(idDeLUrl());
+    const retour = () => setAdresse(lireAdresse());
     window.addEventListener('popstate', retour);
     return () => { annule = true; window.removeEventListener('popstate', retour); };
   }, []);
 
-  const choisir = (t: Appareil | undefined) => {
-    setId(t?.id);
+  const aller = (suivante: { tel?: string; pc?: string }, titre = TITRE) => {
+    setAdresse(suivante);
     setSaisie('');
     const url = new URL(window.location.href);
-    if (t) url.searchParams.set('tel', t.id); else url.searchParams.delete('tel');
+    for (const cle of ['tel', 'pc'] as const) {
+      if (suivante[cle]) url.searchParams.set(cle, suivante[cle]); else url.searchParams.delete(cle);
+    }
     window.history.pushState(null, '', url);
-    document.title = t ? `Chargeur pour ${nomComplet(t)} | Chope ton chargeur` : 'Chope ton chargeur : le bon chargeur pour ton téléphone';
+    document.title = titre;
   };
+  const choisir = (t: Appareil) => aller({ tel: t.id }, `Chargeur pour ${nomComplet(t)} | Chope ton chargeur`);
 
-  // Nouveau téléphone affiché : on amène son titre à l'écran et au lecteur d'écran.
+  // Nouvel appareil affiché : on amène son titre à l'écran et au lecteur d'écran.
+  const affiche = telephone?.id ?? ordinateur?.id;
   useEffect(() => {
-    if (!telephone) return;
+    if (!affiche) return;
     const titre = resultat.current?.querySelector<HTMLElement>('#titre-telephone');
     titre?.focus({ preventScroll: true });
     resultat.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' });
-  }, [telephone]);
+  }, [affiche]);
 
   const marqueDetectee = !detection.telephone ? detection.marque : undefined;
   const modelesMarque = useMemo(
@@ -65,12 +78,13 @@ export function App() {
     [appareils, marqueDetectee],
   );
   // Adresse partagée vers un téléphone du catalogue : on attend qu'il soit chargé avant de conclure qu'il n'existe pas.
-  const enAttente = id !== undefined && !telephone && !catalogueCharge;
+  const enAttente = adresse.tel !== undefined && !telephone && !catalogueCharge;
+  const accueil = !telephone && !ordinateur && !enAttente;
 
   return (
     <>
       <header className={styles.entete}>
-        <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); choisir(undefined); }}>
+        <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); }}>
           <span className={styles.logoIcone}><Icone nom="eclair" taille={18} /></span>
           Chope ton chargeur
         </a>
@@ -78,55 +92,69 @@ export function App() {
 
       <main className={styles.page}>
         {enAttente && <p role="status">Chargement du téléphone…</p>}
-        {!telephone && !enAttente && (
+        {accueil && (
           <section className={styles.accueil} aria-labelledby="titre-accueil">
-            <h1 id="titre-accueil">Le bon chargeur pour ton téléphone, sans te tromper.</h1>
-            <p className={styles.accroche}>Choisis ton modèle : on te dit quelle puissance il accepte et quels chargeurs le rechargent à pleine vitesse.</p>
+            <h1 id="titre-accueil">Le bon chargeur, sans te tromper.</h1>
+            <p className={styles.accroche}>Choisis ton appareil : on te dit quelle puissance il accepte, quels chargeurs le rechargent à pleine vitesse, et pourquoi.</p>
 
-            {detection.telephone && (
-              <div className={styles.detecte} role="status">
-                <p><span className={styles.detecteLibelle}>Appareil détecté</span>{nomComplet(detection.telephone)}</p>
-                <button type="button" className="btn" onClick={() => choisir(detection.telephone)}>Voir ses chargeurs</button>
-              </div>
-            )}
-
-            <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} />
-
-            {modelesMarque.length > 0 && (
-              <div className={styles.raccourcis}>
-                <p className={styles.raccourcisTitre}>
-                  {marqueDetectee === 'Apple' ? 'Tu es sur un iPhone : lequel ?' : `Tu es sur un ${marqueDetectee} : lequel ?`}
-                </p>
-                <div className={styles.puces}>
-                  {modelesMarque.map((t) => <button key={t.id} type="button" className={styles.puce} onClick={() => choisir(t)}>{t.modele}</button>)}
-                  <button type="button" className={styles.puce} onClick={() => setSaisie(`${marqueDetectee} `)}>Autre modèle…</button>
-                </div>
-              </div>
-            )}
-
-            <div className={styles.raccourcis}>
-              <p className={styles.raccourcisTitre}>Ou pars de la marque</p>
-              <div className={styles.puces}>
-                {MARQUES.map((m) => <button key={m} type="button" className={styles.puce} onClick={() => setSaisie(`${m} `)}>{m}</button>)}
-              </div>
+            <div className={styles.parties} role="group" aria-label="Type d’appareil">
+              <button type="button" className={styles.partie} aria-pressed={!partieOrdinateur} onClick={() => aller({})}>
+                <Icone nom="telephone" /> Téléphone
+              </button>
+              <button type="button" className={styles.partie} aria-pressed={partieOrdinateur} onClick={() => aller({ pc: 'choix' })}>
+                <Icone nom="ordinateur" /> Ordinateur portable
+              </button>
             </div>
 
-            <ol className={styles.etapes}>
-              <li><strong>Ton téléphone</strong><span>Détecté tout seul quand c’est possible, sinon tu le cherches.</span></li>
-              <li><strong>Ce qu’il accepte</strong><span>Puissance en watts, type de charge rapide, port.</span></li>
-              <li><strong>Le bon chargeur</strong><span>Trié par vitesse, puissance, prix ou fiabilité.</span></li>
-            </ol>
+            {partieOrdinateur ? (
+              <ChoixOrdinateur ordinateurs={ORDINATEURS} onChoisir={(o) => aller({ pc: o.id }, `Chargeur pour ${o.nom} | Chope ton chargeur`)} />
+            ) : (
+              <>
+                {detection.telephone && (
+                  <div className={styles.detecte} role="status">
+                    <p><span className={styles.detecteLibelle}>Appareil détecté</span>{nomComplet(detection.telephone)}</p>
+                    <button type="button" className="btn" onClick={() => choisir(detection.telephone!)}>Voir ses chargeurs</button>
+                  </div>
+                )}
 
-            <details className={styles.aide}>
-              <summary>Mon téléphone n’est pas dans la liste</summary>
-              <p>Essaie avec le nom écrit sur la boîte, ou seulement une partie (« s24 », « note 13 »). Sinon, cherche sur la fiche du constructeur la puissance de charge (en watts, « W ») : à défaut, un chargeur USB-C « Power Delivery » avec « PPS » de 30 à 45 W est le choix le plus polyvalent.</p>
-            </details>
+                <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} />
+
+                {modelesMarque.length > 0 && (
+                  <div className={styles.raccourcis}>
+                    <p className={styles.raccourcisTitre}>
+                      {marqueDetectee === 'Apple' ? 'Tu es sur un iPhone : lequel ?' : `Tu es sur un ${marqueDetectee} : lequel ?`}
+                    </p>
+                    <div className={styles.puces}>
+                      {modelesMarque.map((t) => <button key={t.id} type="button" className={styles.puce} onClick={() => choisir(t)}>{t.modele}</button>)}
+                      <button type="button" className={styles.puce} onClick={() => setSaisie(`${marqueDetectee} `)}>Autre modèle…</button>
+                    </div>
+                  </div>
+                )}
+
+                <div className={styles.raccourcis}>
+                  <p className={styles.raccourcisTitre}>Ou pars de la marque</p>
+                  <div className={styles.puces}>
+                    {MARQUES.map((m) => <button key={m} type="button" className={styles.puce} onClick={() => setSaisie(`${m} `)}>{m}</button>)}
+                  </div>
+                </div>
+
+                <details className={styles.aide}>
+                  <summary>Mon téléphone n’est pas dans la liste</summary>
+                  <p>La liste contient les iPhone et les téléphones Android à port USB-C. Essaie avec le nom écrit sur la boîte, ou seulement une partie (« s24 », « note 13 »). Si ton téléphone est plus ancien (port micro-USB), garde son chargeur et son câble d’origine. Sinon, un chargeur USB-C « Power Delivery » avec « PPS » de 30 à 45 W est le choix le plus polyvalent.</p>
+                </details>
+              </>
+            )}
           </section>
         )}
 
         <div ref={resultat}>
-          {telephone && <Resultat key={telephone.id} appareil={telephone} chargeurs={CHARGEURS} onChanger={() => choisir(undefined)} />}
+          {telephone && <Resultat key={telephone.id} appareil={telephone} chargeurs={CHARGEURS} onChanger={() => aller({})} />}
+          {!telephone && ordinateur && (
+            <ResultatOrdinateur key={ordinateur.id} ordinateur={ordinateur} chargeurs={CHARGEURS_ORDINATEUR} onChanger={() => aller({ pc: 'choix' })} />
+          )}
         </div>
+
+        <Guide />
       </main>
 
       <footer className={styles.pied}>

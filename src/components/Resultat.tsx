@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { lienMarchand } from '../moteur/affiliation';
 import { proposer, proposerSansFiche } from '../moteur/compatibilite';
+import { pourquoi } from '../moteur/explications';
 import { conseilMarque } from '../moteur/marques';
 import { estVerifie, type Appareil, type Chargeur, type Proposition, type Telephone, type Tri } from '../moteur/types';
 import { Icone } from './Icone';
@@ -53,6 +54,7 @@ function Carte({ p, appareil, conseil }: { p: Proposition; appareil: Appareil; c
         </p>
       )}
       <p className={styles.details}>{details}</p>
+      {estVerifie(appareil) && <p className={styles.pourquoi}><strong>Pourquoi ?</strong> {pourquoi(appareil, p)}</p>}
       {c.note && <p className={styles.note}>{c.note}</p>}
       <a className={`btn ${styles.lien}`} href={lienMarchand(c.requete)} target="_blank" rel="sponsored nofollow noopener">
         Voir sur Amazon <Icone nom="externe" taille={18} /><span className="sr-only"> : {c.nom} (nouvel onglet, lien affilié)</span>

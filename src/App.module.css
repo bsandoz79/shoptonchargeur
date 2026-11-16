@@ -20,13 +20,11 @@
 .puce { min-height: 42px; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; cursor: pointer; }
 .puce:hover { border-color: var(--c-accent-fonce); background: var(--c-accent-doux); }
 
-/* Les trois étapes. */
-.etapes { list-style: none; counter-reset: etape; margin: .5rem 0 0; padding: 0; display: grid; gap: .6rem; }
-.etapes li { counter-increment: etape; display: grid; grid-template-columns: auto 1fr; column-gap: .8rem; align-items: start; }
-.etapes li::before { content: counter(etape); grid-row: span 2; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--c-texte);
-  font-weight: 800; font-size: .9rem; }
-.etapes span { grid-column: 2; font-size: .92rem; color: var(--c-texte-doux); }
-@media (min-width: 720px) { .etapes { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+/* Choix du type d'appareil : téléphone ou ordinateur portable. */
+.parties { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; padding: .3rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); }
+.partie { display: flex; align-items: center; justify-content: center; gap: .45rem; min-height: 46px; padding: 0 .6rem; border-radius: var(--rayon-petit); border: 0; background: transparent;
+  font-weight: 700; font-size: clamp(.85rem, 3.6vw, 1rem); white-space: nowrap; cursor: pointer; }
+.partie[aria-pressed='true'] { background: var(--c-texte); color: var(--c-fond); }
 
 .aide { padding: .8rem 1rem; border-radius: var(--rayon); border: 1px solid var(--c-bord); background: var(--c-surface); }
 .aide summary { font-weight: 700; cursor: pointer; }
