@@ -11,10 +11,12 @@ button, input { font: inherit; color: inherit; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Bouton principal et bouton secondaire (contour). */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 46px; padding: 0 1.1rem; border-radius: var(--rayon-petit);
-  border: 1px solid transparent; background: var(--c-accent); color: #fff; font-weight: 700; text-decoration: none; cursor: pointer; transition: background .15s ease; }
-.btn:hover { background: color-mix(in srgb, var(--c-accent) 82%, #000); }
-.btn--contour { background: transparent; color: var(--c-texte); border-color: var(--c-bord); }
-.btn--contour:hover { background: var(--c-accent-doux); border-color: var(--c-accent-fonce); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 48px; padding: 0 1.25rem; border-radius: 10px;
+  border: 1px solid var(--c-texte); background: var(--c-texte); color: var(--c-fond); font-weight: 700; font-size: .95rem; letter-spacing: .005em;
+  text-decoration: none; cursor: pointer; transition: background .15s ease, border-color .15s ease, transform .1s ease; }
+.btn:hover { background: color-mix(in srgb, var(--c-texte) 86%, var(--c-fond)); }
+.btn:active { transform: translateY(1px); }
+.btn--contour { background: var(--c-surface); color: var(--c-texte); border-color: var(--c-bord-fort); }
+.btn--contour:hover { background: var(--c-fond); border-color: var(--c-texte); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }

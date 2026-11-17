@@ -1,16 +1,32 @@
-.entete { border-bottom: 1px solid var(--c-bord); background: var(--c-surface); }
-.logo { display: flex; align-items: center; gap: .55rem; max-width: var(--largeur); margin-inline: auto; min-height: 56px; padding: 0 1rem; font-weight: 800; font-size: 1.05rem;
-  color: var(--c-texte); text-decoration: none; }
-.logoIcone { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--c-accent); color: #fff; }
+.entete { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--c-bord); background: color-mix(in srgb, var(--c-surface) 92%, transparent); backdrop-filter: blur(8px); }
+.enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 60px; padding: 0 1rem; }
+.logo { display: flex; align-items: center; gap: .55rem; font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--c-texte); text-decoration: none; white-space: nowrap; }
+.logoIcone { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--c-texte); color: var(--c-fond); }
+.nav { display: flex; gap: 1.1rem; }
+.nav a { font-size: .92rem; font-weight: 600; color: var(--c-texte-doux); text-decoration: none; }
+.nav a:hover { color: var(--c-texte); }
+@media (max-width: 560px) { .nav { display: none; } }
 
 .page { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 3rem; }
-.accueil { display: grid; gap: 1.25rem; }
-.accueil h1 { font-size: clamp(1.7rem, 7vw, 2.5rem); line-height: 1.1; letter-spacing: -.01em; }
-.accroche { font-size: 1.08rem; color: var(--c-texte-doux); }
+.accueil { display: grid; gap: 1.25rem; max-width: var(--largeur-texte); }
+.hero { display: grid; grid-template-columns: 1fr; align-items: center; gap: 1rem; }
+.heroTexte { display: grid; gap: .6rem; }
+.accueil h1 { font-size: clamp(1.9rem, 7.5vw, 3rem); line-height: 1.05; letter-spacing: -.025em; }
+.accroche { font-size: 1.08rem; color: var(--c-texte-doux); max-width: 36rem; }
+.heroVisuel { display: none; }
+@media (min-width: 900px) {
+  .accueil { max-width: none; grid-template-columns: minmax(0, 44rem) 1fr; column-gap: 2.5rem; }
+  .accueil > * { grid-column: 1; }
+  .hero { grid-column: 1 / -1; grid-template-columns: minmax(0, 44rem) 1fr; gap: 2.5rem; }
+  .heroVisuel { display: flex; align-items: end; justify-content: center; gap: .5rem; padding: 1rem; border-radius: var(--rayon-grand); background: var(--c-visuel); }
+}
+.garanties { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; font-size: .86rem; font-weight: 600; color: var(--c-texte-doux); }
+.garanties li { display: inline-flex; align-items: center; gap: .3rem; }
+.garanties svg { color: var(--c-accent-fonce); }
 
 /* Appareil détecté. */
-.detecte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; padding: .9rem 1rem; border-radius: var(--rayon);
-  background: var(--c-accent-doux); border: 1px solid color-mix(in srgb, var(--c-accent-fonce) 35%, transparent); font-weight: 700; }
+.detecte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; padding: .9rem 1rem; border-radius: var(--rayon-grand);
+  background: var(--c-surface); border: 1px solid var(--c-bord-fort); font-weight: 700; }
 .detecteLibelle { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-fonce); }
 
 /* Raccourcis : modèles de la marque détectée, marques. */
@@ -18,7 +34,7 @@
 .raccourcisTitre { font-size: .9rem; font-weight: 700; color: var(--c-texte-doux); }
 .puces { display: flex; flex-wrap: wrap; gap: .4rem; }
 .puce { min-height: 42px; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; cursor: pointer; }
-.puce:hover { border-color: var(--c-accent-fonce); background: var(--c-accent-doux); }
+.puce:hover { border-color: var(--c-texte); background: var(--c-surface); }
 
 /* Choix du type d'appareil : téléphone ou ordinateur portable. */
 .parties { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; padding: .3rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); }

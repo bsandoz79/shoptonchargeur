@@ -1,49 +1,32 @@
 .resultat { display: grid; gap: 1.25rem; }
 
-/* Fiche du téléphone. */
-.fiche { display: grid; gap: 1rem; padding: 1.1rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); }
-.ficheTete { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8rem; }
-.pastille { display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--rayon); background: var(--c-accent-doux); color: var(--c-accent-fonce); }
-.surtitre { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-texte-doux); }
-.ficheTete h2 { font-size: clamp(1.3rem, 5vw, 1.7rem); line-height: 1.15; outline: none; }
-.changer { min-height: 40px; padding: 0 .85rem; font-size: .9rem; }
-.specs { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+/* Fiche de l'appareil. */
+.fiche { display: grid; gap: 1rem; padding: 1.15rem; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px solid var(--c-bord); }
+.ficheTete { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .85rem; }
+.pastille { display: grid; place-items: center; width: 50px; height: 50px; border-radius: var(--rayon); background: var(--c-visuel); color: var(--c-texte); }
+.surtitre { font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-texte-doux); }
+.ficheTete h2 { font-size: clamp(1.35rem, 5vw, 1.8rem); line-height: 1.12; letter-spacing: -.015em; outline: none; }
+.changer { min-height: 38px; padding: 0 .85rem; font-size: .88rem; }
+.specs { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; }
 .specs div { padding: .6rem .7rem; border-radius: var(--rayon-petit); background: var(--c-fond); }
-.specs dt { font-size: .75rem; color: var(--c-texte-doux); }
-.specs dd { margin: 0; font-weight: 800; }
-@media (max-width: 420px) { .specs { grid-template-columns: 1fr 1fr; } .specs div:last-child { grid-column: 1 / -1; } }
-
-/* Titre de la liste et tris. */
-.barre { display: grid; gap: .6rem; }
-.titreListe { font-size: 1.15rem; }
-.tris { display: flex; flex-wrap: wrap; gap: .4rem; }
-.tri { flex: none; min-height: 40px; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; font-size: .9rem; cursor: pointer; }
-.tri[aria-checked='true'] { background: var(--c-texte); color: var(--c-fond); border-color: var(--c-texte); }
-
-/* Cartes des chargeurs. */
-.liste { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
-.carte { display: grid; gap: .55rem; padding: 1rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); }
-.conseil { border-color: var(--c-accent-fonce); box-shadow: 0 0 0 1px var(--c-accent-fonce); }
-.etiquette { justify-self: start; padding: 2px 10px; border-radius: 999px; background: var(--c-accent); color: #fff; font-size: .75rem; font-weight: 800; }
-.enTete { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
-.nom { font-size: 1.05rem; line-height: 1.25; }
-.marque { font-size: .88rem; color: var(--c-texte-doux); }
-.prix { font-weight: 800; letter-spacing: .05em; white-space: nowrap; }
-.prixVide { opacity: .25; }
-.vitesse { display: flex; align-items: center; gap: .35rem; font-weight: 700; }
-.maximale { color: var(--c-accent-fonce); }
-.details { font-size: .88rem; color: var(--c-texte-doux); }
-.note { font-size: .88rem; padding: .5rem .7rem; border-radius: var(--rayon-petit); background: var(--c-alerte-doux); color: var(--c-alerte-texte); }
-.lien { justify-self: start; margin-top: .15rem; }
-@media (max-width: 480px) { .lien { justify-self: stretch; } }
-
-/* Conseil sur le câble. */
-.cable { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: start; padding: .9rem 1rem; border-radius: var(--rayon); border: 1px dashed var(--c-bord); font-size: .95rem; }
-.cableIcone { display: grid; color: var(--c-texte-doux); margin-top: 2px; }
-
-/* Téléphone sans fiche vérifiée. */
+.specs dt { font-size: .72rem; color: var(--c-texte-doux); }
+.specs dd { margin: 0; font-weight: 800; font-size: .95rem; }
+@media (max-width: 560px) { .specs { grid-template-columns: 1fr 1fr; } }
+.explication { color: var(--c-texte-doux); }
 .sansFiche { padding: .7rem .8rem; border-radius: var(--rayon-petit); background: var(--c-alerte-doux); color: var(--c-alerte-texte); font-size: .95rem; }
-.astuce { font-size: .9rem; color: var(--c-texte-doux); }
 
-/* Explication du verdict, sous chaque chargeur. */
-.pourquoi { font-size: .92rem; padding: .6rem .75rem; border-radius: var(--rayon-petit); background: var(--c-fond); }
+/* Onglets (secteur / sans fil) et tri. */
+.barre { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: .75rem; border-bottom: 1px solid var(--c-bord); }
+.titreListe { font-size: 1.2rem; padding-bottom: .6rem; }
+.onglets { display: flex; gap: 1.25rem; }
+.onglet { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: 0 .1rem; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent;
+  background: none; font-weight: 700; font-size: 1rem; color: var(--c-texte-doux); cursor: pointer; }
+.onglet[aria-selected='true'] { color: var(--c-texte); border-bottom-color: var(--c-texte); }
+.compte { min-width: 22px; padding: 0 6px; border-radius: 999px; background: var(--c-fond); font-size: .75rem; line-height: 20px; text-align: center; }
+.tri { display: inline-flex; align-items: center; gap: .45rem; padding-bottom: .45rem; font-size: .88rem; color: var(--c-texte-doux); }
+.tri select { min-height: 36px; padding: 0 .6rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); background: var(--c-surface); color: var(--c-texte); font: inherit; font-weight: 600; }
+
+/* Grille de produits : 1 colonne sur téléphone, 2 puis 3 sur grand écran. */
+.chapo { margin-bottom: .9rem; font-size: .92rem; color: var(--c-texte-doux); }
+.grille { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+.vide { padding: 1.2rem; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px dashed var(--c-bord); color: var(--c-texte-doux); }

@@ -74,3 +74,40 @@ export const GUIDE: { question: string; reponse: string }[] = [
     reponse: 'Oui, s’il est en USB-C. Il parle le Power Delivery, et le téléphone ne prend que ce qu’il lui faut. Un chargeur de 65 W ou 100 W peut ainsi recharger l’ordinateur, la tablette et le téléphone. Pour la vitesse maximale d’un Galaxy ou d’un Pixel, vérifie simplement qu’il a aussi le PPS.',
   },
 ];
+
+/** Les trois explications illustrées du guide : le bloc, le câble, et pourquoi éviter l'entrée de gamme douteuse. */
+export const ESSENTIELS: { id: string; titre: string; forme: 'cube' | 'cable' | 'gan'; points: string[] }[] = [
+  {
+    id: 'bloc',
+    titre: 'Comment fonctionne un bloc',
+    forme: 'cube',
+    points: [
+      'Le bloc transforme le 230 volts de la prise en une basse tension que le téléphone supporte : 5, 9, 15 ou 20 volts.',
+      'À l’intérieur, un transformateur sépare la prise de ton téléphone : c’est lui qui t’évite de recevoir le secteur en cas de défaut.',
+      'Une petite puce discute avec le téléphone (Power Delivery, PPS) pour choisir la bonne tension, puis la surveille en permanence.',
+      'Les blocs « GaN » utilisent un composant qui chauffe moins : même puissance, bloc deux fois plus petit.',
+    ],
+  },
+  {
+    id: 'cable',
+    titre: 'Comment fonctionne un câble',
+    forme: 'cable',
+    points: [
+      'Le câble transporte le courant, et aussi la conversation entre le bloc et le téléphone : un mauvais câble peut faire échouer la charge rapide.',
+      'La puissance dépend de l’épaisseur des fils. Un câble USB-C ordinaire est fait pour 3 ampères, soit 60 W au plus.',
+      'Au-delà (45 W des Galaxy, ordinateurs), il faut un câble « 5 A » avec une puce d’identification (« e-marker ») qui annonce qu’il tient la charge.',
+      'Pour un iPhone à port Lightning, préfère un câble certifié « MFi » par Apple : les autres peuvent s’arrêter de fonctionner après une mise à jour.',
+    ],
+  },
+  {
+    id: 'camelote',
+    titre: 'Pourquoi éviter les chargeurs premier prix',
+    forme: 'gan',
+    points: [
+      'Un chargeur sans marque à quelques euros économise d’abord sur ce qui ne se voit pas : l’isolation entre la prise et le câble, et les protections contre la surchauffe.',
+      'Résultat possible : une charge instable qui use la batterie plus vite, un bloc qui chauffe fort, et dans le pire des cas un risque d’incendie ou d’électrocution.',
+      'Le logo « CE » ne prouve rien : c’est une déclaration du fabricant lui-même, souvent imitée.',
+      'Les marques sérieuses conçoivent et testent leurs chargeurs, publient leurs caractéristiques et les garantissent. C’est pour ça qu’on ne te propose qu’elles.',
+    ],
+  },
+];

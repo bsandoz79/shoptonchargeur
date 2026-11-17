@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react';
-import { lienMarchand } from '../moteur/affiliation';
 import { pourquoiOrdinateur, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
 import type { Tri } from '../moteur/types';
+import { qualitePrix } from '../moteur/qualitePrix';
 import { Icone } from './Icone';
+import { Produit, type ProduitAffiche } from './Produit';
 import styles from './Resultat.module.css';
 import propres from './Ordinateur.module.css';
 
 const TRIS: { cle: Tri; libelle: string }[] = [
-  { cle: 'vitesse', libelle: 'Conseillés' },
+  { cle: 'vitesse', libelle: 'Recommandés' },
   { cle: 'puissance', libelle: 'Puissance' },
   { cle: 'prix', libelle: 'Prix' },
   { cle: 'fiabilite', libelle: 'Fiabilité' },
 ];
 const NIVEAUX: Record<Niveau, string> = { rapide: 'Recharge rapide', normal: 'Recharge normale', insuffisant: 'Trop faible : recharge lente' };
-const FIABILITE = { 3: 'Chargeur du constructeur', 2: 'Grande marque' } as const;
 
 /** Choix de l'ordinateur : par la puissance lue sur le chargeur d'origine, ou parmi les MacBook. */
 export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[]; onChoisir: (o: Ordi) => void }) {
@@ -44,10 +44,23 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
   const [tri, setTri] = useState<Tri>('vitesse');
   const propositions = useMemo(() => proposerOrdinateur(ordinateur, chargeurs, tri), [ordinateur, chargeurs, tri]);
   const cable = ordinateur.besoinW > 100
-    ? { texte: 'Au-delà de 100 W, il faut un câble USB-C « 240 W » : un câble ordinaire bride la charge.', requete: 'câble USB-C vers USB-C 240W' }
+    ? { nom: 'Câble USB-C 240 W', requete: 'câble USB-C vers USB-C 240W' }
     : ordinateur.besoinW > 60
-      ? { texte: 'Au-delà de 60 W, il faut un câble USB-C « 5 A » (vendu « 100 W ») : un câble ordinaire bride la charge à 60 W.', requete: 'câble USB-C vers USB-C 100W 5A' }
-      : { texte: 'Côté câble, un USB-C vers USB-C « 60 W » ou plus suffit.', requete: 'câble USB-C vers USB-C 100W 5A' };
+      ? { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 100W 5A' }
+      : { nom: 'Câble USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé' };
+  const produits: ProduitAffiche[] = propositions.map((p, i) => {
+    const c = p.chargeur;
+    return {
+      id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'brique', teinte: c.teinte ?? 'blanc', budget: c.budget,
+      etiquette: tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant' ? 'Notre choix' : undefined,
+      verdict: { texte: NIVEAUX[p.niveau], ok: p.niveau !== 'insuffisant' },
+      qualitePrix: qualitePrix(p.niveau === 'insuffisant' ? c.puissanceW / ordinateur.besoinW : 1, c.fiabilite, c.budget),
+      caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
+      pourquoi: pourquoiOrdinateur(ordinateur, p),
+      requete: c.requete,
+      cable: p.niveau === 'insuffisant' ? undefined : cable,
+    };
+  });
 
   return (
     <section className={styles.resultat} aria-labelledby="titre-telephone">
@@ -63,57 +76,24 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
         <dl className={styles.specs}>
           <div><dt>Puissance à fournir</dt><dd>{ordinateur.besoinW} W</dd></div>
           <div><dt>Port</dt><dd>USB-C</dd></div>
-          <div><dt>Recharge rapide</dt><dd>{ordinateur.rapideW ? `à partir de ${ordinateur.rapideW} W` : 'non renseignée'}</dd></div>
+          <div><dt>Recharge rapide</dt><dd>{ordinateur.rapideW ? `dès ${ordinateur.rapideW} W` : '—'}</dd></div>
+          <div><dt>Câble</dt><dd>{cable.nom.replace('Câble USB-C ', '')}</dd></div>
         </dl>
-        <p>
+        <p className={styles.explication}>
           Un ordinateur se recharge en USB-C « Power Delivery », comme un téléphone, mais il lui faut bien plus de puissance. La règle : un chargeur d’au moins {ordinateur.besoinW} W, la puissance du chargeur d’origine. Plus puissant ne pose aucun problème ; moins puissant recharge lentement.
         </p>
       </div>
 
       <div className={styles.barre}>
         <h2 className={styles.titreListe}>Chargeurs compatibles</h2>
-        <div role="radiogroup" aria-label="Trier par" className={styles.tris}>
-          {TRIS.map(({ cle, libelle }) => (
-            <button key={cle} type="button" role="radio" aria-checked={tri === cle} className={styles.tri} onClick={() => setTri(cle)}>{libelle}</button>
-          ))}
-        </div>
+        <label className={styles.tri}>
+          <span>Trier</span>
+          <select value={tri} onChange={(e) => setTri(e.target.value as Tri)}>
+            {TRIS.map(({ cle, libelle }) => <option key={cle} value={cle}>{libelle}</option>)}
+          </select>
+        </label>
       </div>
-
-      <ul className={styles.liste}>
-        {propositions.map((p, i) => {
-          const c = p.chargeur;
-          const conseil = tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant';
-          return (
-            <li key={c.id} className={`${styles.carte} ${conseil ? styles.conseil : ''}`}>
-              {conseil && <p className={styles.etiquette}>Notre conseil</p>}
-              <div className={styles.enTete}>
-                <div>
-                  <h3 className={styles.nom}>{c.nom}</h3>
-                  <p className={styles.marque}>{c.marque}</p>
-                </div>
-                <p className={styles.prix} aria-label={`Niveau de prix : ${c.budget} sur 3`} title="Niveau de prix indicatif">
-                  <span aria-hidden="true">{'€'.repeat(c.budget)}<span className={styles.prixVide}>{'€'.repeat(3 - c.budget)}</span></span>
-                </p>
-              </div>
-              <p className={`${styles.vitesse} ${p.niveau === 'insuffisant' ? '' : styles.maximale}`}>
-                {p.niveau !== 'insuffisant' && <Icone nom="coche" taille={18} />}{NIVEAUX[p.niveau]}
-              </p>
-              <p className={styles.details}>
-                {[`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), FIABILITE[c.fiabilite]].join(' · ')}
-              </p>
-              <p className={styles.pourquoi}><strong>Pourquoi ?</strong> {pourquoiOrdinateur(ordinateur, p)}</p>
-              <a className={`btn ${styles.lien}`} href={lienMarchand(c.requete)} target="_blank" rel="sponsored nofollow noopener">
-                Voir sur Amazon <Icone nom="externe" taille={18} /><span className="sr-only"> : {c.nom} (nouvel onglet, lien affilié)</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-
-      <p className={styles.cable}>
-        <span className={styles.cableIcone}><Icone nom="cable" /></span>
-        <span>{cable.texte} <a href={lienMarchand(cable.requete)} target="_blank" rel="sponsored nofollow noopener">Voir des câbles sur Amazon</a></span>
-      </p>
+      <ul className={styles.grille}>{produits.map((p) => <Produit key={p.id} p={p} />)}</ul>
     </section>
   );
 }
