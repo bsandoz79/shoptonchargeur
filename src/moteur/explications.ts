@@ -42,6 +42,26 @@ export function pourquoi(t: Telephone, p: Proposition): string {
 /** Les questions du guide, dans l'ordre où on se les pose. */
 export const GUIDE: { question: string; reponse: string }[] = [
   {
+    question: 'De quel chargeur ai-je besoin ?',
+    reponse: 'Trois choses comptent : le port de ton téléphone (USB-C ou Lightning), la puissance qu’il accepte au maximum, et sa norme de charge rapide (Power Delivery, PPS, ou celle de la marque). Le chargeur doit parler la même norme et fournir au moins cette puissance. Le plus simple : tape ton modèle en haut de la page, on fait le calcul pour toi.',
+  },
+  {
+    question: 'Quel chargeur choisir pour mon téléphone ?',
+    reponse: 'Pour un iPhone, un Galaxy ou un Pixel, un chargeur USB-C Power Delivery de grande marque (Apple, Samsung, Google, Anker, Belkin, UGREEN) suffit. Les Galaxy et les Pixel ont en plus besoin du PPS pour charger à pleine vitesse. Pour un Xiaomi, un OnePlus ou un OPPO, seul le chargeur de la marque donne la charge rapide maximale. Évite les chargeurs sans marque : ils annoncent souvent plus qu’ils ne donnent, et protègent mal.',
+  },
+  {
+    question: 'Comment savoir combien de watts accepte mon téléphone ?',
+    reponse: 'C’est écrit dans la fiche technique du fabricant, à la rubrique batterie ou charge. Ici, tu le vois directement sur la fiche de ton téléphone, avec la norme à utiliser. Prendre plus de watts que nécessaire ne pose aucun problème : le téléphone ne prend que ce dont il a besoin.',
+  },
+  {
+    question: 'Faut-il acheter le chargeur de la marque du téléphone ?',
+    reponse: 'Pas forcément. Il est indispensable seulement quand la marque a sa propre charge rapide (Xiaomi, OnePlus, OPPO…). Pour un iPhone, un Galaxy ou un Pixel, un chargeur Anker, Belkin ou UGREEN de bonne puissance charge aussi vite, souvent pour moins cher.',
+  },
+  {
+    question: 'Quel chargeur prendre pour plusieurs appareils ?',
+    reponse: 'Un chargeur USB-C à plusieurs ports, de 65 W ou plus, peut alimenter un téléphone, une tablette et un ordinateur. La puissance se partage entre les ports branchés : regarde combien chaque port donne quand tout est branché.',
+  },
+  {
     question: 'À quoi servent les watts ?',
     reponse: 'Plus il y a de watts, plus la batterie se remplit vite. Mais c’est le téléphone qui décide de ce qu’il prend. Un chargeur de 65 W branché sur un téléphone de 20 W donnera 20 W, sans rien abîmer. Dans l’autre sens, un petit chargeur sur un gros téléphone fonctionne aussi, simplement plus lentement.',
   },

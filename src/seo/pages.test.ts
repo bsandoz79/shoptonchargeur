@@ -30,6 +30,13 @@ describe('pages générées pour les moteurs de recherche', () => {
     expect(p.contenu).toMatch(/Non : sa prise de recharge n’est pas en USB-C/);
   });
 
+  it('accueil : répond à « quel chargeur choisir » et « de quel chargeur ai-je besoin », en FAQ structurée', () => {
+    const p = toutesLesPages()[0];
+    expect(p.titre).toMatch(/^Quel chargeur choisir/);
+    const faq = p.jsonLd.find((j) => (j as { '@type': string })['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
+    expect(faq.mainEntity.map((q) => q.name)).toEqual(expect.arrayContaining(['De quel chargeur ai-je besoin ?', 'Quel chargeur choisir pour mon téléphone ?']));
+  });
+
   it('guide : questions et explications', () => {
     expect(pageGuide().contenu).toMatch(/C’est quoi, le PPS/);
   });
