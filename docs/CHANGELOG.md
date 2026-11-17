@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (mise en ligne)
+- `public/.htaccess` : HTTPS forcé, cache long des fichiers versionnés, page jamais en cache, en-têtes de sécurité, compression.
+
 ### Modifié (refonte boutique)
 - Présentation façon boutique en ligne : cartes produit avec visuel, marque, verdict sur l'appareil, caractéristiques, rapport qualité/prix, niveau de prix, « Pourquoi il convient » dépliable, bouton « Voir le prix » ; grille de 1 à 3 colonnes ; onglets « Chargeur secteur » et « Sans fil » ; tri par menu ; en-tête fixe avec rubriques ; boutons plus sobres (noir plein, contour).
 - Chaque produit a son dessin (`src/components/Illustration.tsx` : bloc compact, cube, GaN multiport, gros bloc, MagSafe, tapis, support, câble), à la place des photos des marchands, qui ne peuvent pas être reprises.
