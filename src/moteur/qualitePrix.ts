@@ -6,9 +6,14 @@
  */
 export type Verdict = 'Excellent' | 'Très bon' | 'Bon' | 'Moyen';
 
-export function qualitePrix(partVitesse: number | null, fiabilite: 2 | 3, budget: 1 | 2 | 3): Verdict {
+/** Points du barème (0 à 5), pour comparer deux produits. */
+export function pointsQualitePrix(partVitesse: number | null, fiabilite: 2 | 3, budget: 1 | 2 | 3): number {
   const vitesse = partVitesse === null ? 1 : partVitesse >= 1 ? 2 : partVitesse >= 0.6 ? 1 : 0;
-  const points = vitesse + (fiabilite === 3 ? 1 : 0) + (budget === 1 ? 2 : budget === 2 ? 1 : 0);
+  return vitesse + (fiabilite === 3 ? 1 : 0) + (budget === 1 ? 2 : budget === 2 ? 1 : 0);
+}
+
+export function qualitePrix(partVitesse: number | null, fiabilite: 2 | 3, budget: 1 | 2 | 3): Verdict {
+  const points = pointsQualitePrix(partVitesse, fiabilite, budget);
   return points >= 4 ? 'Excellent' : points === 3 ? 'Très bon' : points === 2 ? 'Bon' : 'Moyen';
 }
 

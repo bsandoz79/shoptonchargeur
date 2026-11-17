@@ -220,3 +220,27 @@ describe('rapport qualité/prix', () => {
     expect(qualitePrix(null, 3, 2)).toBe('Très bon');
   });
 });
+
+describe('priorités d’achat', () => {
+  it('chargeur conseillé par le constructeur : le moins puissant de la marque qui donne la vitesse maximale', async () => {
+    const { selectionner } = await import('./selection');
+    const vers = (p: ReturnType<typeof proposer>[number], t: ReturnType<typeof tel>) => ({
+      id: p.chargeur.id, marque: p.chargeur.marque, fiabilite: p.chargeur.fiabilite, budget: p.chargeur.budget, puissanceW: p.chargeur.puissanceW,
+      part: p.puissanceObtenueW === null ? 0 : p.puissanceObtenueW / t.puissanceMaxW, origine: p.chargeur.origineDe === t.marque,
+    });
+    const choisir = (id: string) => { const t = tel(id); return selectionner(t.marque, proposer(t, CHARGEURS), (p) => vers(p, t)); };
+    expect(choisir('apple-iphone-15').constructeur?.chargeur.id).toBe('apple-20w');
+    expect(choisir('apple-iphone-17-pro-max').constructeur?.chargeur.id).toBe('apple-40w');
+    expect(choisir('samsung-galaxy-s24').constructeur?.chargeur.id).toBe('samsung-25w');
+    expect(choisir('samsung-galaxy-s24-ultra').constructeur?.chargeur.id).toBe('samsung-45w');
+    expect(choisir('google-pixel-9-pro-xl').constructeur?.chargeur.id).toBe('google-45w');
+    expect(choisir('oneplus-oneplus-12').constructeur?.chargeur.origineDe).toBe('OnePlus');
+    // Meilleur rapport qualité/prix : un autre produit, à pleine vitesse, le moins cher à barème égal.
+    const s24 = choisir('samsung-galaxy-s24');
+    expect(s24.qualitePrix?.chargeur.id).not.toBe('samsung-25w');
+    expect(s24.qualitePrix?.chargeur.budget).toBe(1);
+    expect(s24.qualitePrix?.maximale).toBe(true);
+    expect(s24.autres).not.toContain(s24.constructeur);
+    expect(s24.autres).not.toContain(s24.qualitePrix);
+  });
+});

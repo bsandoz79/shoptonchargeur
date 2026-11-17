@@ -90,8 +90,14 @@ Règle (`src/moteur/ordinateur.ts`) : chargeur d'au moins `besoinW` → recharge
 ## Recherche
 `src/moteur/recherche.ts`. Chaque mot saisi doit commencer un mot de la marque ou du modèle. Ordre des résultats : le nom exact ; puis les modèles dont chaque mot saisi est un mot entier ou le début d'un numéro (« s » trouve « S25 », pas « Sidekick ») ; puis les autres. À égalité : grandes marques d'abord, numéros décroissants (S26, S25, S24…), iPhone par année. 30 résultats au plus.
 
-## Pourquoi aucun prix
-Les prix changent sans cesse, et le programme Partenaires Amazon n'autorise l'affichage d'un prix que s'il vient de son interface officielle. Le site affiche donc un niveau de prix (€ à €€€) et laisse le prix exact au marchand.
+## Liens directs (ASIN)
+Champ `asin` des chargeurs : identifiant de la page Amazon.fr du produit, relevé à la main le 17/11/2026 sur les fiches vendues par la marque ou par Amazon (pas les copies). Sans ASIN, le lien mène à une recherche. Une page peut disparaître ou changer de vendeur : vérifier les liens de temps en temps.
+
+## Priorités d'achat
+`src/moteur/selection.ts` : 1. conseillé par le constructeur (chargeur de la marque, ou d'origine, qui donne la vitesse maximale, le moins puissant) ; 2. meilleur rapport qualité/prix parmi les autres (barème de `qualitePrix`, vitesse maximale exigée s'il y en a, puis le moins cher) ; 3. les autres, dans l'ordre du tri.
+
+## Pourquoi aucun prix ni photo
+Les prix changent sans cesse, et le programme Partenaires Amazon n'autorise l'affichage d'un prix ou d'une photo de produit que s'ils viennent de son interface officielle (Product Advertising API), mis à jour au moins toutes les 24 heures. Cette interface s'ouvre après l'inscription au programme et les premières ventes. Prochaine étape : une tâche quotidienne (GitHub Actions) qui interroge l'API et publie prix et photos avec leur heure de relevé. Le site affiche donc un niveau de prix (€ à €€€) et laisse le prix exact au marchand.
 
 ## Fiches vérifiées : sources et limites
 83 fiches (Apple, Samsung, Google, Xiaomi, OnePlus), saisies de mémoire à partir des annonces des constructeurs. **Elles n'ont pas été recoupées ligne par ligne avec les fiches officielles : à faire avant l'ouverture au public.**

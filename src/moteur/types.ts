@@ -59,6 +59,8 @@ export interface Chargeur {
   note?: string;
   /** Chargeur d'origine de cette marque (charge rapide propriétaire). */
   origineDe?: string;
+  /** Identifiant Amazon (ASIN) : lien direct vers la page du produit. */
+  asin?: string;
   forme?: Forme;
   teinte?: Teinte;
 }

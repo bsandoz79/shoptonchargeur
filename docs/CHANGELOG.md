@@ -1,6 +1,11 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (priorités d'achat)
+- « À acheter en priorité » en tête des résultats : le chargeur conseillé par le constructeur (celui de la marque qui donne la vitesse maximale, le moins puissant d'entre eux) et le meilleur rapport qualité/prix, en grandes cartes à bandeau ; puis « Les autres chargeurs compatibles », que le tri range. Même chose pour le sans fil (MagSafe conseillé par Apple…). Règles : `src/moteur/selection.ts`.
+- Fiches vérifiées iPhone 17, 17 Pro, 17 Pro Max (40 W filaire, MagSafe 25 W) et iPhone Air (20 W, MagSafe 20 W) ; adaptateur secteur dynamique Apple 40 W.
+- Liens directs vers la page du produit sur Amazon (identifiant ASIN) pour 14 produits ; recherche précise pour les autres.
+
 ### Corrigé (mise en ligne)
 - Envoi FTPS : méthode de Perfect Clean (TLS 1.2, chaîne de certificats reconstituée), serveur et dossier réglables par secrets, échec clair si un secret manque au lieu d'un envoi sauté sans bruit, liste du dossier en ligne à la fin.
 

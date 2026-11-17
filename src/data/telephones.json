@@ -1,4 +1,8 @@
 [
+ {"id":"apple-iphone-17-pro-max","marque":"Apple","modele":"iPhone 17 Pro Max","annee":2025,"port":"usb-c","puissanceMaxW":40,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
+ {"id":"apple-iphone-17-pro","marque":"Apple","modele":"iPhone 17 Pro","annee":2025,"port":"usb-c","puissanceMaxW":40,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
+ {"id":"apple-iphone-17","marque":"Apple","modele":"iPhone 17","annee":2025,"port":"usb-c","puissanceMaxW":40,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
+ {"id":"apple-iphone-air","marque":"Apple","modele":"iPhone Air","annee":2025,"port":"usb-c","puissanceMaxW":20,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":20}},
  {"id":"apple-iphone-16","marque":"Apple","modele":"iPhone 16","annee":2024,"port":"usb-c","puissanceMaxW":20,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
  {"id":"apple-iphone-16-plus","marque":"Apple","modele":"iPhone 16 Plus","annee":2024,"port":"usb-c","puissanceMaxW":20,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
  {"id":"apple-iphone-16-pro","marque":"Apple","modele":"iPhone 16 Pro","annee":2024,"port":"usb-c","puissanceMaxW":20,"protocole":"pd","sansFil":{"norme":"magsafe","maxW":25}},
