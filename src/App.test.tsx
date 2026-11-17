@@ -21,16 +21,20 @@ describe('App', () => {
     expect(screen.getByText(/Sans PPS, la charge retombe à 15 W/)).toBeInTheDocument();
     expect(window.location.search).toBe('?tel=samsung-galaxy-s24-ultra');
 
-    const premier = produits()[0];
-    expect(within(premier).getByText('Notre choix')).toBeInTheDocument();
+    // À acheter en priorité : le chargeur conseillé par Samsung, puis le meilleur rapport qualité/prix.
+    const priorite = screen.getByRole('region', { name: 'À acheter en priorité' });
+    const premier = within(priorite).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0];
+    expect(within(premier).getByText('Conseillé par Samsung')).toBeInTheDocument();
     expect(within(premier).getByRole('heading', { name: 'Chargeur ultra rapide 45 W' })).toBeInTheDocument();
+    expect(within(priorite).getByText('Meilleur rapport qualité/prix')).toBeInTheDocument();
     expect(within(premier).getByText('45 W, vitesse maximale')).toBeInTheDocument();
     // Rapport qualité/prix, explication, câble à associer.
     expect(within(premier).getByText('Qualité/prix')).toBeInTheDocument();
     expect(within(premier).getByText(/Ce chargeur a le « PPS »/)).toBeInTheDocument();
     expect(within(premier).getByRole('link', { name: /Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
+    // Lien direct vers la page du produit (identifiant Amazon connu).
     const lien = within(premier).getByRole('link', { name: /Voir le prix/ });
-    expect(lien).toHaveAttribute('href', expect.stringContaining('https://www.amazon.fr/s?k=Samsung+chargeur+45W'));
+    expect(lien).toHaveAttribute('href', 'https://www.amazon.fr/dp/B09PWHYSH8');
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
 
     const anker45 = carte('Anker Nano 45 W');
@@ -54,7 +58,7 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
     const magsafe = carte('Chargeur MagSafe (25 W)');
     expect(within(magsafe).getByText('25 W, vitesse maximale sans fil')).toBeInTheDocument();
-    expect(within(produits()[0]).getByText('Notre choix')).toBeInTheDocument();
+    expect(within(magsafe).getByText('Conseillé par Apple')).toBeInTheDocument();
     unmount();
 
     window.history.replaceState(null, '', '/?tel=samsung-galaxy-a55-5g');
@@ -63,13 +67,29 @@ describe('App', () => {
     expect(screen.getByText(/n’a pas la recharge sans fil/)).toBeInTheDocument();
   });
 
+  it('iPhone 17 Pro Max : chargeur 40 W conseillé par Apple, MagSafe 25 W en sans fil', async () => {
+    render(<App />);
+    await userEvent.type(screen.getByRole('combobox'), '17 pro max');
+    await userEvent.click(await screen.findByRole('option', { name: /iPhone 17 Pro Max/ }));
+    const priorite = screen.getByRole('region', { name: 'À acheter en priorité' });
+    const conseil = within(priorite).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0];
+    expect(within(conseil).getByText('Conseillé par Apple')).toBeInTheDocument();
+    expect(within(conseil).getByRole('heading', { name: 'Adaptateur secteur dynamique USB-C 40 W' })).toBeInTheDocument();
+    expect(within(conseil).getByText('40 W, vitesse maximale')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
+    expect(within(screen.getByRole('region', { name: 'À acheter en priorité' })).getByRole('heading', { name: 'Chargeur MagSafe (25 W)' })).toBeInTheDocument();
+  });
+
   it('trie par prix, puis revient à la recherche avec « Changer »', async () => {
     window.history.replaceState(null, '', '/?tel=google-pixel-8');
     render(<App />);
     expect(screen.getByRole('heading', { level: 2, name: 'Pixel 8' })).toBeInTheDocument();
+    // Le tri range les autres chargeurs (les priorités restent en tête).
     await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Trier' }), 'Prix');
-    expect(within(produits()[0]).getByLabelText(/Petit prix/)).toBeInTheDocument();
-    expect(screen.queryByText('Notre choix')).not.toBeInTheDocument();
+    const autres = screen.getByRole('region', { name: 'Les autres chargeurs compatibles' });
+    expect(within(within(autres).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0]).getByLabelText(/Petit prix/)).toBeInTheDocument();
+    expect(within(screen.getByRole('region', { name: 'À acheter en priorité' })).getByText('Conseillé par Google')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
     expect(screen.getByRole('combobox', { name: 'Quel téléphone veux-tu recharger ?' })).toBeInTheDocument();

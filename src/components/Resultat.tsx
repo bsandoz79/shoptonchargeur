@@ -5,6 +5,7 @@ import { pourquoi } from '../moteur/explications';
 import { conseilMarque } from '../moteur/marques';
 import { qualitePrix } from '../moteur/qualitePrix';
 import { proposerSansFil } from '../moteur/sansFil';
+import { selectionner, type Candidat, type Selection } from '../moteur/selection';
 import { estVerifie, type Appareil, type Chargeur, type Proposition, type Telephone, type Tri } from '../moteur/types';
 import { Icone } from './Icone';
 import { Produit, type ProduitAffiche } from './Produit';
@@ -37,7 +38,10 @@ function cablePour(a: Appareil, c: Chargeur): { nom: string; requete: string } {
   return { nom: 'Câble USB-C vers USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé' };
 }
 
-function produitFilaire(a: Appareil, p: Proposition, i: number, tri: Tri): ProduitAffiche {
+/** Un produit à afficher, avec ce qu'il faut pour le classer par priorité d'achat. */
+type Ligne = { produit: ProduitAffiche; candidat: Candidat };
+
+function produitFilaire(a: Appareil, p: Proposition): Ligne {
   const c = p.chargeur;
   const verifie = estVerifie(a);
   const verdict = !verifie ? undefined
@@ -45,17 +49,62 @@ function produitFilaire(a: Appareil, p: Proposition, i: number, tri: Tri): Produ
       : p.maximale ? { texte: `${p.puissanceObtenueW} W, vitesse maximale`, ok: true }
         : { texte: `${p.puissanceObtenueW} W sur ${a.puissanceMaxW} W possibles`, ok: false };
   const part = verifie ? (p.puissanceObtenueW === null ? 0 : p.puissanceObtenueW / a.puissanceMaxW) : null;
-  return {
+  const produit: ProduitAffiche = {
     id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'cube', teinte: c.teinte ?? (c.marque === 'Samsung' ? 'noir' : 'blanc'), budget: c.budget,
-    etiquette: tri === 'vitesse' && i === 0 ? 'Notre choix' : undefined,
     verdict,
     qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
     caracteristiques: [...(c.puissanceW ? [`${c.puissanceW} W`] : []), ...c.protocoles.map((x) => PROTOCOLES[x]), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
     pourquoi: verifie ? pourquoi(a, p) : undefined,
     note: c.note,
     requete: c.requete,
+    asin: c.asin,
     cable: cablePour(a, c),
   };
+  return { produit, candidat: { id: c.id, marque: c.marque, fiabilite: c.fiabilite, budget: c.budget, puissanceW: c.puissanceW, part, origine: c.origineDe === a.marque } };
+}
+
+/** Priorités d'achat : produits mis en avant (étiquetés), puis les autres. */
+function priorites(a: Appareil, lignes: Ligne[]): Selection<ProduitAffiche> {
+  const s = selectionner(a.marque, lignes, (l) => l.candidat);
+  return {
+    constructeur: s.constructeur && {
+      ...s.constructeur.produit, vedette: 'constructeur',
+      etiquette: estVerifie(a) ? `Conseillé par ${a.marque}` : `Le chargeur de la marque ${a.marque}`,
+    },
+    qualitePrix: s.qualitePrix && { ...s.qualitePrix.produit, vedette: 'qualitePrix', etiquette: 'Meilleur rapport qualité/prix' },
+    autres: s.autres.map((l) => l.produit),
+  };
+}
+
+/** Les produits à acheter en priorité, puis les autres compatibles. */
+function Rayon({ selection, titreAutres, tri, onTri }: { selection: Selection<ProduitAffiche>; titreAutres: string; tri?: Tri; onTri?: (t: Tri) => void }) {
+  const vedettes = [selection.constructeur, selection.qualitePrix].filter((p): p is ProduitAffiche => !!p);
+  return (
+    <>
+      {vedettes.length > 0 && (
+        <section className={styles.priorite} aria-labelledby="titre-priorite">
+          <h3 id="titre-priorite" className={styles.titreSection}>À acheter en priorité</h3>
+          <ul className={styles.vedettes}>{vedettes.map((p) => <Produit key={p.id} p={p} />)}</ul>
+        </section>
+      )}
+      {selection.autres.length > 0 && (
+        <section aria-labelledby="titre-autres">
+          <div className={styles.enteteAutres}>
+            <h3 id="titre-autres" className={styles.titreSection}>{titreAutres}</h3>
+            {tri && onTri && (
+              <label className={styles.tri}>
+                <span>Trier</span>
+                <select value={tri} onChange={(e) => onTri(e.target.value as Tri)}>
+                  {TRIS.map(({ cle, libelle }) => <option key={cle} value={cle}>{libelle}</option>)}
+                </select>
+              </label>
+            )}
+          </div>
+          <ul className={styles.grille}>{selection.autres.map((p) => <Produit key={p.id} p={p} />)}</ul>
+        </section>
+      )}
+    </>
+  );
 }
 
 /**
@@ -66,27 +115,32 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
   const [tri, setTri] = useState<Tri>('vitesse');
   const [onglet, setOnglet] = useState<'secteur' | 'sansfil'>('secteur');
   const filaires = useMemo(
-    () => (estVerifie(appareil) ? proposer(appareil, chargeurs, tri) : proposerSansFiche(appareil, chargeurs, tri)).map((p, i) => produitFilaire(appareil, p, i, tri)),
+    () => priorites(appareil, (estVerifie(appareil) ? proposer(appareil, chargeurs, tri) : proposerSansFiche(appareil, chargeurs, tri)).map((p) => produitFilaire(appareil, p))),
     [appareil, chargeurs, tri],
   );
-  const produitsSansFil = useMemo((): ProduitAffiche[] => {
-    if (!estVerifie(appareil) || !appareil.sansFil) return [];
+  const produitsSansFil = useMemo((): Selection<ProduitAffiche> => {
+    if (!estVerifie(appareil) || !appareil.sansFil) return { autres: [] };
     const max = appareil.sansFil.maxW;
-    return proposerSansFil(appareil, CHARGEURS_SANS_FIL).map((p, i) => {
+    return priorites(appareil, proposerSansFil(appareil, CHARGEURS_SANS_FIL).map((p): Ligne => {
       const c = p.chargeur;
       const w = p.puissanceObtenueW;
-      return {
+      const part = max && w !== null ? w / max : null;
+      const produit: ProduitAffiche = {
         id: c.id, marque: c.marque, nom: c.nom, forme: c.forme, teinte: c.teinte, budget: c.budget,
-        etiquette: i === 0 ? 'Notre choix' : undefined,
         verdict: w === null ? undefined : { texte: max && w >= max ? `${String(w).replace('.', ',')} W, vitesse maximale sans fil` : `${String(w).replace('.', ',')} W sans fil`, ok: !!max && w >= max },
-        qualitePrix: qualitePrix(max && w !== null ? w / max : null, c.fiabilite, c.budget),
+        qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
         caracteristiques: [`${c.puissanceW} W`, c.norme === 'magsafe' ? 'MagSafe' : c.norme === 'qi2' ? 'Qi2 magnétique' : 'Qi', c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
         pourquoi: p.pourquoi,
         note: c.note ?? (c.adaptateurW ? `Bloc secteur vendu à part : prends un USB-C de ${c.adaptateurW} W ou plus.` : undefined),
         requete: c.requete,
+        asin: c.asin,
       };
-    });
+      return { produit, candidat: { id: c.id, marque: c.marque, fiabilite: c.fiabilite, budget: c.budget, puissanceW: c.puissanceW, part } };
+    }));
   }, [appareil]);
+  const compte = (s: Selection<ProduitAffiche>) => s.autres.length + (s.constructeur ? 1 : 0) + (s.qualitePrix ? 1 : 0);
+  const nbSecteur = compte(filaires);
+  const nbSansFil = compte(produitsSansFil);
 
   const verifie = estVerifie(appareil);
   const sf = verifie ? appareil.sansFil : undefined;
@@ -125,32 +179,24 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
       <div className={styles.barre}>
         <div className={styles.onglets} role="tablist" aria-label="Type de chargeur">
           <button type="button" role="tab" id="onglet-secteur" aria-controls="panneau-produits" aria-selected={onglet === 'secteur'} className={styles.onglet} onClick={() => setOnglet('secteur')}>
-            Chargeur secteur <span className={styles.compte}>{filaires.length}</span>
+            Chargeur secteur <span className={styles.compte}>{nbSecteur}</span>
           </button>
           <button type="button" role="tab" id="onglet-sansfil" aria-controls="panneau-produits" aria-selected={onglet === 'sansfil'} className={styles.onglet} onClick={() => setOnglet('sansfil')}>
-            Sans fil <span className={styles.compte}>{produitsSansFil.length}</span>
+            Sans fil <span className={styles.compte}>{nbSansFil}</span>
           </button>
         </div>
-        {onglet === 'secteur' && (
-          <label className={styles.tri}>
-            <span>Trier</span>
-            <select value={tri} onChange={(e) => setTri(e.target.value as Tri)}>
-              {TRIS.map(({ cle, libelle }) => <option key={cle} value={cle}>{libelle}</option>)}
-            </select>
-          </label>
-        )}
       </div>
 
       <div id="panneau-produits" role="tabpanel" aria-labelledby={onglet === 'secteur' ? 'onglet-secteur' : 'onglet-sansfil'}>
         {onglet === 'secteur' ? (
           <>
             <p className={styles.chapo}>Le bloc seul ne suffit pas : on t’indique sous chacun le câble qui va avec, pour ne pas brider la charge.</p>
-            <ul className={styles.grille}>{filaires.map((p) => <Produit key={p.id} p={p} />)}</ul>
+            <Rayon selection={filaires} titreAutres="Les autres chargeurs compatibles" tri={tri} onTri={setTri} />
           </>
-        ) : produitsSansFil.length > 0 ? (
+        ) : nbSansFil > 0 ? (
           <>
             <p className={styles.chapo}>Plus lent qu’un câble, mais pratique au bureau ou la nuit : tu poses le téléphone, il charge. Seulement des modèles de constructeurs et de grandes marques.</p>
-            <ul className={styles.grille}>{produitsSansFil.map((p) => <Produit key={p.id} p={p} />)}</ul>
+            <Rayon selection={produitsSansFil} titreAutres="Les autres chargeurs sans fil compatibles" />
           </>
         ) : (
           <p className={styles.vide}>

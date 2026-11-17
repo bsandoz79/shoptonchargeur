@@ -1,4 +1,4 @@
-import { lienMarchand } from '../moteur/affiliation';
+import { lienAmazon, lienMarchand } from '../moteur/affiliation';
 import { EXPLICATION_QUALITE_PRIX, type Verdict } from '../moteur/qualitePrix';
 import type { Forme, Teinte } from '../moteur/types';
 import { Icone } from './Icone';
@@ -12,8 +12,10 @@ export interface ProduitAffiche {
   forme?: Forme;
   teinte?: Teinte;
   budget: 1 | 2 | 3;
-  /** Étiquette en haut de la carte (« Notre choix »). */
+  /** Étiquette de la carte (« Conseillé par Apple »). */
   etiquette?: string;
+  /** Produit mis en avant (carte plus grande, en tête) : chargeur du constructeur ou meilleur rapport qualité/prix. */
+  vedette?: 'constructeur' | 'qualitePrix';
   /** Vitesse ou verdict sur l'appareil choisi ; `ok` : coche verte. Absent : rien n'est annoncé. */
   verdict?: { texte: string; ok: boolean };
   qualitePrix?: Verdict;
@@ -21,9 +23,14 @@ export interface ProduitAffiche {
   pourquoi?: string;
   note?: string;
   requete: string;
+  /** Identifiant Amazon du produit (ASIN) : le lien mène directement à sa page, sinon à une recherche. */
+  asin?: string;
   /** Câble à associer (le bloc seul ne suffit pas). */
   cable?: { nom: string; requete: string };
 }
+
+/** Page du produit si son identifiant Amazon est connu, sinon une recherche. */
+const lienProduit = (p: { asin?: string; requete: string }) => (p.asin ? lienAmazon(p.asin) : lienMarchand(p.requete));
 
 const PRIX = { 1: 'Petit prix', 2: 'Prix moyen', 3: 'Haut de gamme' } as const;
 const CLASSE_QP: Record<Verdict, string | undefined> = { Excellent: styles.qpExcellent, 'Très bon': styles.qpTresbon, Bon: undefined, Moyen: styles.qpMoyen };
@@ -31,10 +38,13 @@ const CLASSE_QP: Record<Verdict, string | undefined> = { Excellent: styles.qpExc
 /** Carte produit : dessin, marque, nom, verdict sur l'appareil, rapport qualité/prix, et le câble qui va avec. */
 export function Produit({ p }: { p: ProduitAffiche }) {
   return (
-    <li className={`${styles.carte} ${p.etiquette ? styles.choix : ''}`}>
+    <li className={[styles.carte, p.vedette ? styles.vedette : '', p.vedette === 'qualitePrix' ? styles.vedetteQp : ''].join(' ').trim()}>
+      {p.vedette && p.etiquette && (
+        <p className={styles.bandeau}><Icone nom={p.vedette === 'constructeur' ? 'eclair' : 'coche'} taille={16} />{p.etiquette}</p>
+      )}
       <div className={styles.visuel}>
-        {p.etiquette && <span className={styles.etiquette}>{p.etiquette}</span>}
-        <Illustration forme={p.forme} teinte={p.teinte} />
+        {!p.vedette && p.etiquette && <span className={styles.etiquette}>{p.etiquette}</span>}
+        <Illustration forme={p.forme} teinte={p.teinte} taille={p.vedette ? 190 : 160} />
       </div>
       <div className={styles.corps}>
         <p className={styles.marque}>{p.marque}</p>
@@ -67,7 +77,7 @@ export function Produit({ p }: { p: ProduitAffiche }) {
         )}
         {p.note && <p className={styles.note}>{p.note}</p>}
         <div className={styles.actions}>
-          <a className={`btn ${styles.acheter}`} href={lienMarchand(p.requete)} target="_blank" rel="sponsored nofollow noopener">
+          <a className={`btn ${styles.acheter}`} href={lienProduit(p)} target="_blank" rel="sponsored nofollow noopener">
             Voir le prix <Icone nom="externe" taille={17} /><span className="sr-only"> de {p.nom} sur Amazon (nouvel onglet, lien affilié)</span>
           </a>
           {p.cable && (

@@ -11,6 +11,8 @@ export interface ChargeurSansFil {
   fiabilite: 2 | 3;
   budget: 1 | 2 | 3;
   requete: string;
+  /** Identifiant Amazon (ASIN) : lien direct vers la page du produit. */
+  asin?: string;
   forme: Forme;
   teinte: Teinte;
   /** Bloc secteur à associer, en watts (vendu à part), s'il n'est pas fourni. */

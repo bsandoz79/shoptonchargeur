@@ -58,6 +58,7 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
       caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
       pourquoi: pourquoiOrdinateur(ordinateur, p),
       requete: c.requete,
+      asin: c.asin,
       cable: p.niveau === 'insuffisant' ? undefined : cable,
     };
   });
