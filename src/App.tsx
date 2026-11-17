@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Guide } from './components/Guide';
 import { Icone } from './components/Icone';
+import { Illustration } from './components/Illustration';
 import { ChoixOrdinateur, ResultatOrdinateur } from './components/Ordinateur';
 import { Recherche } from './components/Recherche';
 import { Resultat } from './components/Resultat';
@@ -85,18 +86,38 @@ export function App() {
   return (
     <>
       <header className={styles.entete}>
-        <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); }}>
-          <span className={styles.logoIcone}><Icone nom="eclair" taille={18} /></span>
-          Chope ton chargeur
-        </a>
+        <div className={styles.enteteInterieur}>
+          <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); }}>
+            <span className={styles.logoIcone}><Icone nom="eclair" taille={18} /></span>
+            Chope ton chargeur
+          </a>
+          <nav aria-label="Rubriques" className={styles.nav}>
+            <a href="/" onClick={(e) => { e.preventDefault(); aller({}); }}>Téléphones</a>
+            <a href="/?pc=choix" onClick={(e) => { e.preventDefault(); aller({ pc: 'choix' }); }}>Ordinateurs</a>
+            <a href="#titre-guide">Le guide</a>
+          </nav>
+        </div>
       </header>
 
       <main className={styles.page}>
         {enAttente && <p role="status">Chargement du téléphone…</p>}
         {accueil && (
           <section className={styles.accueil} aria-labelledby="titre-accueil">
-            <h1 id="titre-accueil">Le bon chargeur, sans te tromper.</h1>
-            <p className={styles.accroche}>Choisis ton appareil : on te dit quelle puissance il accepte, quels chargeurs le rechargent à pleine vitesse, et pourquoi.</p>
+            <div className={styles.hero}>
+              <div className={styles.heroTexte}>
+                <h1 id="titre-accueil">Le bon chargeur, sans te tromper.</h1>
+                <p className={styles.accroche}>Indique ton appareil : on te dit quelle puissance il accepte, quels chargeurs le rechargent à pleine vitesse, et pourquoi.</p>
+              </div>
+              <div className={styles.heroVisuel} aria-hidden="true">
+                <Illustration forme="gan" teinte="gris" taille={150} />
+                <Illustration forme="magsafe" teinte="blanc" taille={130} />
+              </div>
+            </div>
+            <ul className={styles.garanties} aria-label="Nos engagements">
+              <li><Icone nom="coche" taille={16} />Seulement des constructeurs et des grandes marques</li>
+              <li><Icone nom="coche" taille={16} />La compatibilité expliquée, sans jargon</li>
+              <li><Icone nom="coche" taille={16} />Aucun cookie, aucun compte</li>
+            </ul>
 
             <div className={styles.parties} role="group" aria-label="Type d’appareil">
               <button type="button" className={styles.partie} aria-pressed={!partieOrdinateur} onClick={() => aller({})}>

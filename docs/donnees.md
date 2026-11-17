@@ -64,6 +64,19 @@ Le chargeur d'origine des marques à charge propriétaire (Xiaomi, OnePlus, OPPO
 - Charge propriétaire : seul le chargeur de la marque donne la puissance maximale.
 - Le chargeur d'un constructeur (Apple, Samsung, Google) n'est proposé que pour ses propres téléphones.
 
+## Recharge sans fil
+`telephones.json`, champ `sansFil` : `false` (pas de recharge sans fil), ou `{ norme, maxW? }` avec `magsafe` (iPhone 12 et suivants, sauf 16e) ou `qi`. `maxW` seulement quand il est sûr : iPhone 16 25 W, iPhone 12 à 15 15 W (mini 12 W), Qi des iPhone 7,5 W. Pour les Android, la puissance sans fil n'est pas renseignée : le site n'annonce pas de vitesse.
+
+`chargeurs-sans-fil.json` : norme (`magsafe`, `qi2` magnétique, `qi`), puissance, bloc secteur à associer (`adaptateurW`), `reservePixel`. Règles dans `src/moteur/sansFil.ts`.
+
+À recouper avant l'ouverture : quels Galaxy, Pixel, Xiaomi et OnePlus ont la recharge sans fil (valeurs saisies de mémoire), et les noms exacts des chargeurs sans fil.
+
+## Rapport qualité/prix
+`src/moteur/qualitePrix.ts`. Notre évaluation, affichée comme telle (infobulle) : 2 points pour la vitesse maximale sur l'appareil (1 si au moins 60 %), 1 point pour un chargeur de constructeur, 2 points pour un petit prix (1 pour un prix moyen). 4 et plus : Excellent ; 3 : Très bon ; 2 : Bon ; moins : Moyen. Ce n'est jamais une note d'acheteurs (le site n'en affiche aucune).
+
+## Visuels
+Pas de photos : celles des marchands et des marques ne peuvent pas être reprises sans autorisation. Chaque produit a un champ `forme` et `teinte`, dessiné par `src/components/Illustration.tsx`. Pour de vraies photos plus tard : celles fournies par l'interface officielle d'Amazon (réservée aux partenaires actifs) ou par les marques.
+
 ## Ordinateurs portables
 `ordinateurs.json` : `besoinW` est la puissance du chargeur d'origine, `rapideW` celle qui déclenche la recharge rapide quand elle est connue. Les entrées `generique` sont des choix par puissance (« PC portable avec chargeur de 65 W »), pas des modèles : aucune base ne donne la puissance de tous les PC, et elle est écrite sur le chargeur d'origine.
 

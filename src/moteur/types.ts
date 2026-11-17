@@ -26,9 +26,18 @@ export interface Telephone extends Appareil {
   techno?: string;
   /** La puissance maximale demande un PPS à 5 A, côté chargeur et côté câble (Samsung 45 W). */
   cable5A?: boolean;
+  /**
+   * Recharge sans fil : `false` si le téléphone ne l'a pas ; sinon sa norme (MagSafe : aimants Apple, Qi : standard
+   * commun) et sa puissance maximale quand elle est sûre.
+   */
+  sansFil?: false | { norme: 'magsafe' | 'qi'; maxW?: number };
 }
 
 export const estVerifie = (a: Appareil): a is Telephone => 'puissanceMaxW' in a;
+
+/** Dessin du produit (src/components/Illustration.tsx) et sa teinte. */
+export type Forme = 'cube' | 'compact' | 'gan' | 'brique' | 'magsafe' | 'pad' | 'support' | 'cable';
+export type Teinte = 'blanc' | 'noir' | 'gris';
 
 /** Un chargeur conseillé (src/data/chargeurs.json), ou le chargeur d'origine d'une marque (créé par le moteur). */
 export interface Chargeur {
@@ -50,6 +59,8 @@ export interface Chargeur {
   note?: string;
   /** Chargeur d'origine de cette marque (charge rapide propriétaire). */
   origineDe?: string;
+  forme?: Forme;
+  teinte?: Teinte;
 }
 
 /** Un chargeur évalué pour un téléphone. */

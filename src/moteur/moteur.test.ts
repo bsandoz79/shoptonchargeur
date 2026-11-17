@@ -184,3 +184,39 @@ describe('lien marchand', () => {
     expect(lienMarchand('chargeur USB-C 45W', '')).toBe('https://www.amazon.fr/s?k=chargeur+USB-C+45W');
   });
 });
+
+describe('sans fil', () => {
+  it('iPhone MagSafe : chargeurs magnétiques, plafonnés à ce que le téléphone accepte', async () => {
+    const { CHARGEURS_SANS_FIL } = await import('../data');
+    const { proposerSansFil } = await import('./sansFil');
+    const i15 = proposerSansFil(tel('apple-iphone-15'), CHARGEURS_SANS_FIL);
+    expect(i15.every((p) => p.chargeur.norme !== 'qi')).toBe(true);
+    expect(i15.find((p) => p.chargeur.id === 'apple-magsafe-25w')?.puissanceObtenueW).toBe(15);
+    expect(proposerSansFil(tel('apple-iphone-16'), CHARGEURS_SANS_FIL)[0].puissanceObtenueW).toBe(25);
+    // iPhone 16e : pas d'aimants, Qi seulement à 7,5 W.
+    const i16e = proposerSansFil(tel('apple-iphone-16e'), CHARGEURS_SANS_FIL);
+    expect(i16e.every((p) => p.chargeur.norme === 'qi' && p.puissanceObtenueW === 7.5)).toBe(true);
+    expect(i16e.some((p) => p.chargeur.marque === 'Samsung' || p.chargeur.reservePixel)).toBe(false);
+  });
+
+  it('Android : chargeurs Qi, ceux de la marque compris, Pixel Stand réservé aux Pixel ; sans recharge sans fil : rien', async () => {
+    const { CHARGEURS_SANS_FIL } = await import('../data');
+    const { proposerSansFil } = await import('./sansFil');
+    const pixel = proposerSansFil(tel('google-pixel-9'), CHARGEURS_SANS_FIL).map((p) => p.chargeur.id);
+    expect(pixel).toContain('google-pixel-stand-2');
+    expect(pixel).not.toContain('samsung-pad-15w');
+    expect(proposerSansFil(tel('samsung-galaxy-s24'), CHARGEURS_SANS_FIL).map((p) => p.chargeur.id)).not.toContain('google-pixel-stand-2');
+    expect(proposerSansFil(tel('samsung-galaxy-a55-5g'), CHARGEURS_SANS_FIL)).toEqual([]);
+  });
+});
+
+describe('rapport qualité/prix', () => {
+  it('croise vitesse obtenue, fiabilité et niveau de prix', async () => {
+    const { qualitePrix } = await import('./qualitePrix');
+    expect(qualitePrix(1, 2, 1)).toBe('Excellent');
+    expect(qualitePrix(1, 3, 3)).toBe('Très bon');
+    expect(qualitePrix(1, 2, 3)).toBe('Bon');
+    expect(qualitePrix(25 / 45, 2, 2)).toBe('Moyen');
+    expect(qualitePrix(null, 3, 2)).toBe('Très bon');
+  });
+});

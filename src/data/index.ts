@@ -4,6 +4,8 @@ import type { Appareil, Chargeur, Telephone } from '../moteur/types';
 import chargeursOrdinateur from './chargeurs-ordinateur.json';
 import chargeurs from './chargeurs.json';
 import ordinateurs from './ordinateurs.json';
+import chargeursSansFil from './chargeurs-sans-fil.json';
+import type { ChargeurSansFil } from '../moteur/sansFil';
 import telephones from './telephones.json';
 
 /** Téléphones à fiche de charge vérifiée : chargés avec la page. */
@@ -12,6 +14,8 @@ export const CHARGEURS = chargeurs as Chargeur[];
 /** Ordinateurs portables rechargés en USB-C, et leurs chargeurs. */
 export const ORDINATEURS = ordinateurs as Ordinateur[];
 export const CHARGEURS_ORDINATEUR = chargeursOrdinateur as ChargeurOrdinateur[];
+/** Chargeurs sans fil : constructeurs et grandes marques seulement. */
+export const CHARGEURS_SANS_FIL = chargeursSansFil as ChargeurSansFil[];
 
 /**
  * Tous les téléphones : les fiches vérifiées, puis le catalogue complet (nom et références, sans données de charge),

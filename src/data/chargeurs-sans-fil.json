@@ -1,0 +1,8 @@
+[
+ {"id":"apple-magsafe-25w","marque":"Apple","nom":"Chargeur MagSafe (25 W)","norme":"magsafe","puissanceW":25,"fiabilite":3,"budget":3,"forme":"magsafe","teinte":"blanc","requete":"Apple chargeur MagSafe 25W","adaptateurW":30,"note":"Pour les 25 W (iPhone 16), branche-le sur un bloc USB-C de 30 W ou plus."},
+ {"id":"anker-maggo-qi2","marque":"Anker","nom":"Anker MagGo Qi2 15 W","norme":"qi2","puissanceW":15,"fiabilite":2,"budget":2,"forme":"magsafe","teinte":"noir","requete":"Anker MagGo chargeur Qi2 15W magnétique","adaptateurW":20},
+ {"id":"belkin-qi2-15w","marque":"Belkin","nom":"Belkin BoostCharge Pro Qi2 15 W","norme":"qi2","puissanceW":15,"fiabilite":2,"budget":2,"forme":"support","teinte":"blanc","requete":"Belkin BoostCharge Pro Qi2 15W chargeur magnétique","adaptateurW":20},
+ {"id":"samsung-pad-15w","marque":"Samsung","nom":"Chargeur sans fil Samsung 15 W","norme":"qi","puissanceW":15,"fiabilite":3,"budget":2,"forme":"pad","teinte":"noir","requete":"Samsung chargeur sans fil 15W EP-P2400","adaptateurW":25},
+ {"id":"google-pixel-stand-2","marque":"Google","nom":"Pixel Stand (2e génération)","norme":"qi","puissanceW":23,"fiabilite":3,"budget":3,"forme":"support","teinte":"blanc","requete":"Google Pixel Stand 2e génération","reservePixel":true},
+ {"id":"anker-pad-15w","marque":"Anker","nom":"Anker 313 Wireless Pad (Qi)","norme":"qi","puissanceW":10,"fiabilite":2,"budget":1,"forme":"pad","teinte":"noir","requete":"Anker 313 chargeur sans fil pad Qi","adaptateurW":18}
+]

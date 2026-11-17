@@ -1,0 +1,45 @@
+/* Carte produit, façon boutique : visuel sur fond clair, informations dessous, bouton pleine largeur. */
+.carte { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px solid var(--c-bord);
+  transition: border-color .15s ease, box-shadow .15s ease; }
+.carte:hover { border-color: var(--c-bord-fort); box-shadow: 0 10px 28px rgb(16 24 20 / .07); }
+.choix { border-color: var(--c-texte); }
+
+.visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: var(--c-visuel); }
+.etiquette { position: absolute; top: .75rem; left: .75rem; padding: 3px 10px; border-radius: 999px; background: var(--c-texte); color: var(--c-fond);
+  font-size: .72rem; font-weight: 800; letter-spacing: .02em; }
+
+.corps { display: flex; flex-direction: column; gap: .55rem; padding: 1rem 1.05rem 1.1rem; }
+.marque { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-texte-doux); }
+.nom { font-size: 1.06rem; line-height: 1.25; letter-spacing: -.005em; }
+.verdict { display: flex; align-items: center; gap: .3rem; font-size: .92rem; font-weight: 700; color: var(--c-texte-doux); }
+.ok { color: var(--c-accent-fonce); }
+
+.puces { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
+.puces li { padding: 2px 8px; border-radius: 6px; background: var(--c-fond); font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
+
+.indicateurs { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .55rem 0; border-block: 1px solid var(--c-bord); }
+.qp { display: grid; gap: 1px; cursor: help; }
+.qpLibelle { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }
+.qpValeur { font-weight: 800; font-size: .95rem; }
+.qpExcellent { color: var(--c-accent-fonce); }
+.qpTresbon { color: var(--c-accent-fonce); }
+.qpMoyen { color: var(--c-alerte-texte); }
+.prix { display: grid; justify-items: end; gap: 1px; }
+.prix > span:first-child { font-weight: 800; letter-spacing: .06em; }
+.prixVide { opacity: .22; }
+.prixTexte { font-size: .72rem; color: var(--c-texte-doux); }
+
+.pourquoi summary { display: flex; align-items: center; gap: .35rem; min-height: 32px; font-size: .88rem; font-weight: 700; cursor: pointer; list-style: none; color: var(--c-texte); }
+.pourquoi summary::-webkit-details-marker { display: none; }
+.pourquoi summary::after { content: ''; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); margin-left: .2rem; }
+.pourquoi[open] summary::after { transform: rotate(-135deg) translateY(-1px); }
+.pourquoi p { font-size: .9rem; color: var(--c-texte-doux); padding-top: .2rem; }
+.note { font-size: .84rem; padding: .5rem .65rem; border-radius: var(--rayon-petit); background: var(--c-alerte-doux); color: var(--c-alerte-texte); }
+
+.actions { display: grid; gap: .5rem; margin-top: auto; padding-top: .3rem; }
+.acheter { width: 100%; }
+.cable { display: flex; align-items: center; gap: .5rem; padding: .25rem .6rem .25rem .25rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord);
+  color: var(--c-texte); text-decoration: none; font-size: .86rem; font-weight: 600; line-height: 1.25; }
+.cable:hover { border-color: var(--c-bord-fort); background: var(--c-fond); }
+.cable svg { flex: none; background: var(--c-visuel); border-radius: 6px; }
+.cableLibelle { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }

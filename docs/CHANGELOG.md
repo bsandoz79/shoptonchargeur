@@ -1,6 +1,16 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (refonte boutique)
+- Présentation façon boutique en ligne : cartes produit avec visuel, marque, verdict sur l'appareil, caractéristiques, rapport qualité/prix, niveau de prix, « Pourquoi il convient » dépliable, bouton « Voir le prix » ; grille de 1 à 3 colonnes ; onglets « Chargeur secteur » et « Sans fil » ; tri par menu ; en-tête fixe avec rubriques ; boutons plus sobres (noir plein, contour).
+- Chaque produit a son dessin (`src/components/Illustration.tsx` : bloc compact, cube, GaN multiport, gros bloc, MagSafe, tapis, support, câble), à la place des photos des marchands, qui ne peuvent pas être reprises.
+- Chaque chargeur indique le câble à associer (USB-C 60 W, 5 A 100 W, 240 W ou Lightning MFi) : le bloc seul ne suffit pas.
+
+### Ajouté (refonte boutique)
+- Chargeurs sans fil, seulement constructeurs et grandes marques : Apple MagSafe 25 W, Anker MagGo Qi2, Belkin Qi2, Samsung 15 W, Pixel Stand 2, Anker 313 (Qi). Compatibilité par téléphone (`src/moteur/sansFil.ts`) : magnétiques pour les iPhone MagSafe, Qi pour les autres, aucun pour les téléphones sans recharge sans fil.
+- Rapport qualité/prix (`src/moteur/qualitePrix.ts`) : notre évaluation, barème publié (vitesse obtenue, fiabilité, niveau de prix), jamais une note d'acheteurs.
+- Guide : « Comment fonctionne un bloc », « Comment fonctionne un câble », « Pourquoi éviter les chargeurs premier prix », illustrés.
+
 ### Corrigé
 - Choix d'un appareil possible même quand la page est affichée dans un cadre qui refuse de changer d'adresse (aperçu).
 
