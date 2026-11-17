@@ -11,6 +11,7 @@ import { CHARGEURS, CHARGEURS_ORDINATEUR, ORDINATEURS, TELEPHONES, chargerCatalo
 import { detecter, type Detection } from './moteur/detection';
 import { chercher, nomComplet } from './moteur/recherche';
 import type { Appareil } from './moteur/types';
+import logo from './assets/logo-entete.png';
 import styles from './App.module.css';
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
@@ -90,7 +91,7 @@ export function App() {
       <header className={styles.entete}>
         <div className={styles.enteteInterieur}>
           <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); remonter(); }}>
-            <span className={styles.logoIcone}><Icone nom="eclair" taille={18} /></span>
+            <img className={styles.logoImage} src={logo} alt="" width={58} height={44} />
             Chope ton chargeur
           </a>
           <nav aria-label="Rubriques" className={styles.nav}>

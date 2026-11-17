@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (logo)
+- Logo du site (ordinateur, éclair, téléphone et prise) dans l'en-tête, en icône d'onglet, en icône d'écran d'accueil (iPhone) et en image de partage.
+
 ### Ajouté (ordinateurs par série)
 - 30 ordinateurs et séries, rangés par marque : Apple, Lenovo (ThinkPad, IdeaPad, Legion), Dell (XPS, Latitude, Inspiron, Vostro, G), HP (EliteBook, ProBook, Pavilion, Envy, Victus, Omen), ASUS (Vivobook, Zenbook, TUF, ROG), Acer (Aspire, Swift, Nitro, Predator), MSI, Microsoft Surface, Framework, Samsung.
 - Ordinateurs à prise ronde, rectangulaire ou Surface Connect : le chargeur d'origine de la marque est conseillé (même embout, même puissance ou plus), sans chargeur USB-C proposé.
