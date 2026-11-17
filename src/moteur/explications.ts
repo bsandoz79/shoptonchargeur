@@ -76,7 +76,7 @@ export const GUIDE: { question: string; reponse: string }[] = [
 ];
 
 /** Les trois explications illustrées du guide : le bloc, le câble, et pourquoi éviter l'entrée de gamme douteuse. */
-export const ESSENTIELS: { id: string; titre: string; forme: 'cube' | 'cable' | 'gan'; points: string[] }[] = [
+export const ESSENTIELS: { id: string; titre: string; forme: 'cube' | 'cable' | 'gan' | 'compact'; points: string[] }[] = [
   {
     id: 'bloc',
     titre: 'Comment fonctionne un bloc',
@@ -97,6 +97,18 @@ export const ESSENTIELS: { id: string; titre: string; forme: 'cube' | 'cable' | 
       'La puissance dépend de l’épaisseur des fils. Un câble USB-C ordinaire est fait pour 3 ampères, soit 60 W au plus.',
       'Au-delà (45 W des Galaxy, ordinateurs), il faut un câble « 5 A » avec une puce d’identification (« e-marker ») qui annonce qu’il tient la charge.',
       'Pour un iPhone à port Lightning, préfère un câble certifié « MFi » par Apple : les autres peuvent s’arrêter de fonctionner après une mise à jour.',
+      'La longueur : 1 m pour le bureau, la voiture ou le sac ; 2 m pour charger au lit ou dans le canapé ; 3 m seulement si la prise est loin. Plus long, c’est plus encombrant et plus fragile, sans charger plus vite.',
+    ],
+  },
+  {
+    id: 'batterie',
+    titre: 'Charge rapide et batterie : à quel prix ?',
+    forme: 'compact',
+    points: [
+      'Oui, ton téléphone peut charger très vite. Mais ce qui use une batterie, c’est surtout la chaleur, et une charge puissante chauffe davantage.',
+      'Les téléphones se protègent : ils chargent fort au début, puis ralentissent au-delà de 80 %, quand la batterie supporte moins bien le courant.',
+      'Une charge très rapide de temps en temps ne pose aucun problème. Tous les jours, la batterie perd sa capacité un peu plus vite qu’avec une charge douce.',
+      'D’où nos trois niveaux sur chaque chargeur : très rapide (40 W et plus), rapide (de 21 à 39 W), douce (20 W et moins). Le sans fil, lui, chauffe plus qu’un câble à puissance égale.',
     ],
   },
   {

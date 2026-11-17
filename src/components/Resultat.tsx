@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { CHARGEURS_SANS_FIL } from '../data';
 import { proposer, proposerSansFiche } from '../moteur/compatibilite';
 import { pourquoi } from '../moteur/explications';
+import { effetBatterie, effetSansFil } from '../moteur/batterie';
 import { conseilMarque } from '../moteur/marques';
 import { qualitePrix } from '../moteur/qualitePrix';
 import { proposerSansFil } from '../moteur/sansFil';
@@ -32,10 +33,10 @@ function explication(t: Telephone): string {
 }
 
 /** Le câble qui va avec ce chargeur sur ce téléphone : le bloc seul ne suffit pas. */
-function cablePour(a: Appareil, c: Chargeur): { nom: string; requete: string } {
-  if (estVerifie(a) && a.port === 'lightning') return { nom: 'Câble USB-C vers Lightning certifié MFi', requete: 'câble USB-C vers Lightning certifié MFi Apple' };
-  if (estVerifie(a) && a.cable5A && c.pps5A) return { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 5A 100W' };
-  return { nom: 'Câble USB-C vers USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé' };
+function cablePour(a: Appareil, c: Chargeur): { nom: string; requete: string; longueurs: number[] } {
+  if (estVerifie(a) && a.port === 'lightning') return { nom: 'Câble USB-C vers Lightning certifié MFi', requete: 'câble USB-C vers Lightning certifié MFi Apple', longueurs: [1, 2] };
+  if (estVerifie(a) && a.cable5A && c.pps5A) return { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 5A 100W', longueurs: [1, 2] };
+  return { nom: 'Câble USB-C vers USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé', longueurs: [1, 2, 3] };
 }
 
 /** Un produit à afficher, avec ce qu'il faut pour le classer par priorité d'achat. */
@@ -52,6 +53,7 @@ function produitFilaire(a: Appareil, p: Proposition): Ligne {
   const produit: ProduitAffiche = {
     id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'cube', teinte: c.teinte ?? (c.marque === 'Samsung' ? 'noir' : 'blanc'), budget: c.budget,
     verdict,
+    batterie: verifie ? effetBatterie(p.puissanceObtenueW) ?? undefined : undefined,
     qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
     caracteristiques: [...(c.puissanceW ? [`${c.puissanceW} W`] : []), ...c.protocoles.map((x) => PROTOCOLES[x]), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
     pourquoi: verifie ? pourquoi(a, p) : undefined,
@@ -129,6 +131,7 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
         id: c.id, marque: c.marque, nom: c.nom, forme: c.forme, teinte: c.teinte, budget: c.budget,
         verdict: w === null ? undefined : { texte: max && w >= max ? `${String(w).replace('.', ',')} W, vitesse maximale sans fil` : `${String(w).replace('.', ',')} W sans fil`, ok: !!max && w >= max },
         qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
+        batterie: effetSansFil(w),
         caracteristiques: [`${c.puissanceW} W`, c.norme === 'magsafe' ? 'MagSafe' : c.norme === 'qi2' ? 'Qi2 magnétique' : 'Qi', c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
         pourquoi: p.pourquoi,
         note: c.note ?? (c.adaptateurW ? `Bloc secteur vendu à part : prends un USB-C de ${c.adaptateurW} W ou plus.` : undefined),

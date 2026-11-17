@@ -244,3 +244,16 @@ describe('priorités d’achat', () => {
     expect(s24.autres).not.toContain(s24.qualitePrix);
   });
 });
+
+describe('batterie', () => {
+  it('trois niveaux selon la puissance obtenue ; sans fil toujours signalé comme plus chaud', async () => {
+    const { effetBatterie, effetSansFil } = await import('./batterie');
+    expect(effetBatterie(45)?.profil).toBe('tres-rapide');
+    expect(effetBatterie(40)?.profil).toBe('tres-rapide');
+    expect(effetBatterie(25)?.profil).toBe('rapide');
+    expect(effetBatterie(20)?.profil).toBe('douce');
+    expect(effetBatterie(null)).toBeNull();
+    expect(effetBatterie(100)?.menagement).toBe(1);
+    expect(effetSansFil(25).texte).toMatch(/chauffe plus/);
+  });
+});
