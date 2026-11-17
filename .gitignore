@@ -3,3 +3,6 @@ dist
 .env.local
 .env.*.local
 *.tsbuildinfo
+
+# Notes de travail locales, non publiées
+CLAUDE.md

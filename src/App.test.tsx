@@ -30,7 +30,7 @@ describe('App', () => {
     expect(within(premier).getByText('45 W, vitesse maximale')).toBeInTheDocument();
     // Rapport qualité/prix, explication, câble à associer.
     expect(within(premier).getByText('Qualité/prix')).toBeInTheDocument();
-    expect(within(premier).getByText(/Ce chargeur a le « PPS »/)).toBeInTheDocument();
+    expect(within(premier).getByText(/Il a le PPS, ce réglage/)).toBeInTheDocument();
     expect(within(premier).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
     // Version à prise française : la référence européenne de Samsung (EGEU) est recherchée, faute de page confirmée.
     const lien = within(premier).getByRole('link', { name: /Voir le prix/ });
@@ -45,7 +45,7 @@ describe('App', () => {
 
     const anker45 = carte('Anker Nano 45 W');
     expect(within(anker45).getByText('25 W sur 45 W possibles')).toBeInTheDocument();
-    expect(within(anker45).getByText(/pas avec assez de courant \(5 A\)/)).toBeInTheDocument();
+    expect(within(anker45).getByText(/pas assez de courant pour les 45 W/)).toBeInTheDocument();
     expect(within(anker45).getByText('Moyen')).toBeInTheDocument();
   });
 
@@ -70,7 +70,7 @@ describe('App', () => {
     window.history.replaceState(null, '', '/?tel=samsung-galaxy-a55-5g');
     render(<App />);
     await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
-    expect(screen.getByText(/n’a pas la recharge sans fil/)).toBeInTheDocument();
+    expect(screen.getByText(/ne se recharge pas sans fil/)).toBeInTheDocument();
   });
 
   it('iPhone 17 Pro Max : chargeur 40 W conseillé par Apple, MagSafe 25 W en sans fil', async () => {
@@ -133,7 +133,7 @@ describe('App', () => {
     window.history.replaceState(null, '', '/?tel=oneplus-oneplus-12');
     render(<App />);
     expect(within(produits()[0]).getByRole('heading', { name: 'Chargeur d’origine 100 W SUPERVOOC' })).toBeInTheDocument();
-    expect(screen.getByText(/seul un chargeur OnePlus donne les 100 W/)).toBeInTheDocument();
+    expect(screen.getByText(/Seul un chargeur OnePlus donne les 100 W/)).toBeInTheDocument();
   });
 
   it('téléphone sans fiche vérifiée : trouvé dans le catalogue, conseil de marque, aucune vitesse annoncée', async () => {
@@ -141,7 +141,7 @@ describe('App', () => {
     await userEvent.type(screen.getByRole('combobox'), 's25 edge');
     await userEvent.click(await screen.findByRole('option', { name: /Galaxy S25 Edge/ }));
     expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S25 Edge' })).toBeInTheDocument();
-    expect(screen.getByText(/Fiche de charge pas encore vérifiée/)).toBeInTheDocument();
+    expect(screen.getByText(/On n’a pas encore vérifié la fiche/)).toBeInTheDocument();
     for (const c of produits()) {
       expect(within(c).queryByText(/vitesse maximale|Charge plus lente|Pourquoi il convient/)).not.toBeInTheDocument();
     }
@@ -157,7 +157,7 @@ describe('App', () => {
   it('ordinateur portable : choix par la puissance du chargeur d’origine, verdict expliqué', async () => {
     render(<App />);
     await userEvent.click(screen.getByRole('button', { name: 'Ordinateur portable' }));
-    expect(screen.getByText(/se rechargent par un port/)).toBeInTheDocument();
+    expect(screen.getByText(/qui se rechargent en/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '65 W' }));
     expect(screen.getByRole('heading', { level: 2, name: 'PC portable avec chargeur de 65 W' })).toBeInTheDocument();
     expect(window.location.search).toBe('?pc=pc-65w');
@@ -165,7 +165,7 @@ describe('App', () => {
     const liste = produits();
     expect(within(liste[0]).getByText('Notre choix')).toBeInTheDocument();
     expect(within(liste[0]).getByText('Recharge normale')).toBeInTheDocument();
-    expect(within(liste[0]).getByText(/au moins les 65 W du chargeur d’origine/)).toBeInTheDocument();
+    expect(within(liste[0]).getByText(/au moins autant que les 65 W du chargeur d’origine/)).toBeInTheDocument();
     expect(within(liste[0]).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
     // Pas de chargeur Apple pour un PC ; les chargeurs trop faibles sont signalés, en dernier, sans câble conseillé.
     expect(screen.queryByText('Adaptateur secteur USB-C 96 W')).not.toBeInTheDocument();
@@ -191,15 +191,15 @@ describe('App', () => {
     expect(screen.getAllByText(/le téléphone chauffe plus qu’avec un câble/).length).toBeGreaterThan(0);
   });
 
-  it('guide : le bloc, le câble, les premiers prix, puis les questions', async () => {
+  it('guide : le bloc, le câble, la batterie, les premiers prix, puis les questions', async () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 2, name: 'Comment ça marche, un chargeur ?' })).toBeInTheDocument();
-    for (const titre of ['Comment fonctionne un bloc', 'Comment fonctionne un câble', 'Charge rapide et batterie : à quel prix ?', 'Pourquoi éviter les chargeurs premier prix', 'Faire durer sa batterie']) {
+    for (const titre of ['Comment marche un bloc', 'Comment marche un câble', 'Charge rapide et batterie', 'Pourquoi éviter les chargeurs à 5 €', 'Faire durer sa batterie']) {
       expect(screen.getByRole('heading', { level: 3, name: titre })).toBeInTheDocument();
     }
-    expect(screen.getByText(/Le logo « CE » ne prouve rien/)).toBeInTheDocument();
+    expect(screen.getByText(/Le logo CE n’est pas une garantie/)).toBeInTheDocument();
     await userEvent.click(screen.getByText(/C’est quoi, le PPS/));
-    expect(screen.getByText(/Le PPS est une option du Power Delivery/)).toBeVisible();
+    expect(screen.getByText(/Une option du Power Delivery/)).toBeVisible();
   });
 
   it('affiche la mention des liens affiliés', () => {

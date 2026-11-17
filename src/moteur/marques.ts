@@ -11,16 +11,16 @@ export const chargePropreALaMarque = (marque: string) => CHARGE_PROPRE.has(marqu
 /** Conseil général pour une marque. */
 export function conseilMarque(marque: string): string {
   if (marque === 'Samsung') {
-    return 'Les Galaxy récents se rechargent vite en « Power Delivery » avec « PPS » : 25 W sur la plupart des modèles, 45 W sur certains. Un chargeur PPS convient dans les deux cas ; sans PPS, la charge est nettement plus lente.';
+    return 'Les Galaxy récents chargent en Power Delivery avec PPS, à 25 W pour la plupart et 45 W pour certains. Prends un chargeur PPS, sinon la charge sera nettement plus lente.';
   }
   if (marque === 'Google') {
-    return 'Les Pixel se rechargent en « Power Delivery » ; les modèles récents demandent le « PPS » pour atteindre leur vitesse maximale. Un chargeur PPS de 30 W ou plus convient.';
+    return 'Les Pixel chargent en Power Delivery, et les récents ont besoin du PPS pour aller à pleine vitesse. Un chargeur PPS de 30 W ou plus fera l’affaire.';
   }
   if (marque === 'Apple') {
-    return 'Les iPhone se rechargent vite avec un chargeur USB-C « Power Delivery » de 20 W ou plus.';
+    return 'Un iPhone charge vite avec n’importe quel chargeur USB-C Power Delivery de 20 W ou plus.';
   }
   if (chargePropreALaMarque(marque)) {
-    return `${marque} utilise le plus souvent sa propre charge rapide : la vitesse maximale demande le chargeur de la marque (celui fourni avec le téléphone, ou le même modèle). Un chargeur USB-C « Power Delivery » fonctionne aussi, mais plus lentement.`;
+    return `${marque} a souvent sa propre charge rapide. Pour la vitesse maximale, il faut le chargeur de la marque, celui fourni avec le téléphone ou le même modèle. Un chargeur USB-C Power Delivery marche aussi, en plus lent.`;
   }
-  return 'La plupart des téléphones récents se rechargent en USB-C « Power Delivery ». Un chargeur Power Delivery avec « PPS » de 30 à 45 W est le choix le plus polyvalent.';
+  return 'La plupart des téléphones récents chargent en USB-C Power Delivery. Un chargeur PD avec PPS de 30 à 45 W ira avec presque tous.';
 }

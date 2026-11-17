@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (textes)
+- Textes du site réécrits plus simplement : phrases plus courtes, moins de guillemets et de deux-points, accroche « Quel chargeur pour ton téléphone ? ».
+
 ### Modifié (version française)
 - Tous les chargeurs secteur en version à prise française (européenne) : liens directs gardés seulement quand la fiche le confirme (Samsung 25 W et Anker Nano 30 W remplacés par leur version FR), sinon recherche sur la référence européenne ; étiquette « Prise française » sur chaque carte ; question « Pourquoi prise française ? » dans le guide (versions UK et US à éviter).
 

@@ -53,15 +53,15 @@ export function proposerOrdinateur(ordinateur: Ordinateur, chargeurs: ChargeurOr
 export function pourquoiOrdinateur(o: Ordinateur, p: PropositionOrdinateur): string {
   const c = p.chargeur;
   const partage = c.ports && c.ports > 1
-    ? ` Attention : ses ${c.puissanceW} W valent pour un seul appareil branché. Avec plusieurs appareils, la puissance se partage.`
+    ? ` Ses ${c.puissanceW} W, c’est pour un seul appareil. Si tu en branches plusieurs, la puissance se partage.`
     : '';
   if (p.niveau === 'insuffisant') {
-    return `Il ne fournit que ${c.puissanceW} W alors que ton ordinateur en demande ${o.besoinW}. Il le recharge quand même, en USB-C « Power Delivery », mais lentement : en plein travail, la batterie peut continuer à baisser.`;
+    return `Il ne donne que ${c.puissanceW} W et ton ordinateur en demande ${o.besoinW}. Il charge quand même, lentement, et si tu travailles en même temps la batterie peut continuer à baisser.`;
   }
   if (p.niveau === 'rapide') {
-    return `Avec ${c.puissanceW} W, il atteint les ${o.rapideW} W qui déclenchent la recharge rapide de ton ordinateur.${partage}`;
+    return `Avec ${c.puissanceW} W, il dépasse les ${o.rapideW} W nécessaires à la recharge rapide.${partage}`;
   }
   const reste = o.rapideW ? ` Pour la recharge rapide, il faudrait ${o.rapideW} W.` : '';
-  const marge = c.puissanceW > o.besoinW ? ' L’ordinateur ne prend que ce qu’il lui faut : la puissance en plus ne l’abîme pas.' : '';
-  return `Il fournit ${c.puissanceW} W en USB-C « Power Delivery », au moins les ${o.besoinW} W du chargeur d’origine : ton ordinateur se recharge normalement, même en l’utilisant.${reste}${marge}${partage}`;
+  const marge = c.puissanceW > o.besoinW ? ' Les watts en trop ne l’abîment pas, il ne prend que ce qu’il lui faut.' : '';
+  return `Il donne ${c.puissanceW} W, au moins autant que les ${o.besoinW} W du chargeur d’origine. Ton ordinateur charge normalement, même pendant que tu t’en sers.${reste}${marge}${partage}`;
 }
