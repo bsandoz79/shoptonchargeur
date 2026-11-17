@@ -82,6 +82,8 @@ Pas de photos : celles des marchands et des marques ne peuvent pas être reprise
 
 Règle (`src/moteur/ordinateur.ts`) : chargeur d'au moins `besoinW` → recharge normale ; d'au moins `rapideW` → recharge rapide ; en dessous → « Trop faible : recharge lente », classé en dernier. Les chargeurs Apple ne sont proposés que pour les Mac.
 
+Modèles nommés (relevés le 17/11/2026 sur les fiches des fabricants) : MacBook Air 13 M4 (30 ou 35 W, recharge rapide avec 70 W), Air 15 M4 (35 W, 70 W en rapide), MacBook Pro 14 M4 (70 W) et M4 Pro (96 W), ThinkPad X1 Carbon Gen 12 (65 W, PSREF Lenovo), Dell XPS 13 9340 (60 W, manuel Dell), Framework Laptop 13 (60 W), Galaxy Book4 Pro 14 (65 W, fiche Samsung). MacBook Air M1 (30 W) et MacBook Pro 16 (140 W) de mémoire. HP et ASUS non ajoutés faute de source fiable : n'ajouter un modèle qu'avec la fiche du fabricant.
+
 À recouper avant l'ouverture : les puissances des MacBook (Air : 30 W, rapide à 70 W ; Pro 14 pouces : 70 W, rapide à 96 W ; Pro 16 pouces : 140 W) et les chargeurs de `chargeurs-ordinateur.json` (noms, nombre de ports), saisis de mémoire.
 
 ## Explications

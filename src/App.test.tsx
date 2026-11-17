@@ -173,10 +173,20 @@ describe('App', () => {
     expect(within(dernier).queryByText('À associer')).not.toBeInTheDocument();
   });
 
+  it('ordinateur portable : recherche par modèle', async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole('button', { name: 'Ordinateur portable' }));
+    await userEvent.type(screen.getByRole('combobox', { name: 'Quel ordinateur veux-tu recharger ?' }), 'xps');
+    await userEvent.click(screen.getByRole('option', { name: /XPS 13/ }));
+    expect(screen.getByRole('heading', { level: 2, name: 'XPS 13 (9340, 9345)' })).toBeInTheDocument();
+    expect(window.location.search).toBe('?pc=dell-xps-13-9340');
+    expect(screen.getByText(/Prends au moins 60 W/)).toBeInTheDocument();
+  });
+
   it('MacBook : recharge rapide à partir de la puissance annoncée', async () => {
     window.history.replaceState(null, '', '/?pc=macbook-pro-14');
     render(<App />);
-    expect(screen.getByRole('heading', { level: 2, name: 'MacBook Pro 14 pouces' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'MacBook Pro 14 pouces (M3, M4)' })).toBeInTheDocument();
     expect(within(carte('Adaptateur secteur USB-C 96 W')).getByText('Recharge rapide')).toBeInTheDocument();
   });
 

@@ -11,6 +11,8 @@ export interface Ordinateur {
   rapideW?: number;
   /** Choix par la puissance lue sur le chargeur d'origine, plutôt qu'un modèle précis. */
   generique?: boolean;
+  /** Année du modèle le plus récent de la gamme, pour ranger la recherche. */
+  annee?: number;
 }
 
 /** Un chargeur d'ordinateur : `ports` > 1 = puissance partagée quand plusieurs appareils sont branchés. */
