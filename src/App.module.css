@@ -1,7 +1,7 @@
 .entete { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--c-bord); background: color-mix(in srgb, var(--c-surface) 92%, transparent); backdrop-filter: blur(8px); }
 .enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 60px; padding: 0 1rem; }
 .logo { display: flex; align-items: center; gap: .55rem; font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--c-texte); text-decoration: none; white-space: nowrap; }
-.logoIcone { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--c-texte); color: var(--c-fond); }
+.logoImage { display: block; width: auto; height: 36px; }
 .nav { display: flex; gap: 1.1rem; }
 .nav a { font-size: .92rem; font-weight: 600; color: var(--c-texte-doux); text-decoration: none; }
 .nav a:hover { color: var(--c-texte); }
