@@ -6,11 +6,7 @@ Le site est statique : le dossier `dist/` suffit, sans base de données ni PHP.
 Dans cPanel → Domaines : créer `choptonchargeur.bsandoz.fr`, dossier `choptonchargeur.bsandoz.fr`. Activer le certificat (SSL/TLS Status).
 
 ## 2. Dépôt GitHub et envoi automatique
-1. Créer le dépôt `choptonchargeur` sur GitHub, puis :
-   ```bash
-   git remote add origin https://github.com/<compte>/choptonchargeur.git
-   git push -u origin main
-   ```
+1. Dépôt : https://github.com/bsandoz79/choptonchargeur (branche `main`, poussée le 17/11/2026).
 2. Dans cPanel → Comptes FTP : créer un compte limité au dossier du sous-domaine.
 3. Dans GitHub → Settings → Secrets and variables → Actions :
    - secrets `FTP_USERNAME` et `FTP_PASSWORD` (le compte FTP ci-dessus) ;
