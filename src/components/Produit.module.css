@@ -68,3 +68,4 @@
 .niveauEchelle .niveauActuel { background: var(--c-texte); color: var(--c-fond); font-weight: 800; }
 .niveauBornes { display: flex; justify-content: space-between; font-size: .7rem; color: var(--c-texte-doux); }
 .niveauTexte { font-size: .84rem; color: var(--c-texte-doux); }
+.indicateurs > .prix:only-child { justify-items: start; }

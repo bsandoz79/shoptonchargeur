@@ -6,3 +6,5 @@
 .puce { min-height: 46px; padding: 0 1rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 700; cursor: pointer; }
 .puce:hover { border-color: var(--c-accent-fonce); background: var(--c-accent-doux); }
 .astuce { font-size: .9rem; color: var(--c-texte-doux); }
+.sousTitre { margin-top: .4rem; font-weight: 800; font-size: 1.05rem; }
+.groupe + .groupe { margin-top: .2rem; }

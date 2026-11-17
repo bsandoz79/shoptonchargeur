@@ -86,6 +86,9 @@ Modèles nommés (relevés le 17/11/2026 sur les fiches des fabricants) : MacBoo
 
 À recouper avant l'ouverture : les puissances des MacBook (Air : 30 W, rapide à 70 W ; Pro 14 pouces : 70 W, rapide à 96 W ; Pro 16 pouces : 140 W) et les chargeurs de `chargeurs-ordinateur.json` (noms, nombre de ports), saisis de mémoire.
 
+### Séries et prises (ajout du 17/11/2026)
+Champs : `prise` (`usb-c`, `ronde`, `rectangulaire`, `surface`), `plageW` (puissances selon la configuration), `etiquette` (trop variable : lire l'étiquette), `magsafe`, `chargeurOrigine` (nom et recherche), `note`. Sources : PSREF et boutique Lenovo (Legion 230 à 300 W embout rectangulaire, X1 Carbon 65 W USB-C, IdeaPad Slim 5 65 à 100 W USB-C), manuels Dell (Latitude 45 à 90 W en 4,5 mm ou USB-C, G5 15 130 ou 180 W en 7,4 mm), guide HP (65 W, 90 W avec carte graphique, embout 4,5 mm Smart), assistance Microsoft (Surface Pro 11e édition 39 W, 60 W conseillés), fiches de revendeurs pour HP Victus (150 ou 200 W) et ASUS TUF/ROG (150 à 240 W). Acer, MSI, HP Omen et Dell G15 : pas de source fiable sur la puissance, d'où le renvoi à l'étiquette. Ces séries regroupent des modèles différents : la note de chaque entrée le rappelle.
+
 ## Explications
 `src/moteur/explications.ts` : `pourquoi()` écrit la phrase « Pourquoi ? » de chaque chargeur à partir du même cas que `puissanceObtenue()` ; toute nouvelle règle de calcul doit y avoir sa phrase. `GUIDE` contient les questions du guide en bas de page.
 

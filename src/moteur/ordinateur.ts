@@ -1,12 +1,26 @@
 import type { Chargeur, Tri } from './types';
 
-/** Un ordinateur portable qui se recharge en USB-C (src/data/ordinateurs.json). */
+/** Prise de recharge d'un ordinateur. */
+export type PriseOrdinateur = 'usb-c' | 'ronde' | 'rectangulaire' | 'surface';
+
+/** Un ordinateur portable ou une série d'ordinateurs (src/data/ordinateurs.json). */
 export interface Ordinateur {
   id: string;
   marque: string;
   nom: string;
   /** Puissance du chargeur fourni : le minimum pour recharger normalement. */
   besoinW: number;
+  /** Puissances du chargeur d'origine selon la configuration (série dont les modèles diffèrent). */
+  plageW?: [number, number];
+  /** Puissance trop variable pour être annoncée : lire l'étiquette du chargeur d'origine. */
+  etiquette?: boolean;
+  /** Prise de recharge ; absente : USB-C (choix par puissance). */
+  prise?: PriseOrdinateur;
+  /** Se recharge aussi par MagSafe (câble USB-C vers MagSafe 3 sur les mêmes blocs). */
+  magsafe?: boolean;
+  /** Chargeur d'origine conseillé par le fabricant (recherche chez le marchand). */
+  chargeurOrigine?: { nom: string; requete: string };
+  note?: string;
   /** Puissance à partir de laquelle la recharge rapide s'active, si l'ordinateur en a une. */
   rapideW?: number;
   /** Choix par la puissance lue sur le chargeur d'origine, plutôt qu'un modèle précis. */
@@ -22,9 +36,16 @@ export type Niveau = 'rapide' | 'normal' | 'insuffisant';
 
 export interface PropositionOrdinateur { chargeur: ChargeurOrdinateur; niveau: Niveau }
 
+/** Puissance à fournir : le haut de la plage si elle varie (plus puissant ne pose aucun problème). */
+export const besoinEffectif = (o: Ordinateur) => (o.plageW ? o.plageW[1] : o.besoinW);
+export const enUsbC = (o: Ordinateur) => (o.prise ?? 'usb-c') === 'usb-c';
+export const LIBELLE_PRISE: Record<PriseOrdinateur, string> = {
+  'usb-c': 'USB-C', ronde: 'Ronde (embout)', rectangulaire: 'Rectangulaire', surface: 'Surface Connect',
+};
+
 /** Ce que ce chargeur permet à cet ordinateur. */
 export function niveau(ordinateur: Ordinateur, chargeur: Chargeur): Niveau {
-  if (chargeur.puissanceW < ordinateur.besoinW) return 'insuffisant';
+  if (chargeur.puissanceW < besoinEffectif(ordinateur)) return 'insuffisant';
   return ordinateur.rapideW && chargeur.puissanceW >= ordinateur.rapideW ? 'rapide' : 'normal';
 }
 
@@ -58,12 +79,12 @@ export function pourquoiOrdinateur(o: Ordinateur, p: PropositionOrdinateur): str
     ? ` Ses ${c.puissanceW} W, c’est pour un seul appareil. Si tu en branches plusieurs, la puissance se partage.`
     : '';
   if (p.niveau === 'insuffisant') {
-    return `Il ne donne que ${c.puissanceW} W et ton ordinateur en demande ${o.besoinW}. Il charge quand même, lentement, et si tu travailles en même temps la batterie peut continuer à baisser.`;
+    return `Il ne donne que ${c.puissanceW} W et ton ordinateur en demande ${besoinEffectif(o)}. Il charge quand même, lentement, et si tu travailles en même temps la batterie peut continuer à baisser.`;
   }
   if (p.niveau === 'rapide') {
     return `Avec ${c.puissanceW} W, il dépasse les ${o.rapideW} W nécessaires à la recharge rapide.${partage}`;
   }
   const reste = o.rapideW ? ` Pour la recharge rapide, il faudrait ${o.rapideW} W.` : '';
   const marge = c.puissanceW > o.besoinW ? ' Les watts en trop ne l’abîment pas, il ne prend que ce qu’il lui faut.' : '';
-  return `Il donne ${c.puissanceW} W, au moins autant que les ${o.besoinW} W du chargeur d’origine. Ton ordinateur charge normalement, même pendant que tu t’en sers.${reste}${marge}${partage}`;
+  return `Il donne ${c.puissanceW} W, au moins autant que les ${besoinEffectif(o)} W du chargeur d’origine. Ton ordinateur charge normalement, même pendant que tu t’en sers.${reste}${marge}${partage}`;
 }

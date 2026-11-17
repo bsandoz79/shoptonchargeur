@@ -1,6 +1,11 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (ordinateurs par série)
+- 30 ordinateurs et séries, rangés par marque : Apple, Lenovo (ThinkPad, IdeaPad, Legion), Dell (XPS, Latitude, Inspiron, Vostro, G), HP (EliteBook, ProBook, Pavilion, Envy, Victus, Omen), ASUS (Vivobook, Zenbook, TUF, ROG), Acer (Aspire, Swift, Nitro, Predator), MSI, Microsoft Surface, Framework, Samsung.
+- Ordinateurs à prise ronde, rectangulaire ou Surface Connect : le chargeur d'origine de la marque est conseillé (même embout, même puissance ou plus), sans chargeur USB-C proposé.
+- Chargeur d'origine mis en avant (« Conseillé par … ») ; plage de puissance quand elle dépend de la configuration (le haut de la plage est conseillé en USB-C), ou renvoi à l'étiquette quand elle varie trop.
+
 ### Ajouté (navigation)
 - Le logo ramène à l'accueil et remonte en haut de la page.
 - Bouton flèche « remonter » en bas à gauche, visible après un écran de défilement (sans animation si l'appareil demande moins d'animations).

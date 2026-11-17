@@ -156,13 +156,13 @@ describe('App', () => {
   it('ordinateur portable : choix par la puissance du chargeur d’origine, verdict expliqué', async () => {
     render(<App />);
     await userEvent.click(screen.getByRole('button', { name: 'Ordinateur portable' }));
-    expect(screen.getByText(/qui se rechargent en/)).toBeInTheDocument();
+    expect(screen.getByText('Ou choisis ta marque')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '65 W' }));
     expect(screen.getByRole('heading', { level: 2, name: 'PC portable avec chargeur de 65 W' })).toBeInTheDocument();
     expect(window.location.search).toBe('?pc=pc-65w');
 
     const liste = produits();
-    expect(within(liste[0]).getByText('Notre choix')).toBeInTheDocument();
+    expect(within(liste[0]).getByText('Notre choix USB-C')).toBeInTheDocument();
     expect(within(liste[0]).getByText('Recharge normale')).toBeInTheDocument();
     expect(within(liste[0]).getByText(/au moins autant que les 65 W du chargeur d’origine/)).toBeInTheDocument();
     expect(within(liste[0]).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
@@ -181,6 +181,25 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'XPS 13 (9340, 9345)' })).toBeInTheDocument();
     expect(window.location.search).toBe('?pc=dell-xps-13-9340');
     expect(screen.getByText(/Prends au moins 60 W/)).toBeInTheDocument();
+  });
+
+  it('PC à prise ronde : chargeur d’origine de la marque, pas de chargeur USB-C proposé', async () => {
+    window.history.replaceState(null, '', '/?pc=hp-victus');
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Victus 15 et 16' })).toBeInTheDocument();
+    expect(screen.getByText('150 à 200 W')).toBeInTheDocument();
+    const origine = screen.getByRole('region', { name: 'Le chargeur qu’il te faut' });
+    expect(within(origine).getByText('Conseillé par HP')).toBeInTheDocument();
+    expect(within(origine).getByRole('link', { name: /Voir le prix/ })).toHaveAttribute('href', expect.stringContaining('prise+europ'));
+    expect(screen.queryByRole('heading', { name: 'Chargeurs USB-C compatibles' })).not.toBeInTheDocument();
+  });
+
+  it('série à puissance variable en USB-C : le haut de la plage est conseillé', async () => {
+    window.history.replaceState(null, '', '/?pc=dell-latitude-usbc');
+    render(<App />);
+    expect(screen.getByText('65 à 90 W')).toBeInTheDocument();
+    expect(screen.getByText(/Prends au moins 90 W/)).toBeInTheDocument();
+    expect(within(screen.getByRole('region', { name: 'Le chargeur d’origine' })).getByText('Conseillé par Dell')).toBeInTheDocument();
   });
 
   it('MacBook : recharge rapide à partir de la puissance annoncée', async () => {

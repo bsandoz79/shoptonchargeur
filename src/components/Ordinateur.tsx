@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Recherche } from './Recherche';
-import { pourquoiOrdinateur, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
+import { LIBELLE_PRISE, besoinEffectif, enUsbC, pourquoiOrdinateur, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
 import type { Tri } from '../moteur/types';
 import { qualitePrix } from '../moteur/qualitePrix';
 import { Icone } from './Icone';
@@ -22,19 +22,18 @@ export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[
   const modeles = ordinateurs.filter((o) => !o.generique);
   // La recherche travaille sur des « appareils » (marque, modèle) : on y range les ordinateurs nommés.
   const appareils = useMemo(() => modeles.map((o) => ({ id: o.id, marque: o.marque, modele: o.nom, annee: o.annee })), [modeles]);
+  const marques = [...new Set(modeles.map((o) => o.marque))];
   const groupes = [
-    { titre: 'Ou choisis dans la liste', liste: modeles, libelle: (o: Ordi) => (o.marque === 'Apple' ? o.nom : `${o.marque} ${o.nom}`) },
-    { titre: 'Ton modèle n’y est pas ? Choisis la puissance écrite sur ton chargeur d’origine', liste: ordinateurs.filter((o) => o.generique), libelle: (o: Ordi) => `${o.besoinW === 100 ? '90 ou 100' : o.besoinW} W` },
+    ...marques.map((m) => ({ titre: m, liste: modeles.filter((o) => o.marque === m), libelle: (o: Ordi) => o.nom })),
+    { titre: 'Ton modèle n’y est pas ? Choisis la puissance écrite sur ton chargeur d’origine (USB-C)', liste: ordinateurs.filter((o) => o.generique), libelle: (o: Ordi) => `${o.besoinW === 100 ? '90 ou 100' : o.besoinW} W` },
   ];
   return (
     <div className={propres.choix}>
-      <p className={propres.condition}>
-        Ça concerne les ordinateurs qui se rechargent en <strong>USB-C</strong>, la petite prise ovale qu’on trouve aussi sur les téléphones. Si le tien a une prise ronde ou spéciale, garde le chargeur de la marque.
-      </p>
       <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie}
         onChoisir={(a) => { const o = ordinateurs.find((x) => x.id === a.id); if (o) onChoisir(o); }}
         libelle="Quel ordinateur veux-tu recharger ?" exemple="Ex. macbook air, xps 13, thinkpad" nomListe="Ordinateurs trouvés"
-        aideVide="Choisis plutôt la puissance écrite sur ton chargeur d’origine, juste en dessous." />
+        aideVide="Choisis plutôt ta marque ou la puissance écrite sur ton chargeur d’origine, juste en dessous." />
+      <p className={propres.sousTitre}>Ou choisis ta marque</p>
       {groupes.map(({ titre, liste, libelle }) => (
         <div key={titre} className={propres.groupe}>
           <p className={propres.groupeTitre}>{titre}</p>
@@ -51,19 +50,33 @@ export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[
 /** Chargeurs pour un ordinateur portable, avec l'explication de chaque verdict. */
 export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordinateur: Ordi; chargeurs: ChargeurOrdinateur[]; onChanger: () => void }) {
   const [tri, setTri] = useState<Tri>('vitesse');
-  const propositions = useMemo(() => proposerOrdinateur(ordinateur, chargeurs, tri), [ordinateur, chargeurs, tri]);
-  const cable = ordinateur.besoinW > 100
+  const usbc = enUsbC(ordinateur);
+  const besoin = besoinEffectif(ordinateur);
+  const propositions = useMemo(() => (usbc ? proposerOrdinateur(ordinateur, chargeurs, tri) : []), [ordinateur, chargeurs, tri, usbc]);
+  const puissance = ordinateur.etiquette ? 'Voir l’étiquette' : ordinateur.plageW ? `${ordinateur.plageW[0]} à ${ordinateur.plageW[1]} W` : `${ordinateur.besoinW} W`;
+  const origine: ProduitAffiche | undefined = ordinateur.chargeurOrigine && {
+    id: `origine-${ordinateur.id}`, marque: ordinateur.marque, nom: ordinateur.chargeurOrigine.nom,
+    forme: usbc ? 'cube' : 'brique', teinte: ordinateur.marque === 'Apple' || ordinateur.marque === 'Microsoft' ? 'blanc' : 'noir', budget: 3,
+    etiquette: `Conseillé par ${ordinateur.marque}`, vedette: 'constructeur',
+    verdict: { texte: 'Chargeur d’origine', ok: true },
+    caracteristiques: [LIBELLE_PRISE[ordinateur.prise ?? 'usb-c'], 'Constructeur', 'Prise française'],
+    pourquoi: usbc
+      ? `C’est le chargeur que ${ordinateur.marque} fournit avec cet ordinateur. Les chargeurs USB-C de grande marque ci-dessous font aussi bien, souvent pour moins cher.`
+      : `Ton ordinateur se recharge par une prise ${ordinateur.prise === 'surface' ? 'Surface Connect' : ordinateur.prise === 'ronde' ? 'ronde' : 'rectangulaire'}, pas en USB-C. Il te faut un chargeur de la marque avec le même embout et au moins la même puissance que l’original.`,
+    requete: ordinateur.chargeurOrigine.requete,
+  };
+  const cable = besoin > 100
     ? { nom: 'Câble USB-C 240 W', requete: 'câble USB-C vers USB-C 240W', longueurs: [1, 2] }
-    : ordinateur.besoinW > 60
+    : besoin > 60
       ? { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 100W 5A', longueurs: [1, 2] }
       : { nom: 'Câble USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé', longueurs: [1, 2, 3] };
   const produits: ProduitAffiche[] = propositions.map((p, i) => {
     const c = p.chargeur;
     return {
       id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'brique', teinte: c.teinte ?? 'blanc', budget: c.budget,
-      etiquette: tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant' ? 'Notre choix' : undefined,
+      etiquette: tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant' ? 'Notre choix USB-C' : undefined,
       verdict: { texte: NIVEAUX[p.niveau], ok: p.niveau !== 'insuffisant' },
-      qualitePrix: qualitePrix(p.niveau === 'insuffisant' ? c.puissanceW / ordinateur.besoinW : 1, c.fiabilite, c.budget),
+      qualitePrix: qualitePrix(p.niveau === 'insuffisant' ? c.puissanceW / besoin : 1, c.fiabilite, c.budget),
       caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque', ...(c.prise === 'fr' ? ['Prise française'] : [])],
       pourquoi: pourquoiOrdinateur(ordinateur, p),
       requete: c.requete,
@@ -84,26 +97,37 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
           <button type="button" className={`btn btn--contour ${styles.changer}`} onClick={onChanger}>Changer</button>
         </div>
         <dl className={styles.specs}>
-          <div><dt>Puissance à fournir</dt><dd>{ordinateur.besoinW} W</dd></div>
-          <div><dt>Port</dt><dd>USB-C</dd></div>
+          <div><dt>Chargeur d’origine</dt><dd>{puissance}</dd></div>
+          <div><dt>Prise</dt><dd>{LIBELLE_PRISE[ordinateur.prise ?? 'usb-c']}{ordinateur.magsafe ? ' ou MagSafe' : ''}</dd></div>
           <div><dt>Recharge rapide</dt><dd>{ordinateur.rapideW ? `dès ${ordinateur.rapideW} W` : '—'}</dd></div>
-          <div><dt>Câble</dt><dd>{cable.nom.replace('Câble USB-C ', '')}</dd></div>
+          <div><dt>Câble</dt><dd>{usbc ? cable.nom.replace('Câble USB-C ', '') : 'Fixé au chargeur'}</dd></div>
         </dl>
         <p className={styles.explication}>
-          Un ordinateur charge en USB-C Power Delivery, comme un téléphone, mais il demande bien plus de puissance. Prends au moins {ordinateur.besoinW} W, comme le chargeur d’origine. Plus, ça ne pose aucun problème. Moins, il chargera lentement.
+          {usbc
+            ? `Un ordinateur charge en USB-C Power Delivery, comme un téléphone, mais il demande bien plus de puissance. Prends au moins ${besoin} W${ordinateur.plageW ? ', le haut de la plage, pour être tranquille quelle que soit la version' : ', comme le chargeur d’origine'}. Plus, ça ne pose aucun problème. Moins, il chargera lentement.`
+            : 'Avec une prise ronde ou rectangulaire, chaque marque a ses embouts et ses puissances. Le plus sûr est de reprendre le chargeur de la marque, avec le même embout et au moins les mêmes watts que l’original (c’est écrit sur son étiquette, après Output).'}
         </p>
+        {ordinateur.note && <p className={styles.explication}>{ordinateur.note}</p>}
+        {ordinateur.magsafe && <p className={styles.explication}>Il se recharge aussi par MagSafe : le câble USB-C vers MagSafe 3 d’Apple se branche sur les mêmes chargeurs.</p>}
       </div>
 
-      <div className={styles.barre}>
-        <h2 className={styles.titreListe}>Chargeurs compatibles</h2>
+      {origine && (
+        <section className={styles.priorite} aria-labelledby="titre-origine">
+          <h3 id="titre-origine" className={styles.titreSection}>{usbc ? 'Le chargeur d’origine' : 'Le chargeur qu’il te faut'}</h3>
+          <ul className={styles.vedettes}><Produit p={origine} /></ul>
+        </section>
+      )}
+
+      {usbc && <div className={styles.barre}>
+        <h2 className={styles.titreListe}>Chargeurs USB-C compatibles</h2>
         <label className={styles.tri}>
           <span>Trier</span>
           <select value={tri} onChange={(e) => setTri(e.target.value as Tri)}>
             {TRIS.map(({ cle, libelle }) => <option key={cle} value={cle}>{libelle}</option>)}
           </select>
         </label>
-      </div>
-      <ul className={styles.grille}>{produits.map((p) => <Produit key={p.id} p={p} />)}</ul>
+      </div>}
+      {usbc && <ul className={styles.grille}>{produits.map((p) => <Produit key={p.id} p={p} />)}</ul>}
     </section>
   );
 }
