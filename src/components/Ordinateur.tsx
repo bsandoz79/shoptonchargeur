@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Recherche } from './Recherche';
 import { pourquoiOrdinateur, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
 import type { Tri } from '../moteur/types';
 import { qualitePrix } from '../moteur/qualitePrix';
@@ -15,17 +16,25 @@ const TRIS: { cle: Tri; libelle: string }[] = [
 ];
 const NIVEAUX: Record<Niveau, string> = { rapide: 'Recharge rapide', normal: 'Recharge normale', insuffisant: 'Trop faible : recharge lente' };
 
-/** Choix de l'ordinateur : par la puissance lue sur le chargeur d'origine, ou parmi les MacBook. */
+/** Choix de l'ordinateur : par son modèle (recherche ou raccourcis), ou par la puissance lue sur le chargeur d'origine. */
 export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[]; onChoisir: (o: Ordi) => void }) {
+  const [saisie, setSaisie] = useState('');
+  const modeles = ordinateurs.filter((o) => !o.generique);
+  // La recherche travaille sur des « appareils » (marque, modèle) : on y range les ordinateurs nommés.
+  const appareils = useMemo(() => modeles.map((o) => ({ id: o.id, marque: o.marque, modele: o.nom, annee: o.annee })), [modeles]);
   const groupes = [
-    { titre: 'PC portable : quelle puissance est écrite sur ton chargeur d’origine ?', liste: ordinateurs.filter((o) => o.generique), libelle: (o: Ordi) => `${o.besoinW === 100 ? '90 ou 100' : o.besoinW} W` },
-    { titre: 'Mac', liste: ordinateurs.filter((o) => !o.generique), libelle: (o: Ordi) => o.nom },
+    { titre: 'Ou choisis dans la liste', liste: modeles, libelle: (o: Ordi) => (o.marque === 'Apple' ? o.nom : `${o.marque} ${o.nom}`) },
+    { titre: 'Ton modèle n’y est pas ? Choisis la puissance écrite sur ton chargeur d’origine', liste: ordinateurs.filter((o) => o.generique), libelle: (o: Ordi) => `${o.besoinW === 100 ? '90 ou 100' : o.besoinW} W` },
   ];
   return (
     <div className={propres.choix}>
       <p className={propres.condition}>
         Ça concerne les ordinateurs qui se rechargent en <strong>USB-C</strong>, la petite prise ovale qu’on trouve aussi sur les téléphones. Si le tien a une prise ronde ou spéciale, garde le chargeur de la marque.
       </p>
+      <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie}
+        onChoisir={(a) => { const o = ordinateurs.find((x) => x.id === a.id); if (o) onChoisir(o); }}
+        libelle="Quel ordinateur veux-tu recharger ?" exemple="Ex. macbook air, xps 13, thinkpad" nomListe="Ordinateurs trouvés"
+        aideVide="Choisis plutôt la puissance écrite sur ton chargeur d’origine, juste en dessous." />
       {groupes.map(({ titre, liste, libelle }) => (
         <div key={titre} className={propres.groupe}>
           <p className={propres.groupeTitre}>{titre}</p>

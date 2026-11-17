@@ -3,7 +3,14 @@
  {"id": "pc-65w", "marque": "PC portable", "nom": "PC portable avec chargeur de 65 W", "besoinW": 65, "generique": true},
  {"id": "pc-100w", "marque": "PC portable", "nom": "PC portable avec chargeur de 90 ou 100 W", "besoinW": 100, "generique": true},
  {"id": "pc-140w", "marque": "PC portable", "nom": "PC portable avec chargeur de 140 W", "besoinW": 140, "generique": true},
- {"id": "macbook-air", "marque": "Apple", "nom": "MacBook Air (puce M2 et suivantes)", "besoinW": 30, "rapideW": 70},
- {"id": "macbook-pro-14", "marque": "Apple", "nom": "MacBook Pro 14 pouces", "besoinW": 70, "rapideW": 96},
- {"id": "macbook-pro-16", "marque": "Apple", "nom": "MacBook Pro 16 pouces", "besoinW": 140}
+ {"id": "macbook-air-m1", "marque": "Apple", "nom": "MacBook Air M1", "besoinW": 30, "annee": 2020},
+ {"id": "macbook-air", "marque": "Apple", "nom": "MacBook Air 13 pouces (M2, M3, M4)", "besoinW": 30, "rapideW": 70, "annee": 2025},
+ {"id": "macbook-air-15", "marque": "Apple", "nom": "MacBook Air 15 pouces", "besoinW": 35, "rapideW": 70, "annee": 2025},
+ {"id": "macbook-pro-14", "marque": "Apple", "nom": "MacBook Pro 14 pouces (M3, M4)", "besoinW": 70, "rapideW": 96, "annee": 2024},
+ {"id": "macbook-pro-14-pro", "marque": "Apple", "nom": "MacBook Pro 14 pouces (Pro, Max)", "besoinW": 96, "annee": 2024},
+ {"id": "macbook-pro-16", "marque": "Apple", "nom": "MacBook Pro 16 pouces", "besoinW": 140, "annee": 2024},
+ {"id": "lenovo-thinkpad-x1-carbon-gen-12", "marque": "Lenovo", "nom": "ThinkPad X1 Carbon Gen 12", "besoinW": 65, "annee": 2024},
+ {"id": "dell-xps-13-9340", "marque": "Dell", "nom": "XPS 13 (9340, 9345)", "besoinW": 60, "annee": 2024},
+ {"id": "framework-laptop-13", "marque": "Framework", "nom": "Laptop 13", "besoinW": 60, "annee": 2023},
+ {"id": "samsung-galaxy-book4-pro-14", "marque": "Samsung", "nom": "Galaxy Book4 Pro 14 pouces", "besoinW": 65, "annee": 2024}
 ]

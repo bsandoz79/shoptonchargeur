@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (ordinateurs)
+- Choix de l'ordinateur par modèle : recherche (« macbook air », « xps 13 »…) et liste. MacBook Air M1, Air 13 et 15 pouces, MacBook Pro 14 (M3/M4, Pro/Max) et 16 pouces, ThinkPad X1 Carbon Gen 12, Dell XPS 13 (9340, 9345), Framework Laptop 13, Galaxy Book4 Pro 14. Le choix par puissance du chargeur d'origine reste pour les autres.
+
 ### Modifié (vitesse de charge)
 - Encadré à bord coloré remplacé par une échelle à trois niveaux (très rapide, rapide, doux), le niveau du chargeur en plein, et sa phrase d'explication.
 

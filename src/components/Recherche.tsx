@@ -8,8 +8,9 @@ import styles from './Recherche.module.css';
  * Recherche d'un téléphone par marque et modèle : liste de suggestions au fil de la saisie, utilisable au clavier
  * (flèches, Entrée, Échap). `saisie` est pilotée par le parent (les raccourcis de marque la remplissent).
  */
-export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
+export function Recherche({ telephones, saisie, onSaisie, onChoisir, libelle = 'Quel téléphone veux-tu recharger ?', exemple = 'Ex. s24 ultra, iphone 15, pixel 8', nomListe = 'Téléphones trouvés', aideVide = 'Essaie avec moins de mots, ou regarde le conseil « Mon téléphone n’est pas dans la liste » plus bas.' }: {
   telephones: Appareil[]; saisie: string; onSaisie: (texte: string) => void; onChoisir: (telephone: Appareil) => void;
+  libelle?: string; exemple?: string; nomListe?: string; aideVide?: string;
 }) {
   const id = useId();
   const [ouvert, setOuvert] = useState(false);
@@ -28,17 +29,17 @@ export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
 
   return (
     <div className={styles.recherche}>
-      <label htmlFor={`${id}-champ`} className={styles.libelle}>Quel téléphone veux-tu recharger ?</label>
+      <label htmlFor={`${id}-champ`} className={styles.libelle}>{libelle}</label>
       <div className={styles.champ}>
         <span className={styles.loupe}><Icone nom="loupe" /></span>
         <input id={`${id}-champ`} type="search" role="combobox" autoComplete="off" spellCheck={false} enterKeyHint="search"
-          placeholder="Ex. s24 ultra, iphone 15, pixel 8" value={saisie}
+          placeholder={exemple} value={saisie}
           aria-expanded={visible} aria-controls={`${id}-liste`} aria-autocomplete="list"
           aria-activedescendant={visible && resultats.length ? `${id}-option-${Math.min(actif, resultats.length - 1)}` : undefined}
           onChange={(e) => { onSaisie(e.target.value); setActif(0); setOuvert(true); }}
           onFocus={() => setOuvert(true)} onKeyDown={auClavier} />
       </div>
-      <ul id={`${id}-liste`} role="listbox" aria-label="Téléphones trouvés" className={styles.liste} hidden={!visible || !resultats.length}>
+      <ul id={`${id}-liste`} role="listbox" aria-label={nomListe} className={styles.liste} hidden={!visible || !resultats.length}>
         {resultats.map((t, i) => (
           <li key={t.id} id={`${id}-option-${i}`} role="option" aria-selected={i === actif} className={styles.option}
             // « mousedown » : avant que le champ ne perde le focus.
@@ -50,7 +51,7 @@ export function Recherche({ telephones, saisie, onSaisie, onChoisir }: {
       </ul>
       {visible && !resultats.length && (
         <p role="status" className={styles.vide}>
-          Aucun téléphone trouvé pour « {saisie.trim()} ». Essaie avec moins de mots, ou regarde le conseil « Mon téléphone n’est pas dans la liste » plus bas.
+          Rien trouvé pour « {saisie.trim()} ». {aideVide}
         </p>
       )}
     </div>
