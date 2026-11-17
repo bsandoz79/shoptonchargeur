@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Corrigé
+- Choix d'un appareil possible même quand la page est affichée dans un cadre qui refuse de changer d'adresse (aperçu).
+
 ### Ajouté
 - Explications : sous chaque chargeur, « Pourquoi ? » dit en clair d'où vient la vitesse annoncée (Power Delivery commun, PPS, PPS sans 5 A, charge de la marque, puissance insuffisante). Les textes suivent exactement le calcul du moteur (`src/moteur/explications.ts`).
 - Guide « Comment ça marche, un chargeur ? » en bas de page : watts, Power Delivery, PPS, charge propre aux marques, câble, ralentissement en fin de charge, GaN, chargeur d'ordinateur sur un téléphone.
