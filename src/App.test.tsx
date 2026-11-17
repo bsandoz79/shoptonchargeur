@@ -39,8 +39,7 @@ describe('App', () => {
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
 
     // Charge très rapide (45 W) : la batterie est moins ménagée ; câble proposé en 1 m et 2 m.
-    expect(within(premier).getByText('Charge très rapide')).toBeInTheDocument();
-    expect(within(premier).getByRole('img', { name: 'Batterie ménagée : 1 sur 3' })).toBeInTheDocument();
+    expect(within(premier).getByRole('img', { name: /^Vitesse de charge : très rapide/ })).toBeInTheDocument();
     expect(within(premier).getByRole('link', { name: /5 A \(100 W\), 2 mètres/ })).toHaveAttribute('href', expect.stringContaining('2m'));
 
     const anker45 = carte('Anker Nano 45 W');
@@ -185,8 +184,7 @@ describe('App', () => {
     window.history.replaceState(null, '', '/?tel=apple-iphone-15');
     render(<App />);
     const conseil = within(screen.getByRole('region', { name: 'À acheter en priorité' })).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0];
-    expect(within(conseil).getByText('Charge douce')).toBeInTheDocument();
-    expect(within(conseil).getByRole('img', { name: 'Batterie ménagée : 3 sur 3' })).toBeInTheDocument();
+    expect(within(conseil).getByRole('img', { name: /^Vitesse de charge : doux/ })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
     expect(screen.getAllByText(/le téléphone chauffe plus qu’avec un câble/).length).toBeGreaterThan(0);
   });

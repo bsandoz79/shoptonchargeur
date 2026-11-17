@@ -59,16 +59,12 @@
 .cable svg { flex: none; background: var(--c-visuel); border-radius: 6px; }
 .cableLibelle { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }
 
-/* Vitesse contre durée de vie de la batterie. */
-.batterie { display: grid; gap: .4rem; padding: .65rem .75rem; border-radius: var(--rayon-petit); background: var(--c-fond); border-left: 3px solid var(--c-bord-fort); }
-.batterie_tres_rapide { border-left-color: #c2410c; }
-.batterie_rapide { border-left-color: #ca8a04; }
-.batterie_douce { border-left-color: var(--c-accent); }
-.batterieTitre { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
-.batterieTexte { font-size: .84rem; color: var(--c-texte-doux); }
-.jauges { display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
-.jauge { display: inline-flex; align-items: center; gap: .4rem; }
-.jaugeLibelle { font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
-.crans { display: inline-flex; gap: 3px; }
-.crans span { width: 14px; height: 6px; border-radius: 3px; background: var(--c-bord-fort); }
-.crans span.plein { background: var(--c-texte); }
+/* Vitesse de charge : échelle à trois niveaux, le niveau du produit en plein. */
+.niveau { display: grid; gap: .3rem; }
+.niveauEchelle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+.niveauEchelle span { padding: .35rem .2rem; text-align: center; font-size: .76rem; font-weight: 600; color: var(--c-texte-doux); background: var(--c-fond); }
+.niveauEchelle span:first-child { border-radius: 8px 0 0 8px; }
+.niveauEchelle span:last-child { border-radius: 0 8px 8px 0; }
+.niveauEchelle .niveauActuel { background: var(--c-texte); color: var(--c-fond); font-weight: 800; }
+.niveauBornes { display: flex; justify-content: space-between; font-size: .7rem; color: var(--c-texte-doux); }
+.niveauTexte { font-size: .84rem; color: var(--c-texte-doux); }
