@@ -90,8 +90,8 @@ Règle (`src/moteur/ordinateur.ts`) : chargeur d'au moins `besoinW` → recharge
 ## Recherche
 `src/moteur/recherche.ts`. Chaque mot saisi doit commencer un mot de la marque ou du modèle. Ordre des résultats : le nom exact ; puis les modèles dont chaque mot saisi est un mot entier ou le début d'un numéro (« s » trouve « S25 », pas « Sidekick ») ; puis les autres. À égalité : grandes marques d'abord, numéros décroissants (S26, S25, S24…), iPhone par année. 30 résultats au plus.
 
-## Liens directs (ASIN)
-Champ `asin` des chargeurs : identifiant de la page Amazon.fr du produit, relevé à la main le 17/11/2026 sur les fiches vendues par la marque ou par Amazon (pas les copies). Sans ASIN, le lien mène à une recherche. Une page peut disparaître ou changer de vendeur : vérifier les liens de temps en temps.
+## Liens directs (ASIN) et version française
+Champ `asin` des chargeurs : identifiant de la page Amazon.fr du produit, relevé à la main le 17/11/2026 sur les fiches vendues par la marque ou par Amazon (pas les copies). **Seulement si la fiche confirme la prise française** (type C, E ou F, ou référence européenne) : Apple 40 W, Samsung 25 W (« version FR »), Google 30 W (GA02275-EU), Belkin 30 W (WCA005vf), Anker Nano 30 W (prise type C, AnkerDirect FR), UGREEN 45 W (prise type E), Pixel Stand (GA03002-EU). Sinon, recherche sur la référence européenne (Apple « MHJE3ZM/A », Samsung « EP-T4510XBEGEU ») ou avec « prise européenne » ; un test le vérifie. Champ `prise: 'fr'` sur tous les chargeurs secteur. Les chargeurs sans fil MagSafe, Qi2 et tapis n'ont pas de prise (câble USB-C seul). Sans ASIN, le lien mène à une recherche. Une page peut disparaître ou changer de vendeur : vérifier les liens de temps en temps.
 
 ## Priorités d'achat
 `src/moteur/selection.ts` : 1. conseillé par le constructeur (chargeur de la marque, ou d'origine, qui donne la vitesse maximale, le moins puissant) ; 2. meilleur rapport qualité/prix parmi les autres (barème de `qualitePrix`, vitesse maximale exigée s'il y en a, puis le moins cher) ; 3. les autres, dans l'ordre du tri.

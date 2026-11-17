@@ -66,6 +66,10 @@ export const GUIDE: { question: string; reponse: string }[] = [
     reponse: 'C’est voulu. Une batterie accepte beaucoup de courant quand elle est vide, de moins en moins en se remplissant. Le téléphone ralentit donc tout seul vers la fin pour la protéger. Les puissances annoncées (25 W, 45 W…) valent pour le début de la recharge : c’est là qu’un bon chargeur fait gagner du temps.',
   },
   {
+    question: 'Pourquoi « prise française » ?',
+    reponse: 'Amazon vend aussi des versions anglaises (prise à trois broches rectangulaires) ou américaines (deux broches plates), parfois moins chères : elles ne rentrent pas dans une prise française, et un adaptateur de voyage ajoute un point faible. Tous les chargeurs proposés ici sont des versions européennes, à deux broches rondes. Sur la fiche du produit, vérifie « Type de prise : C, E ou F » ou une référence se terminant par « EU ».',
+  },
+  {
     question: 'C’est quoi, un chargeur « GaN » ?',
     reponse: 'GaN désigne le composant qui remplace le silicium dans les chargeurs récents. Il chauffe moins : à puissance égale, le chargeur est plus petit et plus léger. C’est ce qui permet un chargeur de 65 W de la taille d’un ancien chargeur de téléphone.',
   },

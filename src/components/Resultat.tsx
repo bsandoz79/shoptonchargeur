@@ -55,7 +55,7 @@ function produitFilaire(a: Appareil, p: Proposition): Ligne {
     verdict,
     batterie: verifie ? effetBatterie(p.puissanceObtenueW) ?? undefined : undefined,
     qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
-    caracteristiques: [...(c.puissanceW ? [`${c.puissanceW} W`] : []), ...c.protocoles.map((x) => PROTOCOLES[x]), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
+    caracteristiques: [...(c.puissanceW ? [`${c.puissanceW} W`] : []), ...c.protocoles.map((x) => PROTOCOLES[x]), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque', ...(c.prise === 'fr' || c.origineDe ? ['Prise française'] : [])],
     pourquoi: verifie ? pourquoi(a, p) : undefined,
     note: c.note,
     requete: c.requete,
