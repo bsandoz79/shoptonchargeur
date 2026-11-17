@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from './App';
 
@@ -208,6 +208,25 @@ describe('App', () => {
     expect(screen.getByText(/Le logo CE n’est pas une garantie/)).toBeInTheDocument();
     await userEvent.click(screen.getByText(/C’est quoi, le PPS/));
     expect(screen.getByText(/Une option du Power Delivery/)).toBeVisible();
+  });
+
+  it('le logo ramène à l’accueil, en haut de la page', async () => {
+    window.history.replaceState(null, '', '/?tel=google-pixel-8');
+    const defiler = vi.fn();
+    window.scrollTo = defiler as unknown as typeof window.scrollTo;
+    render(<App />);
+    await userEvent.click(screen.getByRole('link', { name: /Chope ton chargeur/ }));
+    expect(window.location.search).toBe('');
+    expect(defiler).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
+  });
+
+  it('bouton « remonter » : caché en haut de page, visible après défilement', async () => {
+    render(<App />);
+    expect(screen.queryByRole('button', { name: 'Remonter en haut de la page' })).not.toBeInTheDocument();
+    Object.defineProperty(window, 'scrollY', { value: 2000, configurable: true });
+    act(() => { window.dispatchEvent(new Event('scroll')); });
+    expect(await screen.findByRole('button', { name: 'Remonter en haut de la page' })).toBeInTheDocument();
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
   });
 
   it('affiche la mention des liens affiliés', () => {

@@ -1,6 +1,10 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (navigation)
+- Le logo ramène à l'accueil et remonte en haut de la page.
+- Bouton flèche « remonter » en bas à gauche, visible après un écran de défilement (sans animation si l'appareil demande moins d'animations).
+
 ### Ajouté (ordinateurs)
 - Choix de l'ordinateur par modèle : recherche (« macbook air », « xps 13 »…) et liste. MacBook Air M1, Air 13 et 15 pouces, MacBook Pro 14 (M3/M4, Pro/Max) et 16 pouces, ThinkPad X1 Carbon Gen 12, Dell XPS 13 (9340, 9345), Framework Laptop 13, Galaxy Book4 Pro 14. Le choix par puissance du chargeur d'origine reste pour les autres.
 

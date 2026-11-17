@@ -4,6 +4,8 @@ import { Icone } from './components/Icone';
 import { Illustration } from './components/Illustration';
 import { ChoixOrdinateur, ResultatOrdinateur } from './components/Ordinateur';
 import { Recherche } from './components/Recherche';
+import { RetourHaut } from './components/RetourHaut';
+import { remonter } from './components/remonter';
 import { Resultat } from './components/Resultat';
 import { CHARGEURS, CHARGEURS_ORDINATEUR, ORDINATEURS, TELEPHONES, chargerCatalogue } from './data';
 import { detecter, type Detection } from './moteur/detection';
@@ -87,7 +89,7 @@ export function App() {
     <>
       <header className={styles.entete}>
         <div className={styles.enteteInterieur}>
-          <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); }}>
+          <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); remonter(); }}>
             <span className={styles.logoIcone}><Icone nom="eclair" taille={18} /></span>
             Chope ton chargeur
           </a>
@@ -188,6 +190,7 @@ export function App() {
           <p>Pas de cookie, pas de suivi. La détection de ton téléphone se fait dans ton navigateur, rien n’est envoyé ni gardé. Une fois sur le site du marchand, ce sont ses règles qui s’appliquent.</p>
         </details>
       </footer>
+      <RetourHaut />
     </>
   );
 }

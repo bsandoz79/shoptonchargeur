@@ -1,0 +1,7 @@
+/* Bouton « remonter » : rond, en bas à gauche, apparaît après un écran de défilement. */
+.bouton { position: fixed; left: max(1rem, env(safe-area-inset-left)); bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 20;
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--c-bord-fort);
+  background: var(--c-surface); color: var(--c-texte); box-shadow: 0 6px 18px rgb(0 0 0 / .14); cursor: pointer;
+  animation: apparition .2s ease; transition: background .15s ease; }
+@keyframes apparition { from { opacity: 0; transform: translateY(12px); } }
+.bouton:hover { background: var(--c-fond); border-color: var(--c-texte); }
