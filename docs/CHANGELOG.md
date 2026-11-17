@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (version française)
+- Tous les chargeurs secteur en version à prise française (européenne) : liens directs gardés seulement quand la fiche le confirme (Samsung 25 W et Anker Nano 30 W remplacés par leur version FR), sinon recherche sur la référence européenne ; étiquette « Prise française » sur chaque carte ; question « Pourquoi prise française ? » dans le guide (versions UK et US à éviter).
+
 ### Ajouté (batterie et câbles)
 - Effet de chaque charge sur la batterie (`src/moteur/batterie.ts`), d'après la puissance obtenue : très rapide (40 W et plus), rapide (21 à 39 W), douce (20 W et moins), avec deux jauges « Vitesse » et « Batterie ménagée » et une explication ; le sans fil est signalé comme plus chaud qu'un câble. Aucun chiffre d'usure n'est annoncé.
 - Guide : « Charge rapide et batterie : à quel prix ? » et « Faire durer sa batterie » (4 conseils) ; longueur du câble expliquée.

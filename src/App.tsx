@@ -181,7 +181,7 @@ export function App() {
 
       <footer className={styles.pied}>
         <p><strong>Liens affiliés.</strong> Les boutons « Voir sur Amazon » sont des liens partenaires : si tu achètes après avoir cliqué, le site peut toucher une commission, sans surcoût pour toi. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.</p>
-        <p>Les puissances viennent des fiches des constructeurs ; la liste des téléphones, de la liste officielle des appareils Android de Google. Vérifie toujours la fiche du produit avant d’acheter. Aucun prix n’est affiché ici : ils changent sans cesse chez le marchand.</p>
+        <p>Tous les chargeurs proposés sont des versions à prise française (européenne). Les puissances viennent des fiches des constructeurs ; la liste des téléphones, de la liste officielle des appareils Android de Google. Vérifie toujours la fiche du produit avant d’acheter. Aucun prix n’est affiché ici : ils changent sans cesse chez le marchand.</p>
         <details>
           <summary>Mentions légales et données personnelles</summary>
           <p>Éditeur du site : [à compléter]. Contact : [à compléter]. Hébergeur : [à compléter].</p>

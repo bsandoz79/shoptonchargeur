@@ -32,9 +32,10 @@ describe('App', () => {
     expect(within(premier).getByText('Qualité/prix')).toBeInTheDocument();
     expect(within(premier).getByText(/Ce chargeur a le « PPS »/)).toBeInTheDocument();
     expect(within(premier).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
-    // Lien direct vers la page du produit (identifiant Amazon connu).
+    // Version à prise française : la référence européenne de Samsung (EGEU) est recherchée, faute de page confirmée.
     const lien = within(premier).getByRole('link', { name: /Voir le prix/ });
-    expect(lien).toHaveAttribute('href', 'https://www.amazon.fr/dp/B09PWHYSH8');
+    expect(lien).toHaveAttribute('href', expect.stringContaining('EP-T4510XBEGEU'));
+    expect(within(premier).getByText('Prise française')).toBeInTheDocument();
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
 
     // Charge très rapide (45 W) : la batterie est moins ménagée ; câble proposé en 1 m et 2 m.
@@ -81,6 +82,8 @@ describe('App', () => {
     expect(within(conseil).getByText('Conseillé par Apple')).toBeInTheDocument();
     expect(within(conseil).getByRole('heading', { name: 'Adaptateur secteur dynamique USB-C 40 W' })).toBeInTheDocument();
     expect(within(conseil).getByText('40 W, vitesse maximale')).toBeInTheDocument();
+    // Page du produit confirmée en version française : lien direct.
+    expect(within(conseil).getByRole('link', { name: /Voir le prix/ })).toHaveAttribute('href', 'https://www.amazon.fr/dp/B0HGGC81KH');
 
     await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
     expect(within(screen.getByRole('region', { name: 'À acheter en priorité' })).getByRole('heading', { name: 'Chargeur MagSafe (25 W)' })).toBeInTheDocument();

@@ -257,3 +257,13 @@ describe('batterie', () => {
     expect(effetSansFil(25).texte).toMatch(/chauffe plus/);
   });
 });
+
+describe('version française', () => {
+  it('tous les chargeurs secteur sont des versions à prise française ; les recherches sans page confirmée le précisent', async () => {
+    const { CHARGEURS_ORDINATEUR } = await import('../data');
+    for (const c of [...CHARGEURS, ...CHARGEURS_ORDINATEUR]) {
+      expect(c.prise, c.id).toBe('fr');
+      if (!c.asin) expect(c.requete, c.id).toMatch(/ZM\/A|EGEU|-EU|version FR|prise européenne/);
+    }
+  });
+});

@@ -55,7 +55,7 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
       etiquette: tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant' ? 'Notre choix' : undefined,
       verdict: { texte: NIVEAUX[p.niveau], ok: p.niveau !== 'insuffisant' },
       qualitePrix: qualitePrix(p.niveau === 'insuffisant' ? c.puissanceW / ordinateur.besoinW : 1, c.fiabilite, c.budget),
-      caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
+      caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque', ...(c.prise === 'fr' ? ['Prise française'] : [])],
       pourquoi: pourquoiOrdinateur(ordinateur, p),
       requete: c.requete,
       asin: c.asin,

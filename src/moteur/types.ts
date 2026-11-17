@@ -59,8 +59,10 @@ export interface Chargeur {
   note?: string;
   /** Chargeur d'origine de cette marque (charge rapide propriétaire). */
   origineDe?: string;
-  /** Identifiant Amazon (ASIN) : lien direct vers la page du produit. */
+  /** Identifiant Amazon (ASIN) : lien direct vers la page du produit, seulement si la version à prise française est confirmée. */
   asin?: string;
+  /** Version à prise française (Europe continentale, types C, E ou F) : toutes les références proposées. */
+  prise?: 'fr';
   forme?: Forme;
   teinte?: Teinte;
 }
