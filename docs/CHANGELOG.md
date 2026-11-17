@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (vitesse de charge)
+- Encadré à bord coloré remplacé par une échelle à trois niveaux (très rapide, rapide, doux), le niveau du chargeur en plein, et sa phrase d'explication.
+
 ### Modifié (textes)
 - Textes du site réécrits plus simplement : phrases plus courtes, moins de guillemets et de deux-points, accroche « Quel chargeur pour ton téléphone ? ».
 

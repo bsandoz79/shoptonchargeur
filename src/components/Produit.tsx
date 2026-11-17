@@ -35,13 +35,25 @@ export interface ProduitAffiche {
 /** Page du produit si son identifiant Amazon est connu, sinon une recherche. */
 const lienProduit = (p: { asin?: string; requete: string }) => (p.asin ? lienAmazon(p.asin) : lienMarchand(p.requete));
 
-/** Jauge de 3 crans, lue par les lecteurs d'écran comme « n sur 3 ». */
-function Jauge({ libelle, valeur }: { libelle: string; valeur: 1 | 2 | 3 }) {
+const NIVEAUX: { profil: EffetBatterie['profil']; libelle: string }[] = [
+  { profil: 'tres-rapide', libelle: 'Très rapide' },
+  { profil: 'rapide', libelle: 'Rapide' },
+  { profil: 'douce', libelle: 'Doux' },
+];
+
+/** Échelle de vitesse de charge, du plus rapide au plus doux pour la batterie ; le niveau du produit est mis en valeur. */
+function Niveau({ b }: { b: EffetBatterie }) {
+  const actuel = NIVEAUX.find((n) => n.profil === b.profil)!;
   return (
-    <span className={styles.jauge} role="img" aria-label={`${libelle} : ${valeur} sur 3`}>
-      <span className={styles.jaugeLibelle} aria-hidden="true">{libelle}</span>
-      <span className={styles.crans} aria-hidden="true">{[1, 2, 3].map((n) => <span key={n} className={n <= valeur ? styles.plein : undefined} />)}</span>
-    </span>
+    <div className={styles.niveau}>
+      <p className={styles.niveauEchelle} role="img" aria-label={`Vitesse de charge : ${actuel.libelle.toLowerCase()} (échelle : très rapide, rapide, doux pour la batterie)`}>
+        {NIVEAUX.map((n) => (
+          <span key={n.profil} className={n.profil === b.profil ? styles.niveauActuel : undefined} aria-hidden="true">{n.libelle}</span>
+        ))}
+      </p>
+      <p className={styles.niveauBornes} aria-hidden="true"><span>Plus vite</span><span>Batterie ménagée</span></p>
+      <p className={styles.niveauTexte}>{b.texte}</p>
+    </div>
   );
 }
 
@@ -82,16 +94,7 @@ export function Produit({ p }: { p: ProduitAffiche }) {
             <span className={styles.prixTexte}>{PRIX[p.budget]}</span>
           </p>
         </div>
-        {p.batterie && (
-          <div className={`${styles.batterie} ${styles[`batterie_${p.batterie.profil.replace('-', '_')}`] ?? ''}`}>
-            <p className={styles.batterieTitre}>Charge {p.batterie.titre.toLowerCase()}</p>
-            <div className={styles.jauges}>
-              <Jauge libelle="Vitesse" valeur={p.batterie.vitesse} />
-              <Jauge libelle="Batterie ménagée" valeur={p.batterie.menagement} />
-            </div>
-            <p className={styles.batterieTexte}>{p.batterie.texte}</p>
-          </div>
-        )}
+        {p.batterie && <Niveau b={p.batterie} />}
         {p.pourquoi && (
           <details className={styles.pourquoi}>
             <summary>Pourquoi il convient</summary>
