@@ -3,7 +3,7 @@
 Le site est statique : le dossier `dist/` suffit, sans base de données ni PHP.
 
 ## 1. Sous-domaine (o2switch)
-Dans cPanel → Domaines : créer `choptonchargeur.bsandoz.fr`, dossier `choptonchargeur.bsandoz.fr`. Activer le certificat (SSL/TLS Status).
+Dans cPanel → Domaines : créer `choptonchargeur.bsandoz.fr`, dossier `choptonchargeur.bsandoz.fr` (fait le 17/11/2026). Activer le certificat : SSL/TLS Status → cocher le sous-domaine → « Run AutoSSL ». `public/.htaccess` (envoyé avec le site) force le HTTPS : le certificat doit être actif avant le premier envoi.
 
 ## 2. Dépôt GitHub et envoi automatique
 1. Dépôt : https://github.com/bsandoz79/choptonchargeur (branche `main`, poussée le 17/11/2026).
