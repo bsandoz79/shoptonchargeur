@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Corrigé (mise en ligne)
+- Envoi FTPS : méthode de Perfect Clean (TLS 1.2, chaîne de certificats reconstituée), serveur et dossier réglables par secrets, échec clair si un secret manque au lieu d'un envoi sauté sans bruit, liste du dossier en ligne à la fin.
+
 ### Ajouté (mise en ligne)
 - `public/.htaccess` : HTTPS forcé, cache long des fichiers versionnés, page jamais en cache, en-têtes de sécurité, compression.
 

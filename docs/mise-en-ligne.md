@@ -11,9 +11,9 @@ Dans cPanel → Domaines : créer `choptonchargeur.bsandoz.fr`, dossier `chopton
 3. Dans GitHub → Settings → Secrets and variables → Actions :
    - secrets `FTP_USERNAME` et `FTP_PASSWORD` (le compte FTP ci-dessus) ;
    - variable `VITE_AMAZON_TAG` (identifiant Partenaires Amazon), quand il existe.
-4. Chaque envoi sur `main` lance `.github/workflows/deploy.yml` : tests, build, envoi FTPS. Sans les secrets, l'envoi est sauté.
+4. Chaque envoi sur `main` lance `.github/workflows/deploy.yml` : tests, build, envoi FTPS. Sans les secrets, le déploiement échoue avec le nom du secret manquant.
 
-Le serveur FTP du fichier (`muguet.o2switch.net`) est celui des autres sites : à corriger s'il diffère.
+Le serveur FTP vaut `muguet.o2switch.net` par défaut (celui des autres sites) ; s'il diffère, l'indiquer dans un secret `FTP_SERVER`. Secret facultatif `FTP_DIR` : dossier d'envoi, si le compte FTP n'est pas limité au dossier du sous-domaine (ex. `choptonchargeur.bsandoz.fr`). Méthode d'envoi reprise de Perfect Clean : TLS 1.2, chaîne de certificats reconstituée (`.github/chaine-ftps.sh`), échec clair si un secret manque, liste du dossier en ligne à la fin.
 
 ## 3. Affiliation
 1. S'inscrire au programme Partenaires Amazon (partenaires.amazon.fr) avec l'adresse du site en ligne.
