@@ -1,6 +1,10 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (questions avant l'achat)
+- Cinq questions en tête du guide : « De quel chargeur ai-je besoin ? », « Quel chargeur choisir pour mon téléphone ? », « Comment savoir combien de watts accepte mon téléphone ? », « Faut-il acheter le chargeur de la marque ? », « Quel chargeur prendre pour plusieurs appareils ? ». Elles sont aussi sur l'accueil, en FAQ structurée.
+- Titres : « Quel chargeur choisir pour ton téléphone ou ton PC ? » (accueil), « Comment choisir un chargeur » (guide).
+
 ### Ajouté (référencement)
 - Adresses lisibles par appareil (`/chargeur/…/`, `/ordinateur/…/`, `/guide/`), 120 pages générées avec titre, description, adresse canonique, réponse en texte et FAQ, données structurées (FAQPage, BreadcrumbList, WebSite), `sitemap.xml`, `robots.txt` ouvert aux assistants, `llms.txt`, index de toutes les fiches sur l'accueil. Voir `docs/referencement.md`.
 

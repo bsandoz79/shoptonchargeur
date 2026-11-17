@@ -107,7 +107,7 @@ export function App() {
           <section className={styles.accueil} aria-labelledby="titre-accueil">
             <div className={styles.hero}>
               <div className={styles.heroTexte}>
-                <h1 id="titre-accueil">Quel chargeur pour ton téléphone ?</h1>
+                <h1 id="titre-accueil">Quel chargeur choisir pour ton téléphone ?</h1>
                 <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
               </div>
               <div className={styles.heroVisuel} aria-hidden="true">

@@ -150,14 +150,18 @@ function listeLiens(): string {
   return `<h2 id="telephones">Chargeurs par téléphone</h2>${telephones}<h2>Chargeurs par ordinateur portable</h2><ul>${ordis}</ul>`;
 }
 
+/** Les premières questions du guide, celles qu'on se pose avant d'acheter (« de quel chargeur ai-je besoin ? »…). */
+const QUESTIONS_CHOIX = 5;
+
 export function pageAccueil(): Page {
+  const choisir = GUIDE.slice(0, QUESTIONS_CHOIX).map(({ question, reponse }) => ({ q: question, r: reponse }));
   const intro = 'Indique ton téléphone ou ton ordinateur portable : on te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix, la vitesse de charge réelle, le câble qui va avec et les chargeurs sans fil. Uniquement des marques connues, en prise française.';
   return {
     chemin: '/',
-    titre: 'Chope ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?',
-    description: 'Trouve le bon chargeur pour ton téléphone ou ton PC portable : chargeur conseillé par la marque, meilleur rapport qualité/prix, câble, sans fil. iPhone, Samsung, Pixel, MacBook…',
-    contenu: `<main><h1>Quel chargeur pour ton téléphone ?</h1><p>${echapper(intro)}</p><p><a href="${CHEMIN_GUIDE}">Le guide : watts, Power Delivery, PPS, câble, batterie</a></p>${listeLiens()}</main>`,
-    jsonLd: [{
+    titre: 'Quel chargeur choisir pour ton téléphone ou ton PC ? | Chope ton chargeur',
+    description: 'De quel chargeur as-tu besoin ? Tape ton modèle : chargeur conseillé par la marque, meilleur rapport qualité/prix, puissance, câble et sans fil. iPhone, Samsung, Pixel, Xiaomi, MacBook…',
+    contenu: `<main><h1>Quel chargeur choisir pour ton téléphone ?</h1><p>${echapper(intro)}</p>${faqHtml(choisir)}<p><a href="${CHEMIN_GUIDE}">Le guide complet : watts, Power Delivery, PPS, câble, batterie</a></p>${listeLiens()}</main>`,
+    jsonLd: [faq(choisir), {
       '@context': 'https://schema.org', '@type': 'WebSite', name: NOM_SITE, url: `${SITE}/`, inLanguage: 'fr-FR',
       description: 'Guide indépendant pour choisir le chargeur compatible avec son téléphone ou son ordinateur portable.',
     }],
@@ -179,9 +183,9 @@ export function pageGuide(): Page {
   const questions = GUIDE.map(({ question, reponse }) => ({ q: question, r: reponse }));
   return {
     chemin: CHEMIN_GUIDE,
-    titre: `Comment marche un chargeur : watts, PD, PPS, câble et batterie | ${NOM_SITE}`,
-    description: 'Watts, Power Delivery, PPS, charge rapide propre aux marques, câble 5 A, GaN, usure de la batterie : tout pour choisir un chargeur sans se tromper.',
-    contenu: `<main><h1>Comment marche un chargeur ?</h1>${ESSENTIELS.map((e) => `<h2>${echapper(e.titre)}</h2><ul>${e.points.map((p) => `<li>${echapper(p)}</li>`).join('')}</ul>`).join('')}${faqHtml(questions)}</main>`,
+    titre: `Comment choisir un chargeur : watts, PD, PPS, câble et batterie | ${NOM_SITE}`,
+    description: 'Comment choisir un chargeur de téléphone sans se tromper : watts, Power Delivery, PPS, charge rapide des marques, câble 5 A, GaN, usure de la batterie.',
+    contenu: `<main><h1>Comment choisir un chargeur ?</h1>${ESSENTIELS.map((e) => `<h2>${echapper(e.titre)}</h2><ul>${e.points.map((p) => `<li>${echapper(p)}</li>`).join('')}</ul>`).join('')}${faqHtml(questions)}</main>`,
     jsonLd: [faq(questions)],
   };
 }
