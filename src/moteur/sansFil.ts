@@ -51,8 +51,8 @@ export function proposerSansFil(t: Telephone, chargeurs: ChargeurSansFil[]): Pro
       liste.push({
         chargeur: c, puissanceObtenueW: w,
         pourquoi: c.norme === 'magsafe'
-          ? `Le chargeur MagSafe d’Apple se colle au dos de ton iPhone grâce aux aimants : il est toujours bien centré, donc il charge à pleine puissance${w ? ` (${w} W sur ton modèle)` : ''}.`
-          : `Qi2 reprend les aimants de MagSafe en norme ouverte : il se colle au dos de ton iPhone et le charge jusqu’à ${w ?? 15} W, sans le prix d’Apple.`,
+          ? `Il se fixe au dos de ton iPhone avec les aimants, toujours bien centré, donc à pleine puissance${w ? ` (${w} W sur ton modèle)` : ''}.`
+          : `Le Qi2 utilise les mêmes aimants que MagSafe, sans être signé Apple. Il charge ton iPhone jusqu’à ${w ?? 15} W, pour moins cher.`,
       });
     } else {
       if (c.norme !== 'qi') continue;
@@ -60,10 +60,10 @@ export function proposerSansFil(t: Telephone, chargeurs: ChargeurSansFil[]): Pro
       liste.push({
         chargeur: c, puissanceObtenueW: w,
         pourquoi: c.reservePixel
-          ? 'Le support de Google parle directement aux Pixel : c’est avec lui qu’ils chargent le plus vite sans fil, et il sert de réveil sur la table de nuit.'
+          ? 'Fait par Google pour les Pixel, c’est avec lui qu’ils chargent le plus vite sans fil. Il fait aussi réveil sur la table de nuit.'
           : c.marque === t.marque
-            ? `Le chargeur de ${t.marque} active la recharge sans fil rapide de ton téléphone.`
-            : 'Ton téléphone utilise la norme Qi : il suffit de le poser au centre du tapis. Pas d’aimant, donc vise bien le centre.',
+            ? `Le chargeur ${t.marque} active la recharge sans fil rapide de ton téléphone.`
+            : 'Ton téléphone est compatible Qi. Pose-le au milieu du tapis, il n’y a pas d’aimant pour le guider.',
       });
     }
   }

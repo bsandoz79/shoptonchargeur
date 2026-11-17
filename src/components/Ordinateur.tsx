@@ -24,7 +24,7 @@ export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[
   return (
     <div className={propres.choix}>
       <p className={propres.condition}>
-        Ce guide vaut pour les ordinateurs qui se rechargent par un port <strong>USB-C</strong> (la prise ovale, comme sur les téléphones récents). Si ton chargeur a une prise ronde ou propre à la marque, il te faut le chargeur du constructeur.
+        Ça concerne les ordinateurs qui se rechargent en <strong>USB-C</strong>, la petite prise ovale qu’on trouve aussi sur les téléphones. Si le tien a une prise ronde ou spéciale, garde le chargeur de la marque.
       </p>
       {groupes.map(({ titre, liste, libelle }) => (
         <div key={titre} className={propres.groupe}>
@@ -34,7 +34,7 @@ export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[
           </div>
         </div>
       ))}
-      <p className={propres.astuce}>La puissance est écrite en petit sur le bloc du chargeur, après « Output » ou « Sortie » : par exemple « 20 V ⎓ 3,25 A » (soit 65 W) ou directement « 65 W ».</p>
+      <p className={propres.astuce}>La puissance est écrite en petit sur le bloc, après Output ou Sortie. Par exemple 65 W, ou 20 V 3,25 A, ce qui revient au même.</p>
     </div>
   );
 }
@@ -81,7 +81,7 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
           <div><dt>Câble</dt><dd>{cable.nom.replace('Câble USB-C ', '')}</dd></div>
         </dl>
         <p className={styles.explication}>
-          Un ordinateur se recharge en USB-C « Power Delivery », comme un téléphone, mais il lui faut bien plus de puissance. La règle : un chargeur d’au moins {ordinateur.besoinW} W, la puissance du chargeur d’origine. Plus puissant ne pose aucun problème ; moins puissant recharge lentement.
+          Un ordinateur charge en USB-C Power Delivery, comme un téléphone, mais il demande bien plus de puissance. Prends au moins {ordinateur.besoinW} W, comme le chargeur d’origine. Plus, ça ne pose aucun problème. Moins, il chargera lentement.
         </p>
       </div>
 

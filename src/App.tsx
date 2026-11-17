@@ -105,8 +105,8 @@ export function App() {
           <section className={styles.accueil} aria-labelledby="titre-accueil">
             <div className={styles.hero}>
               <div className={styles.heroTexte}>
-                <h1 id="titre-accueil">Le bon chargeur, sans te tromper.</h1>
-                <p className={styles.accroche}>Indique ton appareil : on te dit quelle puissance il accepte, quels chargeurs le rechargent à pleine vitesse, et pourquoi.</p>
+                <h1 id="titre-accueil">Quel chargeur pour ton téléphone ?</h1>
+                <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
               </div>
               <div className={styles.heroVisuel} aria-hidden="true">
                 <Illustration forme="gan" teinte="gris" taille={150} />
@@ -114,9 +114,9 @@ export function App() {
               </div>
             </div>
             <ul className={styles.garanties} aria-label="Nos engagements">
-              <li><Icone nom="coche" taille={16} />Seulement des constructeurs et des grandes marques</li>
-              <li><Icone nom="coche" taille={16} />La compatibilité expliquée, sans jargon</li>
-              <li><Icone nom="coche" taille={16} />Aucun cookie, aucun compte</li>
+              <li><Icone nom="coche" taille={16} />Marques connues uniquement</li>
+              <li><Icone nom="coche" taille={16} />Prise française</li>
+              <li><Icone nom="coche" taille={16} />Sans inscription</li>
             </ul>
 
             <div className={styles.parties} role="group" aria-label="Type d’appareil">
@@ -162,7 +162,7 @@ export function App() {
 
                 <details className={styles.aide}>
                   <summary>Mon téléphone n’est pas dans la liste</summary>
-                  <p>La liste contient les iPhone et les téléphones Android à port USB-C. Essaie avec le nom écrit sur la boîte, ou seulement une partie (« s24 », « note 13 »). Si ton téléphone est plus ancien (port micro-USB), garde son chargeur et son câble d’origine. Sinon, un chargeur USB-C « Power Delivery » avec « PPS » de 30 à 45 W est le choix le plus polyvalent.</p>
+                  <p>On a les iPhone et les téléphones Android en USB-C. Essaie avec le nom écrit sur la boîte, ou juste une partie (s24, note 13…). Si ton téléphone est plus ancien, en micro-USB, garde son chargeur d’origine. Sinon, un chargeur USB-C avec PPS de 30 à 45 W ira avec presque tout.</p>
                 </details>
               </>
             )}
@@ -180,12 +180,12 @@ export function App() {
       </main>
 
       <footer className={styles.pied}>
-        <p><strong>Liens affiliés.</strong> Les boutons « Voir sur Amazon » sont des liens partenaires : si tu achètes après avoir cliqué, le site peut toucher une commission, sans surcoût pour toi. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.</p>
-        <p>Tous les chargeurs proposés sont des versions à prise française (européenne). Les puissances viennent des fiches des constructeurs ; la liste des téléphones, de la liste officielle des appareils Android de Google. Vérifie toujours la fiche du produit avant d’acheter. Aucun prix n’est affiché ici : ils changent sans cesse chez le marchand.</p>
+        <p><strong>Liens affiliés.</strong> Les liens vers Amazon sont des liens partenaires. Si tu achètes après avoir cliqué, on touche une petite commission, sans que ça te coûte plus cher. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.</p>
+        <p>Tous les chargeurs sont en version prise française. Les puissances viennent des fiches des fabricants. Jette quand même un œil à la fiche du produit avant d’acheter, et au prix, qui change souvent chez le marchand.</p>
         <details>
           <summary>Mentions légales et données personnelles</summary>
           <p>Éditeur du site : [à compléter]. Contact : [à compléter]. Hébergeur : [à compléter].</p>
-          <p>Ce site ne dépose aucun cookie et ne suit pas ta navigation. La détection de ton appareil se fait dans ton navigateur : rien n’est envoyé ni enregistré. En cliquant sur un lien marchand, tu arrives sur le site du marchand, qui applique ses propres règles.</p>
+          <p>Pas de cookie, pas de suivi. La détection de ton téléphone se fait dans ton navigateur, rien n’est envoyé ni gardé. Une fois sur le site du marchand, ce sont ses règles qui s’appliquent.</p>
         </details>
       </footer>
     </>

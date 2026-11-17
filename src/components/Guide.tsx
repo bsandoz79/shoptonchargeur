@@ -10,7 +10,7 @@ export function Guide() {
       <div className={styles.tete}>
         <p className={styles.surtitre}>Le guide</p>
         <h2 id="titre-guide">Comment ça marche, un chargeur ?</h2>
-        <p className={styles.intro}>Pas besoin d’être technicien : voici ce qui fait qu’un chargeur va vite, ou pas, et pourquoi on ne te propose que des marques sérieuses.</p>
+        <p className={styles.intro}>Ce qui fait qu’un chargeur va vite ou pas, et pourquoi on ne te conseille que des marques connues.</p>
       </div>
       <div className={styles.essentiels}>
         {ESSENTIELS.map((e) => (

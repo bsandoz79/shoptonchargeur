@@ -26,34 +26,34 @@ export function effetBatterie(watts: number | null): EffetBatterie | null {
   if (watts >= SEUIL_TRES_RAPIDE_W) {
     return {
       profil: 'tres-rapide', vitesse: 3, menagement: 1, titre: 'Très rapide',
-      texte: 'Une charge éclair, mais la batterie chauffe davantage. Tous les jours, elle s’use un peu plus vite : idéal quand tu es pressé.',
+      texte: 'Ça charge en un rien de temps, mais la batterie chauffe plus. À garder pour les jours où tu es pressé.',
     };
   }
   if (watts > SEUIL_RAPIDE_W) {
     return {
       profil: 'rapide', vitesse: 2, menagement: 2, titre: 'Rapide',
-      texte: 'Le bon équilibre : nettement plus rapide qu’un vieux chargeur, sans trop chauffer la batterie.',
+      texte: 'Bien plus rapide qu’un vieux chargeur, sans trop faire chauffer la batterie.',
     };
   }
   return {
     profil: 'douce', vitesse: 1, menagement: 3, titre: 'Douce',
-    texte: 'Plus lente, mais c’est la plus douce pour la batterie : parfaite pour charger la nuit ou au bureau.',
+    texte: 'Plus lent, mais c’est ce qui ménage le mieux la batterie. Idéal la nuit ou au bureau.',
   };
 }
 
-/** La recharge sans fil : pratique, mais elle chauffe plus qu'un câble à puissance égale. */
+/** La recharge sans fil chauffe plus qu'un câble à puissance égale. */
 export function effetSansFil(watts: number | null): EffetBatterie {
   const rapide = watts !== null && watts >= 15;
   return {
     profil: rapide ? 'rapide' : 'douce', vitesse: rapide ? 2 : 1, menagement: 2, titre: rapide ? 'Sans fil rapide' : 'Sans fil',
-    texte: 'Pratique, mais une partie de l’énergie part en chaleur : le téléphone chauffe plus qu’avec un câble. Retire la coque épaisse si elle le fait chauffer.',
+    texte: 'Pratique, mais une partie de l’énergie se perd en chaleur, donc le téléphone chauffe plus qu’avec un câble. Enlève la coque si elle est épaisse.',
   };
 }
 
 /** Conseils pour faire durer la batterie, affichés dans le guide. */
 export const CONSEILS_BATTERIE: string[] = [
-  'Garde la charge rapide pour quand tu en as besoin ; la nuit, un chargeur doux (20 W ou moins) suffit largement.',
-  'Active la recharge optimisée de ton téléphone : il attend le matin pour finir de 80 à 100 %.',
-  'Évite la chaleur : ne laisse pas le téléphone charger au soleil, sur un coussin ou dans une coque épaisse.',
-  'Pas besoin d’attendre qu’il soit vide : les petites recharges entre 20 et 80 % sont les plus douces.',
+  'Garde la charge rapide pour quand tu en as vraiment besoin. La nuit, un chargeur de 20 W suffit largement.',
+  'Active la recharge optimisée dans les réglages. Le téléphone s’arrête à 80 % et termine juste avant ton réveil.',
+  'Évite de le laisser charger au soleil, sous un oreiller ou dans une coque épaisse.',
+  'Inutile d’attendre qu’il soit vide. Des petites recharges entre 20 et 80 %, c’est ce qui l’use le moins.',
 ];

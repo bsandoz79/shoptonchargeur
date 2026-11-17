@@ -23,13 +23,13 @@ const PROTOCOLES = { pd: 'Power Delivery', pps: 'PPS', proprietaire: 'Charge de 
 /** Ce qu'il faut savoir sur la charge de ce téléphone, en une phrase. */
 function explication(t: Telephone): string {
   if (t.protocole === 'pd') {
-    return `Il lui faut un chargeur USB-C « Power Delivery » d’au moins ${t.puissanceMaxW} W. Plus puissant ne pose aucun problème : le téléphone ne prend que ce dont il a besoin.`;
+    return `Il lui faut un chargeur USB-C Power Delivery d’au moins ${t.puissanceMaxW} W. Plus puissant, ça ne pose aucun problème, il ne prendra que ce dont il a besoin.`;
   }
   if (t.protocole === 'pps') {
     const sans = t.puissanceSansProtocoleW ? `la charge retombe à ${t.puissanceSansProtocoleW} W` : 'la charge est plus lente';
-    return `Pour charger à ${t.puissanceMaxW} W, le chargeur doit gérer le « PPS » (une option du Power Delivery). Sans PPS, ${sans}, même avec un chargeur très puissant.`;
+    return `Pour charger à ${t.puissanceMaxW} W, le chargeur doit avoir le PPS, une option du Power Delivery. Sans PPS, ${sans}, même avec un gros chargeur.`;
   }
-  return `${t.marque} utilise sa propre charge rapide (${t.techno}) : seul un chargeur ${t.marque} donne les ${t.puissanceMaxW} W. Un chargeur USB-C classique fonctionne aussi, plus lentement.`;
+  return `${t.marque} a sa propre charge rapide (${t.techno}). Seul un chargeur ${t.marque} donne les ${t.puissanceMaxW} W, un chargeur USB-C classique marche aussi mais moins vite.`;
 }
 
 /** Le câble qui va avec ce chargeur sur ce téléphone : le bloc seul ne suffit pas. */
@@ -134,7 +134,7 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
         batterie: effetSansFil(w),
         caracteristiques: [`${c.puissanceW} W`, c.norme === 'magsafe' ? 'MagSafe' : c.norme === 'qi2' ? 'Qi2 magnétique' : 'Qi', c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
         pourquoi: p.pourquoi,
-        note: c.note ?? (c.adaptateurW ? `Bloc secteur vendu à part : prends un USB-C de ${c.adaptateurW} W ou plus.` : undefined),
+        note: c.note ?? (c.adaptateurW ? `Le bloc secteur est vendu à part. Prends un USB-C de ${c.adaptateurW} W minimum.` : undefined),
         requete: c.requete,
         asin: c.asin,
       };
@@ -172,7 +172,7 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
         ) : (
           <>
             <p className={styles.sansFiche}>
-              <strong>Fiche de charge pas encore vérifiée pour ce modèle.</strong> On ne t’annonce donc pas de vitesse : voici ce qui vaut pour la marque, et des chargeurs sûrs.
+              <strong>On n’a pas encore vérifié la fiche de ce modèle.</strong> Pas de vitesse annoncée, donc, mais voici ce qui vaut pour la marque et des chargeurs sûrs.
             </p>
             <p className={styles.explication}>{conseilMarque(appareil.marque)}</p>
           </>
@@ -193,19 +193,19 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
       <div id="panneau-produits" role="tabpanel" aria-labelledby={onglet === 'secteur' ? 'onglet-secteur' : 'onglet-sansfil'}>
         {onglet === 'secteur' ? (
           <>
-            <p className={styles.chapo}>Le bloc seul ne suffit pas : on t’indique sous chacun le câble qui va avec, pour ne pas brider la charge.</p>
+            <p className={styles.chapo}>Sous chaque chargeur, on t’indique aussi le câble qui va avec. Le mauvais câble peut brider la charge.</p>
             <Rayon selection={filaires} titreAutres="Les autres chargeurs compatibles" tri={tri} onTri={setTri} />
           </>
         ) : nbSansFil > 0 ? (
           <>
-            <p className={styles.chapo}>Plus lent qu’un câble, mais pratique au bureau ou la nuit : tu poses le téléphone, il charge. Seulement des modèles de constructeurs et de grandes marques.</p>
+            <p className={styles.chapo}>Moins rapide qu’un câble, mais bien pratique au bureau ou sur la table de nuit. Que des modèles de marques connues.</p>
             <Rayon selection={produitsSansFil} titreAutres="Les autres chargeurs sans fil compatibles" />
           </>
         ) : (
           <p className={styles.vide}>
             {sf === false
-              ? 'Ce téléphone n’a pas la recharge sans fil : il se recharge seulement par câble.'
-              : 'On ne sait pas encore si ce téléphone a la recharge sans fil. Cherche « Qi » ou « recharge sans fil » sur sa fiche technique : si c’est le cas, un chargeur Qi de grande marque convient.'}
+              ? 'Ce téléphone ne se recharge pas sans fil, seulement avec un câble.'
+              : 'On ne sait pas encore si ce téléphone se recharge sans fil. Regarde si Qi est mentionné dans sa fiche technique. Si oui, un chargeur Qi de marque connue fera l’affaire.'}
           </p>
         )}
       </div>
