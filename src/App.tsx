@@ -58,7 +58,8 @@ export function App() {
     for (const cle of ['tel', 'pc'] as const) {
       if (suivante[cle]) url.searchParams.set(cle, suivante[cle]); else url.searchParams.delete(cle);
     }
-    window.history.pushState(null, '', url);
+    // Page affichée dans un cadre qui refuse de changer d'adresse (aperçu) : le choix s'affiche quand même.
+    try { window.history.pushState(null, '', url); } catch { /* adresse inchangée */ }
     document.title = titre;
   };
   const choisir = (t: Appareil) => aller({ tel: t.id }, `Chargeur pour ${nomComplet(t)} | Chope ton chargeur`);
