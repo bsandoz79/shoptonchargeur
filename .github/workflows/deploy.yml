@@ -1,8 +1,10 @@
 # Tests, build, puis envoi sur o2switch (choptonchargeur.bsandoz.fr) en FTPS avec lftp.
+# Même méthode que le déploiement de Perfect Clean (bsandoz-booking), éprouvée chez o2switch.
 # À régler dans GitHub → Settings → Secrets and variables → Actions :
-#   secrets   FTP_USERNAME, FTP_PASSWORD : compte FTP limité au dossier du sous-domaine
+#   secrets   FTP_USERNAME, FTP_PASSWORD : compte FTP limité au dossier du sous-domaine (ex. chargeur@bsandoz.fr)
+#   secret    FTP_SERVER (facultatif)    : nom du serveur couvert par le certificat, muguet.o2switch.net par défaut
+#   secret    FTP_DIR (facultatif)       : dossier d'envoi vu par ce compte, sa racine par défaut
 #   variable  VITE_AMAZON_TAG            : identifiant Partenaires Amazon (facultatif)
-# Sans les secrets FTP, les tests et le build tournent, l'envoi est sauté.
 name: Déploiement o2switch
 
 on:
@@ -34,31 +36,34 @@ jobs:
 
       - name: Envoi FTPS vers o2switch
         env:
-          FTP_SERVER: muguet.o2switch.net
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ secrets.FTP_DIR }}
         run: |
-          if [ -z "$FTP_USERNAME" ] || [ -z "$LFTP_PASSWORD" ]; then
-            echo "Secrets FTP absents : envoi sauté (voir docs/mise-en-ligne.md)."
-            exit 0
+          # Secrets absents : échec clair (le site ne serait pas mis en ligne).
+          manquants=""
+          [ -n "$FTP_USERNAME" ] || manquants="$manquants FTP_USERNAME"
+          [ -n "$FTP_PASSWORD" ] || manquants="$manquants FTP_PASSWORD"
+          if [ -n "$manquants" ]; then
+            echo "::error::Secrets GitHub manquants :$manquants (Settings → Secrets and variables → Actions → onglet Secrets)."
+            exit 1
           fi
-          sudo apt-get install -y -qq lftp > /dev/null
-          # Retire espaces et retours à la ligne collés par erreur dans les secrets
+          # Espaces et retours à la ligne collés par erreur dans les secrets.
+          FTP_SERVER=$(printf '%s' "${FTP_SERVER:-muguet.o2switch.net}" | tr -d '[:space:]')
           FTP_USERNAME=$(printf '%s' "$FTP_USERNAME" | tr -d '[:space:]')
-          export LFTP_PASSWORD=$(printf '%s' "$LFTP_PASSWORD" | tr -d '\r\n')
-          # Chaîne Let's Encrypt (YR1 → Root YR → ISRG Root X1) ajoutée aux autorités du système : la vérification TLS reste active
-          curl -fsS http://yr1.i.lencr.org/ | openssl x509 -inform der > /tmp/yr1.pem
-          curl -fsS http://yr.i.lencr.org/  | openssl x509 -inform der > /tmp/yr.pem
-          cat /etc/ssl/certs/ca-certificates.crt /tmp/yr1.pem /tmp/yr.pem > /tmp/ca-bundle.pem
-          lftp -c "
-            set ftp:ssl-force true;
-            set ftp:ssl-protect-data true;
-            set ssl:verify-certificate true;
-            set ssl:ca-file /tmp/ca-bundle.pem;
-            set ftp:passive-mode true;
-            set net:max-retries 5;
-            set net:reconnect-interval-base 5;
-            set net:timeout 30;
-            open --env-password -u \"$FTP_USERNAME\" \"$FTP_SERVER\";
-            mirror --reverse --verbose --parallel=4 dist/ ./
-          "
+          FTP_PASSWORD=$(printf '%s' "$FTP_PASSWORD" | tr -d '\r\n')
+          FTP_DIR=$(printf '%s' "${FTP_DIR:-.}" | tr -d '[:space:]')
+          echo "Serveur : $FTP_SERVER · compte : $FTP_USERNAME · dossier : $FTP_DIR"
+          sudo apt-get update -qq > /dev/null && sudo apt-get install -y -qq lftp > /dev/null
+          # Intermédiaires Let's Encrypt absents côté serveur : chaîne reconstituée, certificat toujours vérifié.
+          # TLS 1.2 : en TLS 1.3, lftp (gnutls) échoue sur le canal de données (« gnutls_record_recv: Error in parsing »).
+          # Tout sauf les pages HTML d'abord, puis le reste : la page ne pointe jamais vers un fichier pas encore envoyé.
+          sh .github/chaine-ftps.sh "$FTP_SERVER" "$RUNNER_TEMP/chaine-ftps.pem"
+          lftp -u "$FTP_USERNAME,$FTP_PASSWORD" "$FTP_SERVER" -e "
+            set ssl:ca-file $RUNNER_TEMP/chaine-ftps.pem; set ssl:priority NORMAL:-VERS-TLS1.3; set ftp:ssl-force true; set ftp:ssl-protect-data true;
+            set net:max-retries 3; set net:reconnect-interval-base 5; set net:timeout 30;
+            mirror --reverse --no-perms --parallel=4 --verbose=1 --exclude-glob *.html dist/ $FTP_DIR;
+            mirror --reverse --no-perms --parallel=4 --verbose=1 dist/ $FTP_DIR;
+            echo '--- Contenu du dossier en ligne :'; cls -1 $FTP_DIR;
+            bye"
