@@ -26,7 +26,8 @@ npm run catalogue   # met à jour la liste de tous les téléphones
 | `src/moteur/` | logique pure et testée : compatibilité, recherche, détection, liens |
 | `src/components/` | recherche, fiche du téléphone, liste des chargeurs, icônes |
 | `src/styles/` | variables de design (`tokens.css`) et styles communs |
-| `docs/` | données (format, sources, vérifications), mise en ligne, journal |
+| `src/seo/` | adresses des pages et pages générées pour le référencement (`docs/referencement.md`) |
+| `docs/` | données (format, sources, vérifications), mise en ligne, référencement, journal |
 
 ## Réglages
 `VITE_AMAZON_TAG` : identifiant Partenaires Amazon (ex. `monsite-21`). En local dans `.env.local` (non versionné), en production dans les variables du dépôt GitHub. Vide : les liens fonctionnent, sans suivi.

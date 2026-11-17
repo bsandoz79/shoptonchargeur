@@ -12,15 +12,13 @@ import { detecter, type Detection } from './moteur/detection';
 import { chercher, nomComplet } from './moteur/recherche';
 import type { Appareil } from './moteur/types';
 import logo from './assets/logo-entete.png';
+import { chemin, cheminOrdinateur, cheminTelephone, lireAdresse, type Adresse } from './seo/adresses';
 import styles from './App.module.css';
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
-const TITRE = 'Chope ton chargeur : le bon chargeur pour ton téléphone ou ton ordinateur';
-/** Ce que dit l'adresse : `?tel=<téléphone>`, ou `?pc=<ordinateur>` (`?pc=choix` : la partie ordinateurs, rien de choisi). */
-const lireAdresse = () => {
-  const params = new URLSearchParams(window.location.search);
-  return { tel: params.get('tel') ?? undefined, pc: params.get('pc') ?? undefined };
-};
+const TITRE = 'Chope ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
+/** Ce que dit l'adresse : /chargeur/<téléphone>/, /ordinateur/<ordinateur>/, /ordinateur/, /guide/ (anciens liens ?tel=… compris). */
+const lireAdresseCourante = () => lireAdresse(window.location.pathname, window.location.search);
 
 /**
  * Page unique : on choisit un appareil (téléphone détecté ou cherché, ou ordinateur portable), on voit ses chargeurs et
@@ -30,7 +28,7 @@ export function App() {
   // Les fiches vérifiées tout de suite ; le catalogue complet arrive juste après.
   const [appareils, setAppareils] = useState<Appareil[]>(TELEPHONES);
   const [catalogueCharge, setCatalogueCharge] = useState(false);
-  const [adresse, setAdresse] = useState<{ tel?: string; pc?: string }>(lireAdresse);
+  const [adresse, setAdresse] = useState<Adresse>(lireAdresseCourante);
   const [saisie, setSaisie] = useState('');
   const [detection, setDetection] = useState<Detection>({});
   const resultat = useRef<HTMLDivElement>(null);
@@ -50,23 +48,24 @@ export function App() {
         return detecter(tous).then((d) => { if (!annule) setDetection(d); });
       })
       .catch(() => undefined);
-    const retour = () => setAdresse(lireAdresse());
+    const retour = () => setAdresse(lireAdresseCourante());
     window.addEventListener('popstate', retour);
     return () => { annule = true; window.removeEventListener('popstate', retour); };
   }, []);
 
-  const aller = (suivante: { tel?: string; pc?: string }, titre = TITRE) => {
+  const aller = (suivante: Adresse, titre = TITRE) => {
     setAdresse(suivante);
     setSaisie('');
-    const url = new URL(window.location.href);
-    for (const cle of ['tel', 'pc'] as const) {
-      if (suivante[cle]) url.searchParams.set(cle, suivante[cle]); else url.searchParams.delete(cle);
-    }
     // Page affichée dans un cadre qui refuse de changer d'adresse (aperçu) : le choix s'affiche quand même.
-    try { window.history.pushState(null, '', url); } catch { /* adresse inchangée */ }
+    try { window.history.pushState(null, '', chemin(suivante)); } catch { /* adresse inchangée */ }
     document.title = titre;
   };
   const choisir = (t: Appareil) => aller({ tel: t.id }, `Chargeur pour ${nomComplet(t)} | Chope ton chargeur`);
+
+  // Adresse /guide/ : on descend jusqu'au guide.
+  useEffect(() => {
+    if (adresse.guide) document.getElementById('titre-guide')?.scrollIntoView?.({ block: 'start' });
+  }, [adresse.guide]);
 
   // Nouvel appareil affiché : on amène son titre à l'écran et au lecteur d'écran.
   const affiche = telephone?.id ?? ordinateur?.id;
@@ -96,8 +95,8 @@ export function App() {
           </a>
           <nav aria-label="Rubriques" className={styles.nav}>
             <a href="/" onClick={(e) => { e.preventDefault(); aller({}); }}>Téléphones</a>
-            <a href="/?pc=choix" onClick={(e) => { e.preventDefault(); aller({ pc: 'choix' }); }}>Ordinateurs</a>
-            <a href="#titre-guide">Le guide</a>
+            <a href="/ordinateur/" onClick={(e) => { e.preventDefault(); aller({ pc: 'choix' }); }}>Ordinateurs</a>
+            <a href="/guide/" onClick={(e) => { e.preventDefault(); aller({ guide: true }); document.getElementById('titre-guide')?.scrollIntoView?.({ behavior: 'smooth' }); }}>Le guide</a>
           </nav>
         </div>
       </header>
@@ -178,6 +177,28 @@ export function App() {
             <ResultatOrdinateur key={ordinateur.id} ordinateur={ordinateur} chargeurs={CHARGEURS_ORDINATEUR} onChanger={() => aller({ pc: 'choix' })} />
           )}
         </div>
+
+        {accueil && !partieOrdinateur && (
+          <section className={styles.index} aria-labelledby="telephones">
+            <h2 id="telephones">Chargeurs par téléphone</h2>
+            {[...new Set(TELEPHONES.map((t) => t.marque))].map((m) => (
+              <div key={m} className={styles.indexGroupe}>
+                <h3>{m}</h3>
+                <ul>
+                  {TELEPHONES.filter((t) => t.marque === m).map((t) => (
+                    <li key={t.id}><a href={cheminTelephone(t.id)} onClick={(e) => { e.preventDefault(); choisir(t); }}>{t.modele}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <h2>Chargeurs par ordinateur portable</h2>
+            <ul className={styles.indexOrdis}>
+              {ORDINATEURS.filter((o) => !o.generique).map((o) => (
+                <li key={o.id}><a href={cheminOrdinateur(o.id)} onClick={(e) => { e.preventDefault(); aller({ pc: o.id }, `Chargeur pour ${o.nom} | Chope ton chargeur`); }}>{o.marque === 'Apple' ? o.nom : `${o.marque} ${o.nom}`}</a></li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <Guide />
       </main>

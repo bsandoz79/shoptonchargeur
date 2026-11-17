@@ -19,7 +19,7 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S24 Ultra' })).toBeInTheDocument();
     expect(screen.getByText(/Sans PPS, la charge retombe à 15 W/)).toBeInTheDocument();
-    expect(window.location.search).toBe('?tel=samsung-galaxy-s24-ultra');
+    expect(window.location.pathname).toBe('/chargeur/samsung-galaxy-s24-ultra/');
 
     // À acheter en priorité : le chargeur conseillé par Samsung, puis le meilleur rapport qualité/prix.
     const priorite = screen.getByRole('region', { name: 'À acheter en priorité' });
@@ -100,7 +100,7 @@ describe('App', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
     expect(screen.getByRole('combobox', { name: 'Quel téléphone veux-tu recharger ?' })).toBeInTheDocument();
-    expect(window.location.search).toBe('');
+    expect(window.location.pathname).toBe('/');
   });
 
   it('au clavier : flèche et Entrée choisissent une suggestion ; iPhone Lightning : câble Lightning conseillé', async () => {
@@ -159,7 +159,7 @@ describe('App', () => {
     expect(screen.getByText('Ou choisis ta marque')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '65 W' }));
     expect(screen.getByRole('heading', { level: 2, name: 'PC portable avec chargeur de 65 W' })).toBeInTheDocument();
-    expect(window.location.search).toBe('?pc=pc-65w');
+    expect(window.location.pathname).toBe('/ordinateur/pc-65w/');
 
     const liste = produits();
     expect(within(liste[0]).getByText('Notre choix USB-C')).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('App', () => {
     await userEvent.type(screen.getByRole('combobox', { name: 'Quel ordinateur veux-tu recharger ?' }), 'xps');
     await userEvent.click(screen.getByRole('option', { name: /XPS 13/ }));
     expect(screen.getByRole('heading', { level: 2, name: 'XPS 13 (9340, 9345)' })).toBeInTheDocument();
-    expect(window.location.search).toBe('?pc=dell-xps-13-9340');
+    expect(window.location.pathname).toBe('/ordinateur/dell-xps-13-9340/');
     expect(screen.getByText(/Prends au moins 60 W/)).toBeInTheDocument();
   });
 
@@ -235,7 +235,7 @@ describe('App', () => {
     window.scrollTo = defiler as unknown as typeof window.scrollTo;
     render(<App />);
     await userEvent.click(screen.getByRole('link', { name: /Chope ton chargeur/ }));
-    expect(window.location.search).toBe('');
+    expect(window.location.pathname).toBe('/');
     expect(defiler).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
   });
 
@@ -246,6 +246,23 @@ describe('App', () => {
     act(() => { window.dispatchEvent(new Event('scroll')); });
     expect(await screen.findByRole('button', { name: 'Remonter en haut de la page' })).toBeInTheDocument();
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+  });
+
+  it('adresses lisibles : /chargeur/… ouvre le téléphone, les anciens liens ?tel=… aussi', () => {
+    window.history.replaceState(null, '', '/chargeur/google-pixel-8/');
+    const { unmount } = render(<App />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Pixel 8' })).toBeInTheDocument();
+    unmount();
+    window.history.replaceState(null, '', '/?tel=google-pixel-8');
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Pixel 8' })).toBeInTheDocument();
+  });
+
+  it('accueil : liens vers toutes les fiches, par marque', () => {
+    render(<App />);
+    const index = screen.getByRole('region', { name: 'Chargeurs par téléphone' });
+    expect(within(index).getByRole('link', { name: 'iPhone 15' })).toHaveAttribute('href', '/chargeur/apple-iphone-15/');
+    expect(within(index).getByRole('link', { name: /Dell XPS 13/ })).toHaveAttribute('href', '/ordinateur/dell-xps-13-9340/');
   });
 
   it('affiche la mention des liens affiliés', () => {
