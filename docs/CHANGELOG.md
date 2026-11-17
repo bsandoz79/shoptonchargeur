@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (référencement)
+- Adresses lisibles par appareil (`/chargeur/…/`, `/ordinateur/…/`, `/guide/`), 120 pages générées avec titre, description, adresse canonique, réponse en texte et FAQ, données structurées (FAQPage, BreadcrumbList, WebSite), `sitemap.xml`, `robots.txt` ouvert aux assistants, `llms.txt`, index de toutes les fiches sur l'accueil. Voir `docs/referencement.md`.
+
 ### Ajouté (logo)
 - Logo du site (ordinateur, éclair, téléphone et prise) dans l'en-tête, en icône d'onglet, en icône d'écran d'accueil (iPhone) et en image de partage.
 

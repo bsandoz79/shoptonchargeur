@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --ssr src/seo/prerender.ts --outDir dist-seo && node dist-seo/prerender.js",
     "lint": "oxlint src",
     "preview": "vite preview",
     "test": "vitest run",

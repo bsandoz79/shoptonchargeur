@@ -5,6 +5,11 @@ RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Adresses de pages sans fichier généré (ex. un téléphone du catalogue) : l'application les affiche.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
 # Fichiers versionnés (nom avec empreinte) : gardés un an ; la page, jamais en cache (elle pointe vers les nouveaux fichiers).
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css)$">
