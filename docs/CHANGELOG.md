@@ -1,6 +1,11 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (batterie et câbles)
+- Effet de chaque charge sur la batterie (`src/moteur/batterie.ts`), d'après la puissance obtenue : très rapide (40 W et plus), rapide (21 à 39 W), douce (20 W et moins), avec deux jauges « Vitesse » et « Batterie ménagée » et une explication ; le sans fil est signalé comme plus chaud qu'un câble. Aucun chiffre d'usure n'est annoncé.
+- Guide : « Charge rapide et batterie : à quel prix ? » et « Faire durer sa batterie » (4 conseils) ; longueur du câble expliquée.
+- Câble à associer proposé en plusieurs longueurs (1 m, 2 m, et 3 m pour les câbles 60 W).
+
 ### Ajouté (priorités d'achat)
 - « À acheter en priorité » en tête des résultats : le chargeur conseillé par le constructeur (celui de la marque qui donne la vitesse maximale, le moins puissant d'entre eux) et le meilleur rapport qualité/prix, en grandes cartes à bandeau ; puis « Les autres chargeurs compatibles », que le tri range. Même chose pour le sans fil (MagSafe conseillé par Apple…). Règles : `src/moteur/selection.ts`.
 - Fiches vérifiées iPhone 17, 17 Pro, 17 Pro Max (40 W filaire, MagSafe 25 W) et iPhone Air (20 W, MagSafe 20 W) ; adaptateur secteur dynamique Apple 40 W.

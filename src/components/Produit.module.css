@@ -49,8 +49,26 @@
 
 .actions { display: grid; gap: .5rem; margin-top: auto; padding-top: .3rem; }
 .acheter { width: 100%; }
-.cable { display: flex; align-items: center; gap: .5rem; padding: .25rem .6rem .25rem .25rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord);
-  color: var(--c-texte); text-decoration: none; font-size: .86rem; font-weight: 600; line-height: 1.25; }
-.cable:hover { border-color: var(--c-bord-fort); background: var(--c-fond); }
+.cable { display: grid; gap: .3rem; padding: .25rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); }
+.cableLien { display: flex; align-items: center; gap: .5rem; padding-right: .35rem; border-radius: 6px; color: var(--c-texte); text-decoration: none; font-size: .86rem; font-weight: 600; line-height: 1.25; }
+.cableLien:hover { background: var(--c-fond); }
+.longueurs { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; padding: 0 .35rem .3rem; font-size: .8rem; color: var(--c-texte-doux); }
+.longueurs a { min-width: 44px; min-height: 30px; display: inline-grid; place-items: center; padding: 0 .5rem; border-radius: 999px; border: 1px solid var(--c-bord-fort);
+  color: var(--c-texte); font-weight: 700; text-decoration: none; }
+.longueurs a:hover { border-color: var(--c-texte); }
 .cable svg { flex: none; background: var(--c-visuel); border-radius: 6px; }
 .cableLibelle { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }
+
+/* Vitesse contre durée de vie de la batterie. */
+.batterie { display: grid; gap: .4rem; padding: .65rem .75rem; border-radius: var(--rayon-petit); background: var(--c-fond); border-left: 3px solid var(--c-bord-fort); }
+.batterie_tres_rapide { border-left-color: #c2410c; }
+.batterie_rapide { border-left-color: #ca8a04; }
+.batterie_douce { border-left-color: var(--c-accent); }
+.batterieTitre { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.batterieTexte { font-size: .84rem; color: var(--c-texte-doux); }
+.jauges { display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
+.jauge { display: inline-flex; align-items: center; gap: .4rem; }
+.jaugeLibelle { font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
+.crans { display: inline-flex; gap: 3px; }
+.crans span { width: 14px; height: 6px; border-radius: 3px; background: var(--c-bord-fort); }
+.crans span.plein { background: var(--c-texte); }

@@ -44,10 +44,10 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
   const [tri, setTri] = useState<Tri>('vitesse');
   const propositions = useMemo(() => proposerOrdinateur(ordinateur, chargeurs, tri), [ordinateur, chargeurs, tri]);
   const cable = ordinateur.besoinW > 100
-    ? { nom: 'Câble USB-C 240 W', requete: 'câble USB-C vers USB-C 240W' }
+    ? { nom: 'Câble USB-C 240 W', requete: 'câble USB-C vers USB-C 240W', longueurs: [1, 2] }
     : ordinateur.besoinW > 60
-      ? { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 100W 5A' }
-      : { nom: 'Câble USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé' };
+      ? { nom: 'Câble USB-C 5 A (100 W)', requete: 'câble USB-C vers USB-C 100W 5A', longueurs: [1, 2] }
+      : { nom: 'Câble USB-C 60 W', requete: 'câble USB-C vers USB-C 60W tressé', longueurs: [1, 2, 3] };
   const produits: ProduitAffiche[] = propositions.map((p, i) => {
     const c = p.chargeur;
     return {

@@ -1,4 +1,5 @@
 import { lienAmazon, lienMarchand } from '../moteur/affiliation';
+import type { EffetBatterie } from '../moteur/batterie';
 import { EXPLICATION_QUALITE_PRIX, type Verdict } from '../moteur/qualitePrix';
 import type { Forme, Teinte } from '../moteur/types';
 import { Icone } from './Icone';
@@ -18,6 +19,8 @@ export interface ProduitAffiche {
   vedette?: 'constructeur' | 'qualitePrix';
   /** Vitesse ou verdict sur l'appareil choisi ; `ok` : coche verte. Absent : rien n'est annoncé. */
   verdict?: { texte: string; ok: boolean };
+  /** Effet de cette charge sur la batterie (vitesse contre durée de vie). */
+  batterie?: EffetBatterie;
   qualitePrix?: Verdict;
   caracteristiques: string[];
   pourquoi?: string;
@@ -25,12 +28,22 @@ export interface ProduitAffiche {
   requete: string;
   /** Identifiant Amazon du produit (ASIN) : le lien mène directement à sa page, sinon à une recherche. */
   asin?: string;
-  /** Câble à associer (le bloc seul ne suffit pas). */
-  cable?: { nom: string; requete: string };
+  /** Câble à associer (le bloc seul ne suffit pas), proposé en plusieurs longueurs. */
+  cable?: { nom: string; requete: string; longueurs?: number[] };
 }
 
 /** Page du produit si son identifiant Amazon est connu, sinon une recherche. */
 const lienProduit = (p: { asin?: string; requete: string }) => (p.asin ? lienAmazon(p.asin) : lienMarchand(p.requete));
+
+/** Jauge de 3 crans, lue par les lecteurs d'écran comme « n sur 3 ». */
+function Jauge({ libelle, valeur }: { libelle: string; valeur: 1 | 2 | 3 }) {
+  return (
+    <span className={styles.jauge} role="img" aria-label={`${libelle} : ${valeur} sur 3`}>
+      <span className={styles.jaugeLibelle} aria-hidden="true">{libelle}</span>
+      <span className={styles.crans} aria-hidden="true">{[1, 2, 3].map((n) => <span key={n} className={n <= valeur ? styles.plein : undefined} />)}</span>
+    </span>
+  );
+}
 
 const PRIX = { 1: 'Petit prix', 2: 'Prix moyen', 3: 'Haut de gamme' } as const;
 const CLASSE_QP: Record<Verdict, string | undefined> = { Excellent: styles.qpExcellent, 'Très bon': styles.qpTresbon, Bon: undefined, Moyen: styles.qpMoyen };
@@ -69,6 +82,16 @@ export function Produit({ p }: { p: ProduitAffiche }) {
             <span className={styles.prixTexte}>{PRIX[p.budget]}</span>
           </p>
         </div>
+        {p.batterie && (
+          <div className={`${styles.batterie} ${styles[`batterie_${p.batterie.profil.replace('-', '_')}`] ?? ''}`}>
+            <p className={styles.batterieTitre}>Charge {p.batterie.titre.toLowerCase()}</p>
+            <div className={styles.jauges}>
+              <Jauge libelle="Vitesse" valeur={p.batterie.vitesse} />
+              <Jauge libelle="Batterie ménagée" valeur={p.batterie.menagement} />
+            </div>
+            <p className={styles.batterieTexte}>{p.batterie.texte}</p>
+          </div>
+        )}
         {p.pourquoi && (
           <details className={styles.pourquoi}>
             <summary>Pourquoi il convient</summary>
@@ -81,10 +104,21 @@ export function Produit({ p }: { p: ProduitAffiche }) {
             Voir le prix <Icone nom="externe" taille={17} /><span className="sr-only"> de {p.nom} sur Amazon (nouvel onglet, lien affilié)</span>
           </a>
           {p.cable && (
-            <a className={styles.cable} href={lienMarchand(p.cable.requete)} target="_blank" rel="sponsored nofollow noopener">
-              <Illustration forme="cable" teinte={p.teinte === 'noir' ? 'noir' : 'blanc'} taille={44} />
-              <span><span className={styles.cableLibelle}>À associer</span>{p.cable.nom}</span>
-            </a>
+            <div className={styles.cable}>
+              <a className={styles.cableLien} href={lienMarchand(p.cable.requete)} target="_blank" rel="sponsored nofollow noopener">
+                <Illustration forme="cable" teinte={p.teinte === 'noir' ? 'noir' : 'blanc'} taille={44} />
+                <span><span className={styles.cableLibelle}>À associer</span>{p.cable.nom}</span>
+              </a>
+              {p.cable.longueurs && (
+                <p className={styles.longueurs}>
+                  <span>Longueur :</span>
+                  {p.cable.longueurs.map((l) => (
+                    <a key={l} href={lienMarchand(`${p.cable!.requete} ${l}m`)} target="_blank" rel="sponsored nofollow noopener"
+                      aria-label={`${p.cable!.nom}, ${l} mètre${l > 1 ? 's' : ''} (lien affilié)`}>{l} m</a>
+                  ))}
+                </p>
+              )}
+            </div>
           )}
         </div>
       </div>

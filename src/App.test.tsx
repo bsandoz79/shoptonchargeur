@@ -31,11 +31,16 @@ describe('App', () => {
     // Rapport qualité/prix, explication, câble à associer.
     expect(within(premier).getByText('Qualité/prix')).toBeInTheDocument();
     expect(within(premier).getByText(/Ce chargeur a le « PPS »/)).toBeInTheDocument();
-    expect(within(premier).getByRole('link', { name: /Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
+    expect(within(premier).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
     // Lien direct vers la page du produit (identifiant Amazon connu).
     const lien = within(premier).getByRole('link', { name: /Voir le prix/ });
     expect(lien).toHaveAttribute('href', 'https://www.amazon.fr/dp/B09PWHYSH8');
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
+
+    // Charge très rapide (45 W) : la batterie est moins ménagée ; câble proposé en 1 m et 2 m.
+    expect(within(premier).getByText('Charge très rapide')).toBeInTheDocument();
+    expect(within(premier).getByRole('img', { name: 'Batterie ménagée : 1 sur 3' })).toBeInTheDocument();
+    expect(within(premier).getByRole('link', { name: /5 A \(100 W\), 2 mètres/ })).toHaveAttribute('href', expect.stringContaining('2m'));
 
     const anker45 = carte('Anker Nano 45 W');
     expect(within(anker45).getByText('25 W sur 45 W possibles')).toBeInTheDocument();
@@ -100,7 +105,7 @@ describe('App', () => {
     render(<App />);
     await userEvent.type(screen.getByRole('combobox'), 'iphone 14{ArrowDown}{Enter}');
     expect(screen.getByRole('heading', { level: 2, name: /iPhone 14/ })).toBeInTheDocument();
-    expect(within(produits()[0]).getByRole('link', { name: /Câble USB-C vers Lightning certifié MFi/ })).toBeInTheDocument();
+    expect(within(produits()[0]).getByRole('link', { name: /^À associer ?Câble USB-C vers Lightning certifié MFi/ })).toBeInTheDocument();
   });
 
   it('détecte un Android reconnu et propose ses chargeurs', async () => {
@@ -158,7 +163,7 @@ describe('App', () => {
     expect(within(liste[0]).getByText('Notre choix')).toBeInTheDocument();
     expect(within(liste[0]).getByText('Recharge normale')).toBeInTheDocument();
     expect(within(liste[0]).getByText(/au moins les 65 W du chargeur d’origine/)).toBeInTheDocument();
-    expect(within(liste[0]).getByRole('link', { name: /Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
+    expect(within(liste[0]).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
     // Pas de chargeur Apple pour un PC ; les chargeurs trop faibles sont signalés, en dernier, sans câble conseillé.
     expect(screen.queryByText('Adaptateur secteur USB-C 96 W')).not.toBeInTheDocument();
     const dernier = liste[liste.length - 1];
@@ -173,10 +178,20 @@ describe('App', () => {
     expect(within(carte('Adaptateur secteur USB-C 96 W')).getByText('Recharge rapide')).toBeInTheDocument();
   });
 
+  it('charge douce pour un iPhone 15 (20 W), sans fil signalé comme plus chaud', async () => {
+    window.history.replaceState(null, '', '/?tel=apple-iphone-15');
+    render(<App />);
+    const conseil = within(screen.getByRole('region', { name: 'À acheter en priorité' })).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0];
+    expect(within(conseil).getByText('Charge douce')).toBeInTheDocument();
+    expect(within(conseil).getByRole('img', { name: 'Batterie ménagée : 3 sur 3' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
+    expect(screen.getAllByText(/le téléphone chauffe plus qu’avec un câble/).length).toBeGreaterThan(0);
+  });
+
   it('guide : le bloc, le câble, les premiers prix, puis les questions', async () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 2, name: 'Comment ça marche, un chargeur ?' })).toBeInTheDocument();
-    for (const titre of ['Comment fonctionne un bloc', 'Comment fonctionne un câble', 'Pourquoi éviter les chargeurs premier prix']) {
+    for (const titre of ['Comment fonctionne un bloc', 'Comment fonctionne un câble', 'Charge rapide et batterie : à quel prix ?', 'Pourquoi éviter les chargeurs premier prix', 'Faire durer sa batterie']) {
       expect(screen.getByRole('heading', { level: 3, name: titre })).toBeInTheDocument();
     }
     expect(screen.getByText(/Le logo « CE » ne prouve rien/)).toBeInTheDocument();

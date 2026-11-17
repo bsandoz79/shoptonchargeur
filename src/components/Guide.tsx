@@ -1,3 +1,4 @@
+import { CONSEILS_BATTERIE } from '../moteur/batterie';
 import { ESSENTIELS, GUIDE } from '../moteur/explications';
 import { Illustration } from './Illustration';
 import styles from './Guide.module.css';
@@ -14,11 +15,15 @@ export function Guide() {
       <div className={styles.essentiels}>
         {ESSENTIELS.map((e) => (
           <article key={e.id} className={styles.essentiel} aria-labelledby={`guide-${e.id}`}>
-            <div className={styles.visuel}><Illustration forme={e.forme} teinte={e.id === 'camelote' ? 'gris' : 'blanc'} taille={130} /></div>
+            <div className={styles.visuel}><Illustration forme={e.forme} teinte={e.id === 'camelote' ? 'gris' : e.id === 'batterie' ? 'noir' : 'blanc'} taille={130} /></div>
             <h3 id={`guide-${e.id}`}>{e.titre}</h3>
             <ul>{e.points.map((p) => <li key={p}>{p}</li>)}</ul>
           </article>
         ))}
+      </div>
+      <div className={styles.conseils} aria-labelledby="titre-conseils">
+        <h3 id="titre-conseils">Faire durer sa batterie</h3>
+        <ol>{CONSEILS_BATTERIE.map((c) => <li key={c}>{c}</li>)}</ol>
       </div>
       <h3 className={styles.titreQuestions}>Questions fréquentes</h3>
       <div className={styles.questions}>
