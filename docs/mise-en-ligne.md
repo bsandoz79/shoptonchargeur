@@ -6,7 +6,7 @@ Le site est statique : le dossier `dist/` suffit, sans base de données ni PHP.
 Dans cPanel → Domaines : créer `choptonchargeur.bsandoz.fr`, dossier `choptonchargeur.bsandoz.fr` (fait le 17/11/2026). Activer le certificat : SSL/TLS Status → cocher le sous-domaine → « Run AutoSSL ». `public/.htaccess` (envoyé avec le site) force le HTTPS : le certificat doit être actif avant le premier envoi.
 
 ## 2. Dépôt GitHub et envoi automatique
-1. Dépôt : https://github.com/bsandoz79/choptonchargeur (branche `main`, poussée le 17/11/2026).
+1. Dépôt : https://github.com/bsandoz79/shoptonchargeur (ancien nom : choptonchargeur, redirigé par GitHub) (branche `main`, poussée le 17/11/2026).
 2. Dans cPanel → Comptes FTP : créer un compte limité au dossier du sous-domaine.
 3. Dans GitHub → Settings → Secrets and variables → Actions :
    - secrets `FTP_USERNAME` et `FTP_PASSWORD` (le compte FTP ci-dessus) ;
@@ -27,3 +27,10 @@ Autres marchands (Fnac, Boulanger, marques) : passer par une régie d'affiliatio
 - [ ] Vérifier chaque `requete` de `chargeurs.json` : la recherche Amazon doit montrer le bon produit en tête.
 - [ ] Remplacer les `[à compléter]` des mentions légales (éditeur, contact, hébergeur) dans `src/App.tsx`.
 - [ ] Tester la détection sur de vrais téléphones (Android Chrome, iPhone Safari).
+
+## Changement d'adresse (18/11/2026)
+
+Le site s'appelle « Shop ton chargeur » et vit à **https://shoptonchargeur.bsandoz.fr**.
+- cPanel → Domaines : `shoptonchargeur.bsandoz.fr` créé avec **le même dossier** que l'ancien (`choptonchargeur.bsandoz.fr`) ; certificat activé (SSL/TLS Status).
+- `public/.htaccess` redirige toute adresse `choptonchargeur.bsandoz.fr/...` vers la même page sur `shoptonchargeur.bsandoz.fr` (301, définitive). Garder l'ancien sous-domaine et son certificat : sans eux, les anciens liens tomberaient en erreur.
+- Le compte FTP et les secrets GitHub ne changent pas (même dossier).

@@ -1,4 +1,4 @@
-# Tests, build, puis envoi sur o2switch (choptonchargeur.bsandoz.fr) en FTPS avec lftp.
+# Tests, build, puis envoi sur o2switch (shoptonchargeur.bsandoz.fr ; l'ancienne adresse choptonchargeur.bsandoz.fr pointe sur le même dossier et redirige) en FTPS avec lftp.
 # Même méthode que le déploiement de Perfect Clean (bsandoz-booking), éprouvée chez o2switch.
 # À régler dans GitHub → Settings → Secrets and variables → Actions :
 #   secrets   FTP_USERNAME, FTP_PASSWORD : compte FTP limité au dossier du sous-domaine (ex. chargeur@bsandoz.fr)
