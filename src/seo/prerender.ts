@@ -25,13 +25,15 @@ function html(p: Page): string {
     `<meta property="og:locale" content="fr_FR" />`,
     ...p.jsonLd.map((j) => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`),
   ].join('\n    ');
+  // Le texte pour les moteurs de recherche est caché dès que JavaScript tourne (voir index.html et base.css),
+  // sinon il s'affiche sans mise en forme une fraction de seconde avant le site.
   return modele
     .replace(/<title>[\s\S]*?<\/title>/, '')
     .replace(/<meta name="description"[^>]*>/, '')
     .replace(/<link rel="canonical"[^>]*>/, '')
     .replace(/<meta property="og:(title|description|url)"[^>]*>/g, '')
     .replace('</head>', `    ${tete}\n  </head>`)
-    .replace('<div id="root"></div>', `<div id="root">${p.contenu}</div>`);
+    .replace('<div id="root"></div>', `<div id="root"><div data-statique>${p.contenu}</div></div>`);
 }
 
 const pages = toutesLesPages();

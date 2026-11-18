@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Corrigé (chargement)
+- Plus d'éclair de page en texte brut au chargement : le texte écrit pour les moteurs de recherche est caché dès que JavaScript tourne ; il reste lisible par les robots et sans JavaScript.
+
 ### Ajouté (questions avant l'achat)
 - Cinq questions en tête du guide : « De quel chargeur ai-je besoin ? », « Quel chargeur choisir pour mon téléphone ? », « Comment savoir combien de watts accepte mon téléphone ? », « Faut-il acheter le chargeur de la marque ? », « Quel chargeur prendre pour plusieurs appareils ? ». Elles sont aussi sur l'accueil, en FAQ structurée.
 - Titres : « Quel chargeur choisir pour ton téléphone ou ton PC ? » (accueil), « Comment choisir un chargeur » (guide).

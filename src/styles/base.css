@@ -20,3 +20,8 @@ button, input { font: inherit; color: inherit; }
 .btn--contour:hover { background: var(--c-fond); border-color: var(--c-texte); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+
+/* Texte des pages écrit pour les moteurs de recherche (src/seo/prerender.ts) : caché quand JavaScript affiche le site. */
+.js [data-statique] {
+  display: none;
+}
