@@ -1,7 +1,13 @@
-# Règles Apache (o2switch) pour choptonchargeur.bsandoz.fr, envoyées avec le site.
+# Règles Apache (o2switch) pour shoptonchargeur.bsandoz.fr, envoyées avec le site.
+
+RewriteEngine On
+
+# Ancienne adresse (choptonchargeur.bsandoz.fr, même dossier) : redirection définitive vers la nouvelle,
+# même page, pour garder les visiteurs, les liens partagés et le référencement Google.
+RewriteCond %{HTTP_HOST} ^(www\.)?choptonchargeur\.bsandoz\.fr$ [NC]
+RewriteRule ^ https://shoptonchargeur.bsandoz.fr%{REQUEST_URI} [L,R=301]
 
 # Toujours en HTTPS.
-RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 

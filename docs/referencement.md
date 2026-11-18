@@ -11,10 +11,14 @@
 Le contenu des pages vient du même moteur que l'application (`src/seo/pages.ts`) : une modification des données met tout à jour au prochain envoi.
 
 ## À faire (une fois)
-1. **Google Search Console** (search.google.com/search-console) : ajouter la propriété `https://choptonchargeur.bsandoz.fr`, la valider (fichier HTML à déposer dans `public/`, ou enregistrement DNS dans cPanel), puis soumettre `https://choptonchargeur.bsandoz.fr/sitemap.xml`.
+1. **Google Search Console** (search.google.com/search-console) : ajouter la propriété `https://shoptonchargeur.bsandoz.fr`, la valider (fichier HTML à déposer dans `public/`, ou enregistrement DNS dans cPanel), puis soumettre `https://choptonchargeur.bsandoz.fr/sitemap.xml`.
 2. **Bing Webmaster Tools** (bing.com/webmasters) : importer la propriété depuis Search Console et soumettre le même sitemap. Bing alimente aussi ChatGPT et Copilot.
 3. Demander l'indexation de quelques pages clés (accueil, guide, iPhone et Galaxy récents) dans Search Console.
 
 ## Pour progresser
 - Ajouter des fiches vérifiées pour les téléphones les plus vendus : chacune devient une page.
 - Obtenir des liens depuis d'autres sites (portfolio, bsandoz.fr, forums, réseaux) : c'est ce qui pèse le plus pour Google comme pour les assistants.
+
+## Changement d'adresse (choptonchargeur → shoptonchargeur)
+
+Les anciennes adresses redirigent (301) vers les nouvelles, page par page : Google transfère le référencement. Dans la Search Console : ajouter la propriété `https://shoptonchargeur.bsandoz.fr`, y envoyer `sitemap.xml`, et garder l'ancienne propriété pour suivre la bascule.

@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (adresse)
+- Nouvelle adresse https://shoptonchargeur.bsandoz.fr ; l'ancienne (choptonchargeur.bsandoz.fr) redirige page par page (301). Adresses canoniques, plan du site, aperçus et llms.txt sur la nouvelle.
+
 ### Modifié (nom)
 - Le site s'appelle maintenant « Shop ton chargeur » (titres, en-tête, pages générées, llms.txt). L'adresse change dans un second temps (shoptonchargeur.bsandoz.fr, avec redirection de l'ancienne).
 

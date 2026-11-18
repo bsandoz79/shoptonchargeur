@@ -3,7 +3,7 @@
  *   /chargeur/<téléphone>/   /ordinateur/<ordinateur>/   /ordinateur/ (choix)   /guide/
  * Les anciennes adresses (?tel=…, ?pc=…) restent comprises.
  */
-export const SITE = 'https://choptonchargeur.bsandoz.fr';
+export const SITE = 'https://shoptonchargeur.bsandoz.fr';
 
 export const cheminTelephone = (id: string) => `/chargeur/${id}/`;
 export const cheminOrdinateur = (id: string) => (id === 'choix' ? '/ordinateur/' : `/ordinateur/${id}/`);
