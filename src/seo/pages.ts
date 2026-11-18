@@ -23,7 +23,7 @@ export interface Page {
   jsonLd: object[];
 }
 
-const NOM_SITE = 'Chope ton chargeur';
+const NOM_SITE = 'Shop ton chargeur';
 export const echapper = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const w = (n: number) => `${String(n).replace('.', ',')} W`;
 const PROTOCOLE = { pd: 'USB-C Power Delivery', pps: 'USB-C Power Delivery avec PPS', proprietaire: 'charge rapide de la marque' } as const;
@@ -158,7 +158,7 @@ export function pageAccueil(): Page {
   const intro = 'Indique ton téléphone ou ton ordinateur portable : on te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix, la vitesse de charge réelle, le câble qui va avec et les chargeurs sans fil. Uniquement des marques connues, en prise française.';
   return {
     chemin: '/',
-    titre: 'Quel chargeur choisir pour ton téléphone ou ton PC ? | Chope ton chargeur',
+    titre: 'Quel chargeur choisir pour ton téléphone ou ton PC ? | Shop ton chargeur',
     description: 'De quel chargeur as-tu besoin ? Tape ton modèle : chargeur conseillé par la marque, meilleur rapport qualité/prix, puissance, câble et sans fil. iPhone, Samsung, Pixel, Xiaomi, MacBook…',
     contenu: `<main><h1>Quel chargeur choisir pour ton téléphone ?</h1><p>${echapper(intro)}</p>${faqHtml(choisir)}<p><a href="${CHEMIN_GUIDE}">Le guide complet : watts, Power Delivery, PPS, câble, batterie</a></p>${listeLiens()}</main>`,
     jsonLd: [faq(choisir), {

@@ -1,6 +1,9 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (nom)
+- Le site s'appelle maintenant « Shop ton chargeur » (titres, en-tête, pages générées, llms.txt). L'adresse change dans un second temps (shoptonchargeur.bsandoz.fr, avec redirection de l'ancienne).
+
 ### Corrigé (chargement)
 - Plus d'éclair de page en texte brut au chargement : le texte écrit pour les moteurs de recherche est caché dès que JavaScript tourne ; il reste lisible par les robots et sans JavaScript.
 

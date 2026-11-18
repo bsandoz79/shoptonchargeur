@@ -16,7 +16,7 @@ import { chemin, cheminOrdinateur, cheminTelephone, lireAdresse, type Adresse } 
 import styles from './App.module.css';
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
-const TITRE = 'Chope ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
+const TITRE = 'Shop ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
 /** Ce que dit l'adresse : /chargeur/<téléphone>/, /ordinateur/<ordinateur>/, /ordinateur/, /guide/ (anciens liens ?tel=… compris). */
 const lireAdresseCourante = () => lireAdresse(window.location.pathname, window.location.search);
 
@@ -60,7 +60,7 @@ export function App() {
     try { window.history.pushState(null, '', chemin(suivante)); } catch { /* adresse inchangée */ }
     document.title = titre;
   };
-  const choisir = (t: Appareil) => aller({ tel: t.id }, `Chargeur pour ${nomComplet(t)} | Chope ton chargeur`);
+  const choisir = (t: Appareil) => aller({ tel: t.id }, `Chargeur pour ${nomComplet(t)} | Shop ton chargeur`);
 
   // Adresse /guide/ : on descend jusqu'au guide.
   useEffect(() => {
@@ -91,7 +91,7 @@ export function App() {
         <div className={styles.enteteInterieur}>
           <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); remonter(); }}>
             <img className={styles.logoImage} src={logo} alt="" width={58} height={44} />
-            Chope ton chargeur
+            Shop ton chargeur
           </a>
           <nav aria-label="Rubriques" className={styles.nav}>
             <a href="/" onClick={(e) => { e.preventDefault(); aller({}); }}>Téléphones</a>
@@ -131,7 +131,7 @@ export function App() {
             </div>
 
             {partieOrdinateur ? (
-              <ChoixOrdinateur ordinateurs={ORDINATEURS} onChoisir={(o) => aller({ pc: o.id }, `Chargeur pour ${o.nom} | Chope ton chargeur`)} />
+              <ChoixOrdinateur ordinateurs={ORDINATEURS} onChoisir={(o) => aller({ pc: o.id }, `Chargeur pour ${o.nom} | Shop ton chargeur`)} />
             ) : (
               <>
                 {detection.telephone && (
@@ -194,7 +194,7 @@ export function App() {
             <h2>Chargeurs par ordinateur portable</h2>
             <ul className={styles.indexOrdis}>
               {ORDINATEURS.filter((o) => !o.generique).map((o) => (
-                <li key={o.id}><a href={cheminOrdinateur(o.id)} onClick={(e) => { e.preventDefault(); aller({ pc: o.id }, `Chargeur pour ${o.nom} | Chope ton chargeur`); }}>{o.marque === 'Apple' ? o.nom : `${o.marque} ${o.nom}`}</a></li>
+                <li key={o.id}><a href={cheminOrdinateur(o.id)} onClick={(e) => { e.preventDefault(); aller({ pc: o.id }, `Chargeur pour ${o.nom} | Shop ton chargeur`); }}>{o.marque === 'Apple' ? o.nom : `${o.marque} ${o.nom}`}</a></li>
               ))}
             </ul>
           </section>
