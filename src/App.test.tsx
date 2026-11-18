@@ -234,7 +234,7 @@ describe('App', () => {
     const defiler = vi.fn();
     window.scrollTo = defiler as unknown as typeof window.scrollTo;
     render(<App />);
-    await userEvent.click(screen.getByRole('link', { name: /Chope ton chargeur/ }));
+    await userEvent.click(screen.getByRole('link', { name: /Shop ton chargeur/ }));
     expect(window.location.pathname).toBe('/');
     expect(defiler).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
   });

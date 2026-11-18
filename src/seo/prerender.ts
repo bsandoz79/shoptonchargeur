@@ -86,7 +86,7 @@ Sitemap: ${SITE}/sitemap.xml
 
 // llms.txt : résumé du site et de ses pages, lisible par les assistants.
 const parType = (prefixe: string) => pages.filter((p) => p.chemin.startsWith(prefixe) && p.chemin !== prefixe);
-writeFileSync(join(DIST, 'llms.txt'), `# Chope ton chargeur
+writeFileSync(join(DIST, 'llms.txt'), `# Shop ton chargeur
 
 > Guide indépendant, en français, pour choisir le chargeur compatible avec son téléphone ou son ordinateur portable : chargeur conseillé par le fabricant, meilleur rapport qualité/prix, vitesse de charge obtenue, câble et chargeurs sans fil. Uniquement des marques connues, en version prise française. Les liens vers les marchands sont des liens affiliés.
 
@@ -96,10 +96,10 @@ writeFileSync(join(DIST, 'llms.txt'), `# Chope ton chargeur
 - [Ordinateurs portables](${SITE}/ordinateur/) : chargeur d'origine et chargeurs USB-C compatibles
 
 ## Téléphones
-${parType('/chargeur/').map((p) => `- [${p.titre.replace(/ \| Chope ton chargeur$/, '')}](${SITE}${p.chemin})`).join('\n')}
+${parType('/chargeur/').map((p) => `- [${p.titre.replace(/ \| Shop ton chargeur$/, '')}](${SITE}${p.chemin})`).join('\n')}
 
 ## Ordinateurs
-${parType('/ordinateur/').map((p) => `- [${p.titre.replace(/ \| Chope ton chargeur$/, '')}](${SITE}${p.chemin})`).join('\n')}
+${parType('/ordinateur/').map((p) => `- [${p.titre.replace(/ \| Shop ton chargeur$/, '')}](${SITE}${p.chemin})`).join('\n')}
 `);
 
 console.log(`Référencement : ${pages.length} pages, sitemap.xml, robots.txt et llms.txt générés.`);
