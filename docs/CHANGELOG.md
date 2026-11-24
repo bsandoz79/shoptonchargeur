@@ -1,6 +1,16 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (référencement)
+- Modèles proches en bas de chaque fiche téléphone (même marque, même gamme d'abord : S25, S25+, S24 Ultra…), dans le site et dans les pages générées.
+- Pages générées : lien « Voir le prix » vers Amazon (lien affilié, `rel="sponsored nofollow"`) pour chaque chargeur, et pied de page lisible sans JavaScript (liens affiliés, mentions légales).
+
+### Modifié (textes)
+- L'introduction d'une fiche ne répète plus la première réponse des questions fréquentes (téléphones et ordinateurs).
+
+### Corrigé (mentions légales)
+- Éditeur (Baptiste Sandoz), contact (contact@bsandoz.fr) et hébergeur (o2switch) renseignés ; textes du pied de page dans `src/legal.ts`.
+
 ### Modifié (adresse)
 - Nouvelle adresse https://shoptonchargeur.bsandoz.fr ; l'ancienne (choptonchargeur.bsandoz.fr) redirige page par page (301). Adresses canoniques, plan du site, aperçus et llms.txt sur la nouvelle.
 

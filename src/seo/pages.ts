@@ -4,10 +4,12 @@
  * du même moteur que l'application : la page lue par un robot dit la même chose que celle vue par un visiteur.
  */
 import { CHARGEURS, CHARGEURS_SANS_FIL, ORDINATEURS, TELEPHONES } from '../data';
+import { lienAmazon, lienMarchand } from '../moteur/affiliation';
 import { ESSENTIELS, GUIDE, pourquoi } from '../moteur/explications';
 import { besoinEffectif, enUsbC, LIBELLE_PRISE, type Ordinateur } from '../moteur/ordinateur';
 import { proposer } from '../moteur/compatibilite';
 import { nomComplet } from '../moteur/recherche';
+import { modelesProches } from '../moteur/proches';
 import { proposerSansFil } from '../moteur/sansFil';
 import { selectionner } from '../moteur/selection';
 import type { Telephone } from '../moteur/types';
@@ -42,6 +44,10 @@ function filAriane(elements: { nom: string; chemin: string }[]): object {
   };
 }
 
+/** Lien vers le produit chez le marchand (page du produit si son identifiant est connu, sinon une recherche), lien affilié. */
+const lienProduit = (p: { asin?: string; requete: string }, nom: string) =>
+  ` <a href="${echapper(p.asin ? lienAmazon(p.asin) : lienMarchand(p.requete))}" rel="sponsored nofollow">Voir le prix de ${echapper(nom)} sur Amazon</a>`;
+
 const faqHtml = (questions: { q: string; r: string }[]) =>
   `<h2>Questions fréquentes</h2>${questions.map(({ q, r }) => `<h3>${echapper(q)}</h3><p>${echapper(r)}</p>`).join('')}`;
 
@@ -68,6 +74,7 @@ export function pageTelephone(t: Telephone): Page {
   const nomChargeur = (p?: (typeof props)[number]) => (p ? (p.chargeur.nom.startsWith(p.chargeur.marque) ? p.chargeur.nom : `${p.chargeur.nom} ${p.chargeur.marque}`) : '');
   const vitesse = (p: (typeof props)[number]) => (p.puissanceObtenueW === null ? 'charge plus lente' : `${w(p.puissanceObtenueW)}${p.maximale ? ', vitesse maximale' : ''}`);
 
+  const intro = `${nom} accepte jusqu’à ${w(t.puissanceMaxW)} en filaire. Voici les chargeurs qui lui donnent cette vitesse, et ceux qui coûtent moins cher pour une charge un peu plus lente, tous en prise française.`;
   const reponse = `${nom} se recharge jusqu’à ${w(t.puissanceMaxW)} en ${PROTOCOLE[t.protocole]}${t.techno ? ` (${t.techno})` : ''}.`
     + (conseil ? ` Chargeur conseillé par ${t.marque} : ${nomChargeur(conseil)} (${vitesse(conseil)}).` : '')
     + (qp ? ` Meilleur rapport qualité/prix : ${nomChargeur(qp)} (${vitesse(qp)}).` : '')
@@ -95,13 +102,17 @@ export function pageTelephone(t: Telephone): Page {
   ];
 
   const autres = props.filter((p) => p !== conseil && p !== qp).slice(0, 6);
-  const ligne = (p: (typeof props)[number]) => `<li><strong>${echapper(nomChargeur(p))}</strong> : ${echapper(vitesse(p))}. ${echapper(pourquoi(t, p))}</li>`;
+  const ligne = (p: (typeof props)[number]) => `<li><strong>${echapper(nomChargeur(p))}</strong> : ${echapper(vitesse(p))}. ${echapper(pourquoi(t, p))}${lienProduit(p.chargeur, nomChargeur(p))}</li>`;
+  const proches = modelesProches(t, TELEPHONES);
+  const nomCourt = (x: Telephone) => (x.marque === 'Apple' ? x.modele : nomComplet(x));
   const contenu = `<main><nav><a href="/">${NOM_SITE}</a> › <a href="/#telephones">Téléphones</a> › ${echapper(nom)}</nav>`
-    + `<h1>Quel chargeur pour ${echapper(nom)} ?</h1><p>${echapper(reponse)}</p>`
+    + `<h1>Quel chargeur pour ${echapper(nom)} ?</h1><p>${echapper(intro)}</p>`
     + `<h2>À acheter en priorité</h2><ul>${[conseil, qp].filter((p): p is (typeof props)[number] => !!p).map(ligne).join('')}</ul>`
     + (autres.length ? `<h2>Autres chargeurs compatibles</h2><ul>${autres.map(ligne).join('')}</ul>` : '')
-    + (sansFil.length ? `<h2>Chargeurs sans fil</h2><ul>${sansFil.map((p) => `<li><strong>${echapper(p.chargeur.nom)}</strong>${p.puissanceObtenueW ? ` : ${w(p.puissanceObtenueW)}` : ''}. ${echapper(p.pourquoi)}</li>`).join('')}</ul>` : '')
-    + faqHtml(questions) + `<p><a href="${CHEMIN_GUIDE}">Comment marche un chargeur : le guide</a></p></main>`;
+    + (sansFil.length ? `<h2>Chargeurs sans fil</h2><ul>${sansFil.map((p) => `<li><strong>${echapper(p.chargeur.nom)}</strong>${p.puissanceObtenueW ? ` : ${w(p.puissanceObtenueW)}` : ''}. ${echapper(p.pourquoi)}${lienProduit(p.chargeur, p.chargeur.nom)}</li>`).join('')}</ul>` : '')
+    + faqHtml(questions)
+    + (proches.length ? `<h2>Modèles proches</h2><ul>${proches.map((x) => `<li><a href="${cheminTelephone(x.id)}">Chargeur ${echapper(nomCourt(x))}</a></li>`).join('')}</ul>` : '')
+    + `<p><a href="${CHEMIN_GUIDE}">Comment marche un chargeur : le guide</a></p></main>`;
 
   const titre = `Chargeur ${nom} : lequel choisir (${w(t.puissanceMaxW)}) | ${NOM_SITE}`;
   const description = `${nom} charge jusqu’à ${w(t.puissanceMaxW)}. Chargeur conseillé par ${t.marque}${conseil ? ` (${nomChargeur(conseil)})` : ''}, meilleur rapport qualité/prix, câble et sans fil, en prise française.`;
@@ -130,7 +141,9 @@ export function pageOrdinateur(o: Ordinateur): Page {
     ...(o.note ? [{ q: `À quoi faire attention pour ${nom} ?`, r: o.note }] : []),
   ];
   const contenu = `<main><nav><a href="/">${NOM_SITE}</a> › <a href="/ordinateur/">Ordinateurs</a> › ${echapper(nom)}</nav>`
-    + `<h1>Quel chargeur pour ${echapper(nom)} ?</h1><p>${echapper(reponse)}</p>` + faqHtml(questions) + '</main>';
+    + `<h1>Quel chargeur pour ${echapper(nom)} ?</h1><p>${echapper(usbc
+      ? `${nom} se recharge en USB-C : son chargeur d’origine convient, mais un chargeur USB-C de grande marque assez puissant aussi. Voici la puissance à viser et le câble à prendre.`
+      : `${nom} ne se recharge pas en USB-C : il lui faut un chargeur avec le bon embout et la bonne puissance. Voici lesquels.`)}</p>` + faqHtml(questions) + '</main>';
   return {
     chemin: cheminOrdinateur(o.id),
     titre: `Chargeur ${nom} : quelle puissance, quel embout | ${NOM_SITE}`,
