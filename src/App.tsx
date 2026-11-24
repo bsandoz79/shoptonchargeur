@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Guide } from './components/Guide';
 import { Icone } from './components/Icone';
 import { Logo } from './components/Logo';
-import { SceneAccueil } from './components/SceneAccueil';
 import { ChoixOrdinateur, ResultatOrdinateur } from './components/Ordinateur';
 import { Recherche } from './components/Recherche';
 import { RetourHaut } from './components/RetourHaut';
@@ -110,22 +109,10 @@ export function App() {
         {enAttente && <p role="status">Chargement du téléphone…</p>}
         {accueil && (
           <section className={styles.accueil} aria-labelledby="titre-accueil">
-            <div className={styles.hero}>
-              <div className={styles.heroTexte}>
-                <h1 id="titre-accueil">Quel <span className={styles.surligne}>chargeur</span> choisir pour ton téléphone ?</h1>
-                <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
-                <ul className={styles.garanties} aria-label="Nos engagements">
-                  <li><Icone nom="coche" taille={16} />Marques connues uniquement</li>
-                  <li><Icone nom="coche" taille={16} />Prise française</li>
-                  <li><Icone nom="coche" taille={16} />Sans inscription</li>
-                </ul>
-              </div>
-              <div className={styles.heroVisuel} aria-hidden="true">
-                <SceneAccueil />
-              </div>
-            </div>
-
-            <div className={styles.panneau}>
+            <div className={`${styles.haut} ${partieOrdinateur ? styles.seul : ''}`}>
+            <div className={styles.outil}>
+            <h1 id="titre-accueil">Quel chargeur choisir pour ton téléphone&nbsp;?</h1>
+            <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
             <div className={styles.parties} role="group" aria-label="Type d’appareil">
               <button type="button" className={styles.partie} aria-pressed={!partieOrdinateur} onClick={() => aller({})}>
                 <Icone nom="telephone" /> Téléphone
@@ -173,24 +160,33 @@ export function App() {
                 </details>
               </>
             )}
+            <ul className={styles.garanties} aria-label="Nos engagements">
+              <li><Icone nom="coche" taille={15} />Marques connues uniquement</li>
+              <li><Icone nom="coche" taille={15} />Prise française</li>
+              <li><Icone nom="coche" taille={15} />Sans inscription</li>
+            </ul>
             </div>
 
             {!partieOrdinateur && (
               <section className={styles.rapide} aria-labelledby="titre-rapide">
-                <h2 id="titre-rapide">Accès rapide</h2>
+                <h2 id="titre-rapide">Modèles récents</h2>
                 <ul className={styles.cartesModeles}>
                   {ACCES_RAPIDE.map((t) => (
                     <li key={t.id}>
-                      <button type="button" className={styles.carteModele} onClick={() => choisir(t)}>
-                        <span className={styles.carteMarque}>{t.marque}</span>
-                        <span className={styles.carteNom}>{t.modele}</span>
-                        <span className={styles.carteW}><Icone nom="eclair" taille={14} />jusqu’à {t.puissanceMaxW} W</span>
+                      <button type="button" className={styles.carteModele} onClick={() => choisir(t)} aria-label={`${t.marque} ${t.modele}, jusqu’à ${t.puissanceMaxW} W`}>
+                        <span>
+                          <span className={styles.carteMarque}>{t.marque}</span>
+                          <span className={styles.carteNom}>{t.modele}</span>
+                        </span>
+                        <span className={styles.carteW}>{t.puissanceMaxW} W</span>
+                        <span className={styles.fleche}><Icone nom="fleche" taille={18} /></span>
                       </button>
                     </li>
                   ))}
                 </ul>
               </section>
             )}
+            </div>
           </section>
         )}
 

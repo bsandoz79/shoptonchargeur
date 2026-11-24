@@ -265,9 +265,9 @@ describe('App', () => {
     expect(within(index).getByRole('link', { name: /Dell XPS 13/ })).toHaveAttribute('href', '/ordinateur/dell-xps-13-9340/');
   });
 
-  it('accueil : accès rapide à des modèles récents, avec leur puissance, qui ouvrent leur fiche', async () => {
+  it('accueil : modèles récents, avec leur puissance, qui ouvrent leur fiche', async () => {
     render(<App />);
-    const rapide = screen.getByRole('region', { name: 'Accès rapide' });
+    const rapide = screen.getByRole('region', { name: 'Modèles récents' });
     const s25 = within(rapide).getByRole('button', { name: /Galaxy S25 Ultra.*jusqu’à 45 W/ });
     await userEvent.click(s25);
     expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S25 Ultra' })).toBeInTheDocument();
