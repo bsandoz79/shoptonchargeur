@@ -63,7 +63,7 @@ const CLASSE_QP: Record<Verdict, string | undefined> = { Excellent: styles.qpExc
 /** Carte produit : dessin, marque, nom, verdict sur l'appareil, rapport qualité/prix, et le câble qui va avec. */
 export function Produit({ p }: { p: ProduitAffiche }) {
   return (
-    <li className={[styles.carte, p.vedette ? styles.vedette : '', p.vedette === 'qualitePrix' ? styles.vedetteQp : ''].join(' ').trim()}>
+    <li data-apparait className={[styles.carte, p.vedette ? styles.vedette : '', p.vedette === 'qualitePrix' ? styles.vedetteQp : ''].join(' ').trim()}>
       {p.vedette && p.etiquette && (
         <p className={styles.bandeau}><Icone nom={p.vedette === 'constructeur' ? 'eclair' : 'coche'} taille={16} />{p.etiquette}</p>
       )}

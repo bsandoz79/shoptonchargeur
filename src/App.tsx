@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { Guide } from './components/Guide';
 import { Icone } from './components/Icone';
 import { Logo } from './components/Logo';
@@ -19,6 +19,19 @@ import { piedDePage } from './legal';
 const ACCES_RAPIDE = ['apple-iphone-17-pro-max', 'apple-iphone-16', 'samsung-galaxy-s25-ultra', 'samsung-galaxy-s24', 'google-pixel-9', 'samsung-galaxy-a56-5g']
   .map((id) => TELEPHONES.find((t) => t.id === id))
   .filter((t): t is (typeof TELEPHONES)[number] => t !== undefined);
+
+/** Puissance la plus haute de l'accès rapide : sert d'échelle aux jauges. */
+const PUISSANCE_MAX = Math.max(...ACCES_RAPIDE.map((t) => t.puissanceMaxW));
+/** Exemples tapés un à un dans le champ de recherche vide. */
+const EXEMPLES = ['galaxy s24 ultra', 'iphone 15', 'pixel 8', 'redmi note 13'];
+/** Le halo du haut de l'accueil suit le pointeur. */
+const suivrePointeur = (e: PointerEvent<HTMLElement>) => {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`);
+  e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`);
+};
+/** Cascade d'apparition : `--i` décale chaque élément. */
+const rang = (i: number) => ({ '--i': i }) as CSSProperties;
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
 const TITRE = 'Shop ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
@@ -109,12 +122,12 @@ export function App() {
         {enAttente && <p role="status">Chargement du téléphone…</p>}
         {accueil && (
           <section className={styles.accueil} aria-labelledby="titre-accueil">
-            <div className={`${styles.haut} ${partieOrdinateur ? styles.seul : ''}`}>
+            <div className={`${styles.haut} ${partieOrdinateur ? styles.seul : ''}`} onPointerMove={suivrePointeur}>
             <div className={styles.outil}>
-            <p className={styles.surtitre}>Téléphones et ordinateurs portables</p>
-            <h1 id="titre-accueil">Quel chargeur choisir pour ton téléphone&nbsp;?</h1>
-            <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
-            <div className={styles.parties} role="group" aria-label="Type d’appareil">
+            <p className={styles.surtitre} data-apparait style={rang(0)}>Téléphones et ordinateurs portables</p>
+            <h1 id="titre-accueil" data-apparait style={rang(1)}>Quel chargeur choisir pour ton téléphone&nbsp;?</h1>
+            <p className={styles.accroche} data-apparait style={rang(2)}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
+            <div className={styles.parties} role="group" aria-label="Type d’appareil" data-apparait style={rang(3)}>
               <button type="button" className={styles.partie} aria-pressed={!partieOrdinateur} onClick={() => aller({})}>
                 <Icone nom="telephone" /> Téléphone
               </button>
@@ -134,7 +147,7 @@ export function App() {
                   </div>
                 )}
 
-                <Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} />
+                <div data-apparait style={rang(4)}><Recherche telephones={appareils} saisie={saisie} onSaisie={setSaisie} onChoisir={choisir} exemplesAnimes={EXEMPLES} /></div>
 
                 {modelesMarque.length > 0 && (
                   <div className={styles.raccourcis}>
@@ -148,7 +161,7 @@ export function App() {
                   </div>
                 )}
 
-                <div className={styles.raccourcis}>
+                <div className={styles.raccourcis} data-apparait style={rang(5)}>
                   <p className={styles.raccourcisTitre}>Ou pars de la marque</p>
                   <div className={styles.puces}>
                     {MARQUES.map((m) => <button key={m} type="button" className={styles.puce} onClick={() => setSaisie(`${m} `)}>{m}</button>)}
@@ -170,14 +183,15 @@ export function App() {
 
             {!partieOrdinateur && (
               <section className={styles.rapide} aria-labelledby="titre-rapide">
-                <h2 id="titre-rapide">Modèles récents</h2>
+                <h2 id="titre-rapide" data-apparait style={rang(2)}>Modèles récents</h2>
                 <ul className={styles.cartesModeles}>
-                  {ACCES_RAPIDE.map((t) => (
-                    <li key={t.id}>
+                  {ACCES_RAPIDE.map((t, i) => (
+                    <li key={t.id} data-apparait style={rang(i + 3)}>
                       <button type="button" className={styles.carteModele} onClick={() => choisir(t)} aria-label={`${t.marque} ${t.modele}, jusqu’à ${t.puissanceMaxW} W`}>
                         <span>
                           <span className={styles.carteMarque}>{t.marque}</span>
                           <span className={styles.carteNom}>{t.modele}</span>
+                          <span className={styles.jauge} style={{ '--p': t.puissanceMaxW / PUISSANCE_MAX, '--i': i } as CSSProperties} />
                         </span>
                         <span className={styles.carteW}>{t.puissanceMaxW} W</span>
                         <span className={styles.fleche}><Icone nom="fleche" taille={18} /></span>
@@ -199,7 +213,7 @@ export function App() {
         </div>
 
         {accueil && !partieOrdinateur && (
-          <section className={styles.index} aria-labelledby="telephones">
+          <section className={styles.index} aria-labelledby="telephones" data-apparait>
             <h2 id="telephones">Chargeurs par téléphone</h2>
             {[...new Set(TELEPHONES.map((t) => t.marque))].map((m) => (
               <div key={m} className={styles.indexGroupe}>

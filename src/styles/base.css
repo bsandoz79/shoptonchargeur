@@ -15,12 +15,18 @@ button, input { font: inherit; color: inherit; }
   border: 1px solid var(--c-bouton-bord); background: var(--c-bouton-fond); color: var(--c-bouton-texte); font-weight: 600; font-size: .95rem; letter-spacing: .005em;
   text-decoration: none; cursor: pointer; box-shadow: inset 0 1px 0 rgb(255 255 255 / .14); transition: filter .15s ease, transform .1s ease; }
 .btn:hover { filter: brightness(1.15); }
+/* Reflet qui traverse le bouton au survol. */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; transform: translateX(-120%);
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / .3) 50%, transparent 70%); transition: transform .8s cubic-bezier(.2, .7, .2, 1); }
+.btn:hover::after { transform: translateX(120%); }
+.btn--contour::after { display: none; }
 .btn:active { transform: translateY(1px); }
 .btn--contour { background: var(--c-surface); color: var(--c-texte); border-color: var(--c-bord-fort); box-shadow: none; }
 .btn--contour:hover { filter: none; border-color: var(--c-texte); }
 
 /* Logo : monogramme « STC » espacé, en titane brossé. */
-.monogramme { font-size: 1.3rem; font-weight: 600; letter-spacing: .32em; margin-right: -.32em; line-height: 1;
+.monogramme { display: inline-block; animation: reflet 9s ease-in-out infinite alternate; background-size: 220% 100% !important; font-size: 1.3rem; font-weight: 600; letter-spacing: .32em; margin-right: -.32em; line-height: 1;
   background: var(--titane-texte-clair); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
@@ -29,3 +35,17 @@ button, input { font: inherit; color: inherit; }
 .js [data-statique] {
   display: none;
 }
+
+/* Reflet titane qui glisse lentement (logo, grand titre). */
+@keyframes reflet { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+
+/* Apparitions au défilement (src/effets.ts) : seulement quand la classe « effets » est posée. */
+.effets [data-apparait] { opacity: 0; transform: translateY(22px);
+  transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1), border-color .15s ease;
+  transition-delay: calc(var(--i, 0) * 80ms), calc(var(--i, 0) * 80ms), 0s; }
+.effets [data-apparait].vu { opacity: 1; transform: none; }
+/* Cartes produits : cascade dans la grille. */
+.effets li[data-apparait]:nth-child(2) { --i: 1; }
+.effets li[data-apparait]:nth-child(3) { --i: 2; }
+.effets li[data-apparait]:nth-child(4) { --i: 3; }
+.effets li[data-apparait]:nth-child(n + 5) { --i: 4; }
