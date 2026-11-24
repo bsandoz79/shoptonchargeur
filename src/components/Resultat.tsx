@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
 import { CHARGEURS_SANS_FIL, TELEPHONES } from '../data';
 import { proposer, proposerSansFiche } from '../moteur/compatibilite';
-import { pourquoi } from '../moteur/explications';
-import { effetBatterie, effetSansFil } from '../moteur/batterie';
+import { evaluer } from '../moteur/evaluation';
 import { conseilMarque } from '../moteur/marques';
-import { qualitePrix } from '../moteur/qualitePrix';
 import { modelesProches } from '../moteur/proches';
 import { nomComplet } from '../moteur/recherche';
 import { proposerSansFil } from '../moteur/sansFil';
@@ -12,7 +10,7 @@ import { cheminTelephone } from '../seo/adresses';
 import { selectionner, type Candidat, type Selection } from '../moteur/selection';
 import { estVerifie, type Appareil, type Chargeur, type Proposition, type Telephone, type Tri } from '../moteur/types';
 import { Icone } from './Icone';
-import { Produit, type ProduitAffiche } from './Produit';
+import { CableConseille, LegendeNotes, Produit, type ProduitAffiche } from './Produit';
 import styles from './Resultat.module.css';
 
 const TRIS: { cle: Tri; libelle: string }[] = [
@@ -21,7 +19,6 @@ const TRIS: { cle: Tri; libelle: string }[] = [
   { cle: 'puissance', libelle: 'Puissance' },
   { cle: 'fiabilite', libelle: 'Fiabilité' },
 ];
-const PROTOCOLES = { pd: 'Power Delivery', pps: 'PPS', proprietaire: 'Charge de la marque' } as const;
 
 /** Ce qu'il faut savoir sur la charge de ce téléphone, en une phrase. */
 function explication(t: Telephone): string {
@@ -56,11 +53,7 @@ function produitFilaire(a: Appareil, p: Proposition): Ligne {
   const produit: ProduitAffiche = {
     id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'cube', teinte: c.teinte ?? (c.marque === 'Samsung' ? 'noir' : 'blanc'), budget: c.budget,
     verdict,
-    batterie: verifie ? effetBatterie(p.puissanceObtenueW) ?? undefined : undefined,
-    qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
-    caracteristiques: [...(c.puissanceW ? [`${c.puissanceW} W`] : []), ...c.protocoles.map((x) => PROTOCOLES[x]), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque', ...(c.prise === 'fr' || c.origineDe ? ['Prise française'] : [])],
-    pourquoi: verifie ? pourquoi(a, p) : undefined,
-    note: c.note,
+    evaluation: evaluer(part, c.fiabilite, c.budget),
     requete: c.requete,
     asin: c.asin,
     cable: cablePour(a, c),
@@ -84,14 +77,19 @@ function priorites(a: Appareil, lignes: Ligne[]): Selection<ProduitAffiche> {
 /** Les produits à acheter en priorité, puis les autres compatibles. */
 function Rayon({ selection, titreAutres, tri, onTri }: { selection: Selection<ProduitAffiche>; titreAutres: string; tri?: Tri; onTri?: (t: Tri) => void }) {
   const vedettes = [selection.constructeur, selection.qualitePrix].filter((p): p is ProduitAffiche => !!p);
+  // Le câble du chargeur conseillé : le même pour presque toute la liste, affiché une seule fois.
+  const avecCable = [...vedettes, ...selection.autres].find((p) => p.cable);
   return (
     <>
+      <LegendeNotes />
       {vedettes.length > 0 && (
         <section className={styles.priorite} aria-labelledby="titre-priorite">
           <h3 id="titre-priorite" className={styles.titreSection}>À acheter en priorité</h3>
           <ul className={styles.vedettes}>{vedettes.map((p) => <Produit key={p.id} p={p} />)}</ul>
+          {avecCable?.cable && <CableConseille cable={avecCable.cable} teinte={avecCable.teinte} />}
         </section>
       )}
+      {vedettes.length === 0 && avecCable?.cable && <CableConseille cable={avecCable.cable} teinte={avecCable.teinte} />}
       {selection.autres.length > 0 && (
         <section aria-labelledby="titre-autres">
           <div className={styles.enteteAutres}>
@@ -137,10 +135,7 @@ export function Resultat({ appareil, chargeurs, onChanger, onChoisir }: {
       const produit: ProduitAffiche = {
         id: c.id, marque: c.marque, nom: c.nom, forme: c.forme, teinte: c.teinte, budget: c.budget,
         verdict: w === null ? undefined : { texte: max && w >= max ? `${String(w).replace('.', ',')} W, vitesse maximale sans fil` : `${String(w).replace('.', ',')} W sans fil`, ok: !!max && w >= max },
-        qualitePrix: qualitePrix(part, c.fiabilite, c.budget),
-        batterie: effetSansFil(w),
-        caracteristiques: [`${c.puissanceW} W`, c.norme === 'magsafe' ? 'MagSafe' : c.norme === 'qi2' ? 'Qi2 magnétique' : 'Qi', c.fiabilite === 3 ? 'Constructeur' : 'Grande marque'],
-        pourquoi: p.pourquoi,
+        evaluation: evaluer(part, c.fiabilite, c.budget),
         note: c.note ?? (c.adaptateurW ? `Le bloc secteur est vendu à part. Prends un USB-C de ${c.adaptateurW} W minimum.` : undefined),
         requete: c.requete,
         asin: c.asin,
@@ -201,12 +196,12 @@ export function Resultat({ appareil, chargeurs, onChanger, onChoisir }: {
       <div id="panneau-produits" role="tabpanel" aria-labelledby={onglet === 'secteur' ? 'onglet-secteur' : 'onglet-sansfil'}>
         {onglet === 'secteur' ? (
           <>
-            <p className={styles.chapo}>Sous chaque chargeur, on t’indique aussi le câble qui va avec. Le mauvais câble peut brider la charge.</p>
+            <p className={styles.chapo}>La couleur dit si le chargeur va au mieux avec ton téléphone. Pense aussi au câble : le mauvais peut brider la charge.</p>
             <Rayon selection={filaires} titreAutres="Les autres chargeurs compatibles" tri={tri} onTri={setTri} />
           </>
         ) : nbSansFil > 0 ? (
           <>
-            <p className={styles.chapo}>Moins rapide qu’un câble, mais bien pratique au bureau ou sur la table de nuit. Que des modèles de marques connues.</p>
+            <p className={styles.chapo}>Moins rapide qu’un câble, et le téléphone chauffe plus qu’avec un câble, mais bien pratique au bureau ou sur la table de nuit. Que des modèles de marques connues.</p>
             <Rayon selection={produitsSansFil} titreAutres="Les autres chargeurs sans fil compatibles" />
           </>
         ) : (

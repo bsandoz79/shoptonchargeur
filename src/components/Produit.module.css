@@ -1,11 +1,10 @@
-/* Carte produit, façon boutique : visuel sur fond clair, informations dessous, bouton pleine largeur. */
+/* Carte produit, épurée : dessin, nom, note en couleur, bouton. Toute la carte est cliquable. */
 .carte { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px solid var(--c-bord);
-  transition: border-color .15s ease, box-shadow .15s ease; }
-.carte:hover { border-color: var(--c-bord-fort); }
+  cursor: pointer; transition: border-color .15s ease, box-shadow .2s ease; }
+.carte:hover { border-color: var(--c-bord-fort); box-shadow: var(--ombre); }
 /* Le chargeur se soulève un peu au survol de sa carte. */
 .visuel > svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
 .carte:hover .visuel > svg { transform: translateY(-6px) rotate(-2deg); }
-.choix { border-color: var(--c-texte); }
 
 /* Produits à acheter en priorité : bandeau titre, cadre marqué, visuel à gauche sur grand écran. */
 .vedette { grid-template-rows: auto auto 1fr; border: 2px solid var(--c-texte); }
@@ -13,62 +12,59 @@
 .bandeau { display: flex; align-items: center; gap: .4rem; padding: .55rem 1rem; background: var(--c-texte); color: var(--c-fond); font-size: .88rem; font-weight: 800; letter-spacing: .01em; }
 .vedetteQp .bandeau { background: var(--titane); color: #000; }
 @media (min-width: 760px) {
-  .vedette { grid-template-columns: minmax(200px, 40%) 1fr; grid-template-rows: auto 1fr; }
+  .vedette { grid-template-columns: minmax(200px, 45%) 1fr; grid-template-rows: auto 1fr; }
   .vedette .bandeau { grid-column: 1 / -1; }
   .vedette .visuel { padding: 1.5rem .5rem; }
+  .vedette .corps { justify-content: center; padding: 1.4rem 1.4rem 1.5rem; }
+  .vedette .nom { font-size: 1.3rem; }
 }
 
 .visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: var(--c-visuel); }
 .etiquette { position: absolute; top: .75rem; left: .75rem; padding: 3px 8px; border-radius: 4px; background: var(--c-texte); color: var(--c-fond);
   font-size: .72rem; font-weight: 800; letter-spacing: .02em; }
 
-.corps { display: flex; flex-direction: column; gap: .55rem; padding: 1rem 1.05rem 1.1rem; }
-.marque { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-texte-doux); }
-.nom { font-size: 1.06rem; line-height: 1.25; letter-spacing: -.005em; }
-.verdict { display: flex; align-items: center; gap: .3rem; font-size: .92rem; font-weight: 700; color: var(--c-texte-doux); }
-.ok { color: var(--c-accent-fonce); }
-
-.puces { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
-.puces li { padding: 2px 8px; border-radius: 6px; background: var(--c-fond-doux); font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
-
-.indicateurs { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .55rem 0; border-block: 1px solid var(--c-bord); }
-.qp { display: grid; gap: 1px; cursor: help; }
-.qpLibelle { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }
-.qpValeur { font-weight: 800; font-size: .95rem; }
-.qpExcellent { color: var(--c-accent-fonce); }
-.qpTresbon { color: var(--c-accent-fonce); }
-.qpMoyen { color: var(--c-alerte-texte); }
-.prix { display: grid; justify-items: end; gap: 1px; }
-.prix > span:first-child { font-weight: 800; letter-spacing: .06em; }
+.corps { display: flex; flex-direction: column; gap: .6rem; padding: 1rem 1.05rem 1.1rem; }
+.marque { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-texte-doux); }
+.prix { letter-spacing: .05em; color: var(--c-texte); }
 .prixVide { opacity: .22; }
-.prixTexte { font-size: .72rem; color: var(--c-texte-doux); }
+.nom { font-size: 1.06rem; line-height: 1.25; letter-spacing: -.01em; }
 
-.pourquoi summary { display: flex; align-items: center; gap: .35rem; min-height: 32px; font-size: .88rem; font-weight: 700; cursor: pointer; list-style: none; color: var(--c-texte); }
-.pourquoi summary::-webkit-details-marker { display: none; }
-.pourquoi summary::after { content: ''; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); margin-left: .2rem; }
-.pourquoi[open] summary::after { transform: rotate(-135deg) translateY(-1px); }
-.pourquoi p { font-size: .9rem; color: var(--c-texte-doux); padding-top: .2rem; }
-.note { font-size: .84rem; padding: .5rem .65rem; border-radius: var(--rayon-petit); background: var(--c-alerte-doux); color: var(--c-alerte-texte); }
+/* Note : pastille de couleur et vitesse obtenue. */
+.evaluation { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .6rem; }
+.verdict { font-size: .84rem; color: var(--c-texte-doux); }
+.note { display: inline-flex; align-items: center; gap: .4rem; padding: .28rem .7rem .28rem .55rem; border-radius: 999px; font-size: .84rem; font-weight: 700; white-space: nowrap; }
+.point { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.ideal { background: #0b6b3a; color: #fff; }
+.ideal .point { background: #6ee7a0; }
+.tresbon { background: #dcf7e6; color: #0b5a31; }
+.tresbon .point { background: #22c55e; }
+.compatible { background: #fff3c4; color: #6b4f00; }
+.compatible .point { background: #f5b800; }
+.lent { background: #ffe4d4; color: #8a3300; }
+.lent .point { background: #f97316; }
+@media (prefers-color-scheme: dark) {
+  .tresbon { background: #12301f; color: #8ff0b5; }
+  .compatible { background: #332a08; color: #ffd75e; }
+  .lent { background: #3a1d0c; color: #ffb27a; }
+}
 
-.actions { display: grid; gap: .5rem; margin-top: auto; padding-top: .3rem; }
-.acheter { width: 100%; }
-.cable { display: grid; gap: .3rem; padding: .25rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); }
-.cableLien { display: flex; align-items: center; gap: .5rem; padding-right: .35rem; border-radius: 6px; color: var(--c-texte); text-decoration: none; font-size: .86rem; font-weight: 600; line-height: 1.25; }
-.cableLien:hover { background: var(--c-fond-doux); }
-.longueurs { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; padding: 0 .35rem .3rem; font-size: .8rem; color: var(--c-texte-doux); }
-.longueurs a { min-width: 44px; min-height: 30px; display: inline-grid; place-items: center; padding: 0 .5rem; border-radius: 999px; border: 1px solid var(--c-bord-fort);
+.alerte { font-size: .82rem; padding: .45rem .6rem; border-radius: var(--rayon-petit); background: var(--c-fond-doux); color: var(--c-texte-doux); }
+.acheter { width: 100%; margin-top: auto; }
+
+/* Légende des notes, au-dessus des cartes. */
+.legende { list-style: none; margin: 0 0 1.4rem; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; }
+.legende li { display: inline-flex; align-items: center; gap: .45rem; }
+.legende .note { font-size: .76rem; padding: .18rem .55rem .18rem .45rem; }
+.legendeSens { font-size: .8rem; color: var(--c-texte-doux); }
+
+/* Câble conseillé, une fois pour la liste. */
+.cable { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .5rem .8rem .5rem .5rem; border-radius: var(--rayon-grand);
+  border: 1px solid var(--c-bord); background: var(--c-surface); }
+.cableLien { display: flex; align-items: center; gap: .7rem; color: var(--c-texte); text-decoration: none; font-size: .95rem; font-weight: 600; line-height: 1.25; }
+.cableLien:hover { text-decoration: underline; text-underline-offset: 3px; }
+.cable svg { flex: none; background: var(--c-visuel); border-radius: var(--rayon); }
+.cableLibelle { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-texte-doux); }
+.longueurs { display: flex; align-items: center; flex-wrap: wrap; gap: .35rem; font-size: .82rem; color: var(--c-texte-doux); }
+.longueurs a { min-width: 44px; min-height: 34px; display: inline-grid; place-items: center; padding: 0 .6rem; border-radius: 999px; border: 1px solid var(--c-bord-fort);
   color: var(--c-texte); font-weight: 700; text-decoration: none; }
 .longueurs a:hover { border-color: var(--c-texte); }
-.cable svg { flex: none; background: var(--c-visuel); border-radius: 6px; }
-.cableLibelle { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-texte-doux); }
-
-/* Vitesse de charge : échelle à trois niveaux, le niveau du produit en plein. */
-.niveau { display: grid; gap: .3rem; }
-.niveauEchelle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-.niveauEchelle span { padding: .35rem .2rem; text-align: center; font-size: .76rem; font-weight: 600; color: var(--c-texte-doux); background: var(--c-fond-doux); }
-.niveauEchelle span:first-child { border-radius: 8px 0 0 8px; }
-.niveauEchelle span:last-child { border-radius: 0 8px 8px 0; }
-.niveauEchelle .niveauActuel { background: var(--c-texte); color: var(--c-fond); font-weight: 800; }
-.niveauBornes { display: flex; justify-content: space-between; font-size: .7rem; color: var(--c-texte-doux); }
-.niveauTexte { font-size: .84rem; color: var(--c-texte-doux); }
-.indicateurs > .prix:only-child { justify-items: start; }

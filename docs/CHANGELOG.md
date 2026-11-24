@@ -1,6 +1,12 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (cartes des chargeurs)
+- Cartes épurées : dessin, marque et niveau de prix, nom, une note en couleur, la vitesse obtenue en une ligne, et le bouton « Voir le prix ». Toute la carte est cliquable.
+- Nouvelle note en quatre couleurs (`moteur/evaluation.ts`) : Idéal (vert foncé : vitesse maximale, fiable et bien placé en prix), Très bon (vert clair : vitesse maximale), Compatible (jaune : marche bien, pas le plus rapide), Charge lente (orange : moins de la moitié de la vitesse possible). Légende au-dessus des cartes.
+- Retirés des cartes : caractéristiques, rapport qualité/prix, échelle de vitesse, « Pourquoi il convient ». Le câble à associer n'est plus répété sur chaque carte : un seul bloc par liste, avec ses longueurs. Les mises en garde indispensables (bloc secteur vendu à part…) restent.
+- Sans fil : la chaleur plus forte qu'avec un câble est dite une fois, en tête de liste.
+
 ### Ajouté (animations)
 - Arrivée en cascade du haut de l'accueil, puis apparition en fondu des blocs et des cartes produits au défilement.
 - Reflet titane qui glisse lentement sur le logo et le grand titre, halo de lumière qui suit la souris dans le haut noir.

@@ -28,24 +28,21 @@ describe('App', () => {
     expect(within(premier).getByRole('heading', { name: 'Chargeur ultra rapide 45 W' })).toBeInTheDocument();
     expect(within(priorite).getByText('Meilleur rapport qualité/prix')).toBeInTheDocument();
     expect(within(premier).getByText('45 W, vitesse maximale')).toBeInTheDocument();
-    // Rapport qualité/prix, explication, câble à associer.
-    expect(within(premier).getByText('Qualité/prix')).toBeInTheDocument();
-    expect(within(premier).getByText(/Il a le PPS, ce réglage/)).toBeInTheDocument();
-    expect(within(premier).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
+    // Note en couleur sur la carte ; le câble à associer, une fois pour la liste.
+    expect(within(premier).getByText('Idéal')).toBeInTheDocument();
+    expect(within(priorite).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toHaveAttribute('href', expect.stringContaining('5A'));
     // Version à prise française : la référence européenne de Samsung (EGEU) est recherchée, faute de page confirmée.
     const lien = within(premier).getByRole('link', { name: /Voir le prix/ });
     expect(lien).toHaveAttribute('href', expect.stringContaining('EP-T4510XBEGEU'));
-    expect(within(premier).getByText('Prise française')).toBeInTheDocument();
     expect(lien).toHaveAttribute('rel', 'sponsored nofollow noopener');
+    // Câble proposé en 1 m et 2 m.
+    expect(within(priorite).getByRole('link', { name: /5 A \(100 W\), 2 mètres/ })).toHaveAttribute('href', expect.stringContaining('2m'));
 
-    // Charge très rapide (45 W) : la batterie est moins ménagée ; câble proposé en 1 m et 2 m.
-    expect(within(premier).getByRole('img', { name: /^Vitesse de charge : très rapide/ })).toBeInTheDocument();
-    expect(within(premier).getByRole('link', { name: /5 A \(100 W\), 2 mètres/ })).toHaveAttribute('href', expect.stringContaining('2m'));
-
+    // Pas la vitesse maximale : « Compatible » (jaune).
     const anker45 = carte('Anker Nano 45 W');
     expect(within(anker45).getByText('25 W sur 45 W possibles')).toBeInTheDocument();
-    expect(within(anker45).getByText(/pas assez de courant pour les 45 W/)).toBeInTheDocument();
-    expect(within(anker45).getByText('Moyen')).toBeInTheDocument();
+    expect(within(anker45).getByText('Compatible')).toBeInTheDocument();
+    expect(within(anker45).queryByText('Qualité/prix')).not.toBeInTheDocument();
   });
 
   it('onglet sans fil : chargeurs Qi de la marque pour un Galaxy, rien de magnétique', async () => {
@@ -107,7 +104,7 @@ describe('App', () => {
     render(<App />);
     await userEvent.type(screen.getByRole('combobox'), 'iphone 14{ArrowDown}{Enter}');
     expect(screen.getByRole('heading', { level: 2, name: /iPhone 14/ })).toBeInTheDocument();
-    expect(within(produits()[0]).getByRole('link', { name: /^À associer ?Câble USB-C vers Lightning certifié MFi/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^À associer ?Câble USB-C vers Lightning certifié MFi/ })).toBeInTheDocument();
   });
 
   it('détecte un Android reconnu et propose ses chargeurs', async () => {
@@ -164,12 +161,13 @@ describe('App', () => {
     const liste = produits();
     expect(within(liste[0]).getByText('Notre choix USB-C')).toBeInTheDocument();
     expect(within(liste[0]).getByText('Recharge normale')).toBeInTheDocument();
-    expect(within(liste[0]).getByText(/au moins autant que les 65 W du chargeur d’origine/)).toBeInTheDocument();
-    expect(within(liste[0]).getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
+    expect(within(liste[0]).getByText('Très bon')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^À associer ?Câble USB-C 5 A \(100 W\)/ })).toBeInTheDocument();
     // Pas de chargeur Apple pour un PC ; les chargeurs trop faibles sont signalés, en dernier, sans câble conseillé.
     expect(screen.queryByText('Adaptateur secteur USB-C 96 W')).not.toBeInTheDocument();
     const dernier = liste[liste.length - 1];
     expect(within(dernier).getByText('Trop faible : recharge lente')).toBeInTheDocument();
+    expect(within(dernier).getByText('Charge lente')).toBeInTheDocument();
     expect(within(dernier).queryByText('À associer')).not.toBeInTheDocument();
   });
 
@@ -209,11 +207,11 @@ describe('App', () => {
     expect(within(carte('Adaptateur secteur USB-C 96 W')).getByText('Recharge rapide')).toBeInTheDocument();
   });
 
-  it('charge douce pour un iPhone 15 (20 W), sans fil signalé comme plus chaud', async () => {
+  it('iPhone 15 (20 W) : chargeur Apple noté, sans fil signalé comme plus chaud', async () => {
     window.history.replaceState(null, '', '/?tel=apple-iphone-15');
     render(<App />);
     const conseil = within(screen.getByRole('region', { name: 'À acheter en priorité' })).getAllByRole('listitem').filter((li) => li.querySelector('h3'))[0];
-    expect(within(conseil).getByRole('img', { name: /^Vitesse de charge : doux/ })).toBeInTheDocument();
+    expect(within(conseil).getByText(/^(Idéal|Très bon)$/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('tab', { name: /Sans fil/ }));
     expect(screen.getAllByText(/le téléphone chauffe plus qu’avec un câble/).length).toBeGreaterThan(0);
   });
