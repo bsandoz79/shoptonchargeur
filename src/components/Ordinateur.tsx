@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Recherche } from './Recherche';
-import { LIBELLE_PRISE, besoinEffectif, enUsbC, pourquoiOrdinateur, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
+import { LIBELLE_PRISE, besoinEffectif, enUsbC, proposerOrdinateur, type ChargeurOrdinateur, type Niveau, type Ordinateur as Ordi } from '../moteur/ordinateur';
 import type { Tri } from '../moteur/types';
-import { qualitePrix } from '../moteur/qualitePrix';
+import type { Evaluation } from '../moteur/evaluation';
 import { Icone } from './Icone';
-import { Produit, type ProduitAffiche } from './Produit';
+import { CableConseille, LegendeNotes, Produit, type ProduitAffiche } from './Produit';
 import styles from './Resultat.module.css';
 import propres from './Ordinateur.module.css';
 
@@ -15,6 +15,7 @@ const TRIS: { cle: Tri; libelle: string }[] = [
   { cle: 'fiabilite', libelle: 'Fiabilité' },
 ];
 const NIVEAUX: Record<Niveau, string> = { rapide: 'Recharge rapide', normal: 'Recharge normale', insuffisant: 'Trop faible : recharge lente' };
+const EVALUATION_ORDI: Record<Niveau, Evaluation> = { rapide: 'ideal', normal: 'tresbon', insuffisant: 'lent' };
 
 /** Choix de l'ordinateur : par son modèle (recherche ou raccourcis), ou par la puissance lue sur le chargeur d'origine. */
 export function ChoixOrdinateur({ ordinateurs, onChoisir }: { ordinateurs: Ordi[]; onChoisir: (o: Ordi) => void }) {
@@ -58,11 +59,10 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
     id: `origine-${ordinateur.id}`, marque: ordinateur.marque, nom: ordinateur.chargeurOrigine.nom,
     forme: usbc ? 'cube' : 'brique', teinte: ordinateur.marque === 'Apple' || ordinateur.marque === 'Microsoft' ? 'blanc' : 'noir', budget: 3,
     etiquette: `Conseillé par ${ordinateur.marque}`, vedette: 'constructeur',
+    evaluation: 'ideal',
     verdict: { texte: 'Chargeur d’origine', ok: true },
-    caracteristiques: [LIBELLE_PRISE[ordinateur.prise ?? 'usb-c'], 'Constructeur', 'Prise française'],
-    pourquoi: usbc
-      ? `C’est le chargeur que ${ordinateur.marque} fournit avec cet ordinateur. Les chargeurs USB-C de grande marque ci-dessous font aussi bien, souvent pour moins cher.`
-      : `Ton ordinateur se recharge par une prise ${ordinateur.prise === 'surface' ? 'Surface Connect' : ordinateur.prise === 'ronde' ? 'ronde' : 'rectangulaire'}, pas en USB-C. Il te faut un chargeur de la marque avec le même embout et au moins la même puissance que l’original.`,
+    note: usbc ? undefined
+      : `Prise ${ordinateur.prise === 'surface' ? 'Surface Connect' : ordinateur.prise === 'ronde' ? 'ronde' : 'rectangulaire'}, pas USB-C : prends celui de la marque, même embout, au moins la même puissance.`,
     requete: ordinateur.chargeurOrigine.requete,
   };
   const cable = besoin > 100
@@ -75,10 +75,8 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
     return {
       id: c.id, marque: c.marque, nom: c.nom, forme: c.forme ?? 'brique', teinte: c.teinte ?? 'blanc', budget: c.budget,
       etiquette: tri === 'vitesse' && i === 0 && p.niveau !== 'insuffisant' ? 'Notre choix USB-C' : undefined,
+      evaluation: EVALUATION_ORDI[p.niveau],
       verdict: { texte: NIVEAUX[p.niveau], ok: p.niveau !== 'insuffisant' },
-      qualitePrix: qualitePrix(p.niveau === 'insuffisant' ? c.puissanceW / besoin : 1, c.fiabilite, c.budget),
-      caracteristiques: [`${c.puissanceW} W`, 'Power Delivery', ...(c.ports && c.ports > 1 ? [`${c.ports} ports`] : []), c.fiabilite === 3 ? 'Constructeur' : 'Grande marque', ...(c.prise === 'fr' ? ['Prise française'] : [])],
-      pourquoi: pourquoiOrdinateur(ordinateur, p),
       requete: c.requete,
       asin: c.asin,
       cable: p.niveau === 'insuffisant' ? undefined : cable,
@@ -127,6 +125,8 @@ export function ResultatOrdinateur({ ordinateur, chargeurs, onChanger }: { ordin
           </select>
         </label>
       </div>}
+      {usbc && <LegendeNotes />}
+      {usbc && <CableConseille cable={cable} />}
       {usbc && <ul className={styles.grille}>{produits.map((p) => <Produit key={p.id} p={p} />)}</ul>}
     </section>
   );
