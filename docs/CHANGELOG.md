@@ -1,6 +1,14 @@
 # Journal des modifications
 
 ## [Non publié]
+### Ajouté (animations)
+- Arrivée en cascade du haut de l'accueil, puis apparition en fondu des blocs et des cartes produits au défilement.
+- Reflet titane qui glisse lentement sur le logo et le grand titre, halo de lumière qui suit la souris dans le haut noir.
+- Jauges de puissance des modèles récents, qui se remplissent à l'arrivée.
+- Exemples tapés lettre par lettre dans le champ de recherche vide.
+- Reflet qui traverse les boutons au survol, chargeur qui se soulève au survol de sa carte.
+- Tout est coupé si l'appareil demande moins d'animations, et rien n'est caché sans JavaScript.
+
 ### Modifié (design)
 - Design premium noir et blanc, effet titane brossé : en-tête et haut de l'accueil en noir, titre et détails en dégradé titane, contenu sur fond blanc.
 - Nouveau logo : le monogramme « STC », espacé, en titane. Nouvelles icônes (onglet, écran d'accueil, partage) sur fond noir.

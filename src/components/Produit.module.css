@@ -2,6 +2,9 @@
 .carte { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px solid var(--c-bord);
   transition: border-color .15s ease, box-shadow .15s ease; }
 .carte:hover { border-color: var(--c-bord-fort); }
+/* Le chargeur se soulève un peu au survol de sa carte. */
+.visuel > svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+.carte:hover .visuel > svg { transform: translateY(-6px) rotate(-2deg); }
 .choix { border-color: var(--c-texte); }
 
 /* Produits à acheter en priorité : bandeau titre, cadre marqué, visuel à gauche sur grand écran. */
