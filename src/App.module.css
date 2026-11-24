@@ -1,80 +1,94 @@
-.entete { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--c-bord); background: color-mix(in srgb, var(--c-fond) 94%, transparent); backdrop-filter: blur(8px); }
-.enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 60px; padding: 0 1rem; }
-.logo { display: flex; align-items: center; gap: .55rem; font-weight: 800; font-size: 1.05rem; letter-spacing: -.02em; color: var(--c-texte); text-decoration: none; white-space: nowrap; }
-.nav { display: flex; gap: 1.4rem; }
-.nav a { padding: .4rem 0; font-size: .93rem; font-weight: 600; color: var(--c-texte-doux); text-decoration: none; }
+/* Zones noires (en-tête, haut de l'accueil) : les variables passent en version sombre, quel que soit le réglage de l'appareil. */
+.entete, .haut {
+  --c-fond: #000000; --c-fond-doux: #111112; --c-surface: #111112; --c-texte: #f5f5f7; --c-texte-doux: #a1a1a6;
+  --c-bord: #2c2c2e; --c-bord-fort: #48484a; --c-accent-fonce: #f5f5f7; --c-accent-texte: #f5f5f7; --c-accent-doux: #1c1c1e;
+  --c-bouton-fond: var(--titane); --c-bouton-texte: #000000; --c-bouton-bord: #c7c7cc;
+  color-scheme: dark; color: var(--c-texte);
+}
+
+.entete { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #1c1c1e; background: #000; }
+.enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 56px; padding: 0 1rem; }
+.logo { display: flex; align-items: center; text-decoration: none; }
+.nav { display: flex; gap: 1.6rem; }
+.nav a { padding: .4rem 0; font-size: .86rem; font-weight: 500; letter-spacing: .01em; color: var(--c-texte-doux); text-decoration: none; transition: color .15s ease; }
 .nav a:hover { color: var(--c-texte); }
 @media (max-width: 560px) { .nav { display: none; } }
 
 .page { max-width: var(--largeur); margin-inline: auto; padding: 1.25rem 1rem 3rem; }
-.accueil { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-top: 1.5rem; }
+.accueil { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; margin-top: -1.25rem; }
 .accueil > * { min-width: 0; }
 
-/* Haut de l'accueil : l'outil (titre, recherche) à gauche, les modèles récents à droite sur grand écran. */
-.haut { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+/* Haut de l'accueil, noir sur toute la largeur : l'outil à gauche, les modèles récents à droite sur grand écran. */
+.haut { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem;
+  margin-inline: calc(50% - 50vw); padding: 3.5rem max(1rem, calc(50vw - var(--largeur) / 2 + 1rem)) 4rem;
+  background: radial-gradient(ellipse 60% 70% at 85% 0%, #1c1c1e 0%, transparent 70%), #000; }
+.haut::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--titane); opacity: .5; }
 .haut > * { min-width: 0; }
 @media (min-width: 960px) {
-  .haut { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4rem; align-items: start; padding-top: 1.5rem; }
+  .haut { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4.5rem; align-items: start; padding-top: 5rem; padding-bottom: 5rem; }
   .seul { grid-template-columns: minmax(0, 1fr); }
 }
 
-.outil { display: grid; gap: 1.2rem; }
-.accueil h1 { font-size: clamp(2.2rem, 8vw, 3.8rem); font-weight: 800; line-height: 1; letter-spacing: -.045em; }
-.accroche { font-size: 1.08rem; max-width: 34rem; color: var(--c-texte-doux); }
-.garanties { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; font-size: .88rem; color: var(--c-texte-doux); }
+.outil { display: grid; gap: 1.3rem; }
+.surtitre { font-size: .8rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--c-texte-doux); }
+.accueil h1 { font-size: clamp(2.4rem, 8.5vw, 4.2rem); font-weight: 700; line-height: 1.02; letter-spacing: -.04em; padding-bottom: .06em;
+  background: var(--titane-texte-clair); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.accroche { font-size: 1.1rem; max-width: 34rem; color: var(--c-texte-doux); }
+.garanties { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem 1.3rem; font-size: .86rem; color: var(--c-texte-doux); }
 .garanties li { display: inline-flex; align-items: center; gap: .35rem; }
-.garanties svg { color: var(--c-accent-texte); }
+.garanties svg { color: #c7c7cc; }
 
 /* Appareil détecté. */
 .detecte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; padding: .8rem 1rem; border-radius: var(--rayon);
-  border: 1px solid var(--c-bord-fort); font-weight: 700; }
-.detecteLibelle { display: block; font-size: .8rem; font-weight: 600; color: var(--c-texte-doux); }
+  border: 1px solid var(--c-bord-fort); background: var(--c-surface); font-weight: 600; }
+.detecteLibelle { display: block; font-size: .8rem; font-weight: 500; color: var(--c-texte-doux); }
 
 /* Raccourcis : modèles de la marque détectée, marques. */
-.raccourcis { display: grid; gap: .5rem; }
-.raccourcisTitre { font-size: .88rem; font-weight: 600; color: var(--c-texte-doux); }
+.raccourcis { display: grid; gap: .55rem; }
+.raccourcisTitre { font-size: .86rem; font-weight: 500; color: var(--c-texte-doux); }
 .puces { display: flex; flex-wrap: wrap; gap: .4rem; }
-.puce { min-height: 40px; padding: 0 .9rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; font-size: .93rem; cursor: pointer;
-  transition: border-color .15s ease; }
-.puce:hover { border-color: var(--c-texte); }
+.puce { min-height: 38px; padding: 0 1rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 500; font-size: .92rem; cursor: pointer;
+  transition: border-color .15s ease, background .15s ease; }
+.puce:hover { border-color: var(--c-bord-fort); background: #1c1c1e; }
 
 /* Choix du type d'appareil : deux onglets soulignés. */
-.parties { display: flex; gap: 1.5rem; border-bottom: 1px solid var(--c-bord); }
+.parties { display: flex; gap: 1.6rem; border-bottom: 1px solid var(--c-bord); }
 .partie { display: flex; align-items: center; gap: .45rem; min-height: 44px; margin-bottom: -1px; padding: 0; border: 0; border-bottom: 2px solid transparent; background: none;
-  font-weight: 700; font-size: .98rem; white-space: nowrap; color: var(--c-texte-doux); cursor: pointer; }
+  font-weight: 600; font-size: .96rem; white-space: nowrap; color: var(--c-texte-doux); cursor: pointer; }
 .partie:hover { color: var(--c-texte); }
-.partie[aria-pressed='true'] { color: var(--c-texte); border-bottom-color: var(--c-texte); }
+.partie[aria-pressed='true'] { color: var(--c-texte); border-image: var(--titane) 1; border-bottom-width: 2px; border-bottom-style: solid; }
 
-/* Modèles récents : une liste fine, la puissance alignée à droite. */
-.rapide { display: grid; align-content: start; gap: .6rem; }
-.rapide h2 { font-size: .88rem; font-weight: 600; color: var(--c-texte-doux); }
-.cartesModeles { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c-texte); }
+/* Modèles récents : liste fine, filet titane, puissance alignée à droite. */
+.rapide { display: grid; align-content: start; gap: .7rem; }
+.rapide h2 { font-size: .8rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--c-texte-doux); }
+.cartesModeles { list-style: none; margin: 0; padding: 0; }
+.cartesModeles::before { content: ''; display: block; height: 1px; background: var(--titane); }
 .cartesModeles li { border-bottom: 1px solid var(--c-bord); }
-.carteModele { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .9rem; width: 100%; min-height: 58px; padding: .5rem .1rem;
+.carteModele { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .9rem; width: 100%; min-height: 62px; padding: .55rem .1rem;
   border: 0; background: none; text-align: left; cursor: pointer; }
-.carteMarque { display: block; font-size: .8rem; color: var(--c-texte-doux); }
-.carteNom { display: block; font-size: 1.02rem; font-weight: 700; letter-spacing: -.01em; }
-.carteW { font-size: .95rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.carteMarque { display: block; font-size: .78rem; color: var(--c-texte-doux); }
+.carteNom { display: block; font-size: 1.04rem; font-weight: 600; letter-spacing: -.01em; }
+.carteW { font-size: .95rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--c-texte-doux); }
 .fleche { color: var(--c-texte-doux); transition: transform .15s ease, color .15s ease; }
-.carteModele:hover .carteNom { text-decoration: underline; text-underline-offset: 3px; }
-.carteModele:hover .fleche { color: var(--c-texte); transform: translateX(3px); }
+.carteModele:hover .carteNom, .carteModele:hover .carteW { color: #fff; }
+.carteModele:hover .fleche { color: #fff; transform: translateX(3px); }
 
-.aide { padding-top: .2rem; }
-.aide summary { width: fit-content; font-size: .93rem; font-weight: 600; color: var(--c-texte-doux); cursor: pointer; }
+.aide { padding-top: .1rem; }
+.aide summary { width: fit-content; font-size: .9rem; font-weight: 500; color: var(--c-texte-doux); cursor: pointer; }
 .aide summary:hover { color: var(--c-texte); }
-.aide p { margin-top: .6rem; max-width: var(--largeur-texte); font-size: .93rem; color: var(--c-texte-doux); }
+.aide p { margin-top: .6rem; max-width: var(--largeur-texte); font-size: .92rem; color: var(--c-texte-doux); }
 
-.pied { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 2.5rem; display: grid; gap: .7rem; border-top: 1px solid var(--c-bord); font-size: .85rem; color: var(--c-texte-doux); }
-.pied summary { cursor: pointer; font-weight: 700; }
+.pied { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 2.5rem; display: grid; gap: .7rem; border-top: 1px solid var(--c-bord); font-size: .82rem; color: var(--c-texte-doux); }
+.pied summary { cursor: pointer; font-weight: 600; }
 .pied details p { margin-top: .5rem; }
 
 /* Index des fiches : tous les téléphones et ordinateurs, par marque. */
-.index { display: grid; gap: 1rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--c-bord); }
-.index h2 { font-size: 1.35rem; letter-spacing: -.02em; margin-top: .4rem; }
+.index { display: grid; gap: 1rem; margin-top: 3rem; }
+.index h2 { font-size: 1.45rem; font-weight: 700; letter-spacing: -.025em; margin-top: .4rem; }
 .indexGroupe { display: grid; gap: .35rem; }
-.indexGroupe h3 { font-size: .95rem; font-weight: 700; }
+.indexGroupe h3 { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--c-texte-doux); }
 .index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.1rem; }
-.index a { color: var(--c-texte-doux); font-size: .92rem; text-decoration: none; }
-.index a:hover { color: var(--c-texte); text-decoration: underline; }
+.index a { color: var(--c-texte); font-size: .92rem; text-decoration: none; }
+.index a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) { .carteModele:hover .fleche { transform: none; } }

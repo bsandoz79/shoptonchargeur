@@ -1,51 +1,57 @@
 /*
- * Variables de design : seules couleurs, tailles et rayons du site. Style plat et typographique : fond blanc,
- * texte presque noir, lignes fines, un seul vert pour les actions. Version sombre selon le réglage de l'appareil.
+ * Variables de design : seules couleurs, tailles et rayons du site. Style premium noir et blanc, effet titane brossé
+ * (dégradés gris clair et gris acier) sur le logo, le titre et quelques détails. Version sombre selon le réglage de l'appareil.
  */
 :root {
   color-scheme: light dark;
   --c-fond: #ffffff;
-  --c-fond-doux: #f5f5f2;     /* sections, champs secondaires */
+  --c-fond-doux: #f5f5f7;
   --c-surface: #ffffff;
-  --c-texte: #111111;
-  --c-texte-doux: #5c5c57;
-  --c-bord: #e6e6e1;
-  --c-bord-fort: #cdcdc6;
-  --c-visuel: #f3f3ef;        /* fond des visuels produits */
-  --c-accent: #0a7a4b;        /* boutons : texte blanc dessus, contraste AA */
-  --c-accent-survol: #07603a;
-  --c-accent-fonce: #07633d;  /* liens et petits textes verts sur blanc */
-  --c-accent-texte: #0a7a4b;
-  --c-accent-vif: #12b76a;    /* petits repères (points, traits) */
-  --c-accent-doux: #e8f5ee;
-  --c-alerte-doux: #fff3d6;
-  --c-alerte-texte: #6b4a00;
-  --ombre: 0 12px 32px rgb(0 0 0 / 0.08);
-  --rayon: 8px;
-  --rayon-grand: 12px;
+  --c-texte: #1d1d1f;
+  --c-texte-doux: #6e6e73;
+  --c-bord: #e5e5ea;
+  --c-bord-fort: #c7c7cc;
+  --c-visuel: #f5f5f7;        /* fond des visuels produits */
+  --c-accent: #1d1d1f;        /* boutons : noir, texte blanc */
+  --c-accent-survol: #3a3a3c;
+  --c-accent-fonce: #1d1d1f;  /* liens et petits textes d'accent */
+  --c-accent-texte: #1d1d1f;
+  --c-accent-vif: #8e8e93;    /* gris titane : petits repères */
+  --c-accent-doux: #f2f2f4;
+  --c-bouton-fond: linear-gradient(180deg, #3a3a3c 0%, #1d1d1f 55%, #0b0b0c 100%);
+  --c-bouton-texte: #ffffff;
+  --c-bouton-bord: #0b0b0c;
+  --c-alerte-doux: #f5f5f7;
+  --c-alerte-texte: #3a3a3c;
+  /* Titane brossé : sur fond noir (clair) et sur fond blanc (foncé). */
+  --titane: linear-gradient(105deg, #8e8e93 0%, #e8e8ed 22%, #a1a1a6 42%, #f5f5f7 60%, #8e8e93 80%, #d2d2d7 100%);
+  --titane-texte-clair: linear-gradient(100deg, #f5f5f7 0%, #c7c7cc 30%, #ffffff 52%, #a1a1a6 76%, #e8e8ed 100%);
+  --titane-texte-fonce: linear-gradient(100deg, #1d1d1f 0%, #5a5a5e 35%, #1d1d1f 55%, #6e6e73 80%, #2c2c2e 100%);
+  --ombre: 0 18px 40px rgb(0 0 0 / 0.10);
+  --rayon: 10px;
+  --rayon-grand: 16px;
   --rayon-petit: 6px;
   --largeur: 68rem;
   --largeur-texte: 44rem;
-  --police: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --police: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', system-ui, Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-fond: #111111;
-    --c-fond-doux: #1a1a19;
-    --c-surface: #161615;
-    --c-texte: #f2f2ef;
-    --c-texte-doux: #a8a8a1;
-    --c-bord: #2a2a28;
-    --c-bord-fort: #3d3d3a;
-    --c-visuel: #1e1e1c;
-    --c-accent: #0a7a4b;
-    --c-accent-survol: #0c9159;
-    --c-accent-fonce: #6fdca6;  /* textes d'accent sur fond sombre */
-    --c-accent-texte: #4fd394;
-    --c-accent-vif: #12b76a;
-    --c-accent-doux: #13281d;
-    --c-alerte-doux: #3a2f10;
-    --c-alerte-texte: #f3d58a;
-    --ombre: 0 12px 32px rgb(0 0 0 / 0.4);
+    --c-fond: #000000;
+    --c-fond-doux: #111112;
+    --c-surface: #111112;
+    --c-texte: #f5f5f7;
+    --c-texte-doux: #a1a1a6;
+    --c-bord: #232325;
+    --c-bord-fort: #3a3a3c;
+    --c-visuel: #161618;
+    --c-accent: #f5f5f7;
+    --c-accent-survol: #ffffff;
+    --c-accent-fonce: #f5f5f7;
+    --c-accent-texte: #f5f5f7;
+    --c-accent-doux: #1c1c1e;
+    --c-alerte-doux: #1c1c1e;
+    --c-alerte-texte: #d2d2d7;
+    --ombre: 0 18px 40px rgb(0 0 0 / 0.5);
   }
 }
