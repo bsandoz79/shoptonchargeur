@@ -8,7 +8,7 @@
 .ficheTete h2 { font-size: clamp(1.35rem, 5vw, 1.8rem); line-height: 1.12; letter-spacing: -.015em; outline: none; }
 .changer { min-height: 38px; padding: 0 .85rem; font-size: .88rem; }
 .specs { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; }
-.specs div { padding: .6rem .7rem; border-radius: var(--rayon-petit); background: var(--c-fond); }
+.specs div { padding: .6rem .7rem; border-radius: var(--rayon-petit); background: var(--c-fond-doux); }
 .specs dt { font-size: .72rem; color: var(--c-texte-doux); }
 .specs dd { margin: 0; font-weight: 800; font-size: .95rem; }
 @media (max-width: 560px) { .specs { grid-template-columns: 1fr 1fr; } }
@@ -22,7 +22,7 @@
 .onglet { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: 0 .1rem; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent;
   background: none; font-weight: 700; font-size: 1rem; color: var(--c-texte-doux); cursor: pointer; }
 .onglet[aria-selected='true'] { color: var(--c-texte); border-bottom-color: var(--c-texte); }
-.compte { min-width: 22px; padding: 0 6px; border-radius: 999px; background: var(--c-fond); font-size: .75rem; line-height: 20px; text-align: center; }
+.compte { min-width: 22px; padding: 0 6px; border-radius: 999px; background: var(--c-fond-doux); font-size: .75rem; line-height: 20px; text-align: center; }
 .tri { display: inline-flex; align-items: center; gap: .45rem; padding-bottom: .45rem; font-size: .88rem; color: var(--c-texte-doux); }
 .tri select { min-height: 36px; padding: 0 .6rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); background: var(--c-surface); color: var(--c-texte); font: inherit; font-weight: 600; }
 

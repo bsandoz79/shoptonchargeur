@@ -4,4 +4,4 @@
   background: var(--c-surface); color: var(--c-texte); box-shadow: 0 6px 18px rgb(0 0 0 / .14); cursor: pointer;
   animation: apparition .2s ease; transition: background .15s ease; }
 @keyframes apparition { from { opacity: 0; transform: translateY(12px); } }
-.bouton:hover { background: var(--c-fond); border-color: var(--c-texte); }
+.bouton:hover { background: var(--c-fond-doux); border-color: var(--c-texte); }

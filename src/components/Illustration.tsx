@@ -2,7 +2,7 @@ import type { Forme, Teinte } from '../moteur/types';
 
 /**
  * Dessin du produit, à la place d'une photo (les photos des marchands ne peuvent pas être reprises) : même cadrage pour
- * tous, vue de trois quarts, aplats sobres. Décoratif : le nom du produit est toujours écrit à côté.
+ * tous, vue de trois quarts, aplats, petit éclair vert sur les blocs secteur. Décoratif : le nom du produit est toujours écrit à côté.
  */
 const TEINTES: Record<Teinte, { face: string; cote: string; dessus: string; trait: string; port: string }> = {
   blanc: { face: '#f7f8f6', cote: '#e3e6e1', dessus: '#ffffff', trait: '#b9bfb7', port: '#3a3f3c' },
@@ -28,6 +28,8 @@ function Boite({ x, y, l, h, p, t, ports, broches = true }: { x: number; y: numb
         const py = y + h * 0.28 + i * 15;
         return <rect key={i} x={x + l / 2 - 11} y={py} width="22" height="7" rx="3.5" fill={t.port} />;
       })}
+      {/* Éclair vert, en bas de la face avant (pas de place sous trois ports). */}
+      {ports < 3 && <path transform={`translate(${x + l / 2 - 5} ${y + h - 20})`} d="M6 0 L0 9 H4.5 L3 16 L10 6 H5.5 Z" fill="#19c37d" />}
     </g>
   );
 }
@@ -95,7 +97,7 @@ export function Illustration({ forme = 'cube', teinte = 'blanc', taille = 160 }:
   }
   return (
     <svg viewBox="0 0 200 150" width={taille} height={taille * 0.75} role="presentation" aria-hidden="true" focusable="false">
-      <ellipse cx="100" cy="132" rx="70" ry="7" fill="#000" opacity=".07" />
+      <ellipse cx="100" cy="132" rx="70" ry="7" fill="#00573a" opacity=".12" />
       {dessin}
     </svg>
   );

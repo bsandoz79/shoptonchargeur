@@ -15,7 +15,7 @@
   .vedette .visuel { padding: 1.5rem .5rem; }
 }
 
-.visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: var(--c-visuel); }
+.visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: radial-gradient(circle at 50% 40%, var(--c-surface) 0%, var(--c-visuel) 70%); }
 .etiquette { position: absolute; top: .75rem; left: .75rem; padding: 3px 10px; border-radius: 999px; background: var(--c-texte); color: var(--c-fond);
   font-size: .72rem; font-weight: 800; letter-spacing: .02em; }
 
@@ -26,7 +26,7 @@
 .ok { color: var(--c-accent-fonce); }
 
 .puces { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
-.puces li { padding: 2px 8px; border-radius: 6px; background: var(--c-fond); font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
+.puces li { padding: 2px 8px; border-radius: 6px; background: var(--c-fond-doux); font-size: .78rem; font-weight: 600; color: var(--c-texte-doux); }
 
 .indicateurs { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .55rem 0; border-block: 1px solid var(--c-bord); }
 .qp { display: grid; gap: 1px; cursor: help; }
@@ -51,7 +51,7 @@
 .acheter { width: 100%; }
 .cable { display: grid; gap: .3rem; padding: .25rem; border-radius: var(--rayon-petit); border: 1px solid var(--c-bord); }
 .cableLien { display: flex; align-items: center; gap: .5rem; padding-right: .35rem; border-radius: 6px; color: var(--c-texte); text-decoration: none; font-size: .86rem; font-weight: 600; line-height: 1.25; }
-.cableLien:hover { background: var(--c-fond); }
+.cableLien:hover { background: var(--c-fond-doux); }
 .longueurs { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; padding: 0 .35rem .3rem; font-size: .8rem; color: var(--c-texte-doux); }
 .longueurs a { min-width: 44px; min-height: 30px; display: inline-grid; place-items: center; padding: 0 .5rem; border-radius: 999px; border: 1px solid var(--c-bord-fort);
   color: var(--c-texte); font-weight: 700; text-decoration: none; }
@@ -62,7 +62,7 @@
 /* Vitesse de charge : échelle à trois niveaux, le niveau du produit en plein. */
 .niveau { display: grid; gap: .3rem; }
 .niveauEchelle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-.niveauEchelle span { padding: .35rem .2rem; text-align: center; font-size: .76rem; font-weight: 600; color: var(--c-texte-doux); background: var(--c-fond); }
+.niveauEchelle span { padding: .35rem .2rem; text-align: center; font-size: .76rem; font-weight: 600; color: var(--c-texte-doux); background: var(--c-fond-doux); }
 .niveauEchelle span:first-child { border-radius: 8px 0 0 8px; }
 .niveauEchelle span:last-child { border-radius: 0 8px 8px 0; }
 .niveauEchelle .niveauActuel { background: var(--c-texte); color: var(--c-fond); font-weight: 800; }
