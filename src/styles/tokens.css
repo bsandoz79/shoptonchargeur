@@ -1,38 +1,57 @@
-/* Variables de design : seules couleurs, tailles et rayons du site. Version sombre selon le réglage de l'appareil. */
+/*
+ * Variables de design : seules couleurs, tailles et rayons du site. Clair et coloré : fond blanc, vert vif
+ * (« batterie chargée »), jaune éclair en touche. Version sombre selon le réglage de l'appareil.
+ */
 :root {
   color-scheme: light dark;
-  --c-fond: #f6f7f4;
+  --c-fond: #ffffff;
+  --c-fond-doux: #f2f8f4;     /* sections et listes */
   --c-surface: #ffffff;
-  --c-texte: #14201a;
-  --c-texte-doux: #55635b;
-  --c-bord: #e3e7e2;
-  --c-bord-fort: #c3cac2;
-  --c-visuel: #eef1ec;        /* fond des visuels produits */
-  --c-accent: #0b6b3c;        /* vert « batterie chargée » : contraste AA avec le blanc */
-  --c-accent-fonce: #084f2c;
-  --c-accent-doux: #e4f3ea;
+  --c-texte: #0f1f17;
+  --c-texte-doux: #4d5f55;
+  --c-bord: #e0eae4;
+  --c-bord-fort: #bfd0c6;
+  --c-visuel: #eaf7f0;        /* fond des visuels produits */
+  --c-accent: #00875a;        /* boutons : texte blanc dessus, contraste AA */
+  --c-accent-survol: #006b47;
+  --c-accent-fonce: #006b47;  /* liens et petits textes verts sur blanc */
+  --c-accent-texte: #00875a;  /* mots en vert dans les titres */
+  --c-accent-vif: #19c37d;    /* décor : bandeau, pastilles, dessins */
+  --c-accent-doux: #e3f8ee;
+  --c-eclair: #ffc21a;        /* jaune de l'éclair, en touche */
+  --c-hero-1: #00875a;        /* bandeau : texte blanc dessus, contraste AA */
+  --c-hero-2: #00603c;
   --c-alerte-doux: #fff3d6;
   --c-alerte-texte: #6b4a00;
+  --ombre: 0 10px 30px rgb(0 70 40 / 0.10);
   --rayon: 12px;
-  --rayon-grand: 16px;
+  --rayon-grand: 18px;
+  --rayon-hero: 28px;
   --rayon-petit: 8px;
-  --largeur: 64rem;
+  --largeur: 68rem;
   --largeur-texte: 44rem;
   --police: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --c-fond: #0e1512;
-    --c-surface: #17211c;
-    --c-texte: #e8efe9;
-    --c-texte-doux: #a5b3aa;
-    --c-bord: #26322b;
-    --c-bord-fort: #3a4a40;
-    --c-visuel: #1e2a24;
-    --c-accent: #0b6b3c;
-    --c-accent-fonce: #7fd6a4;  /* textes d'accent sur fond sombre */
+    --c-fond: #0b1510;
+    --c-fond-doux: #101e17;
+    --c-surface: #15241c;
+    --c-texte: #e8f3ec;
+    --c-texte-doux: #a5b8ad;
+    --c-bord: #24372c;
+    --c-bord-fort: #36503f;
+    --c-visuel: #1a2e23;
+    --c-accent: #00875a;
+    --c-accent-survol: #00a36c;
+    --c-accent-fonce: #7fe0b0;  /* textes d'accent sur fond sombre */
+    --c-accent-texte: #4fdc9c;
+    --c-accent-vif: #19c37d;
     --c-accent-doux: #173526;
+    --c-hero-1: #0d8f5c;
+    --c-hero-2: #065f3e;
     --c-alerte-doux: #3a2f10;
     --c-alerte-texte: #f3d58a;
+    --ombre: 0 10px 30px rgb(0 0 0 / 0.35);
   }
 }

@@ -1,6 +1,12 @@
 # Journal des modifications
 
 ## [Non publié]
+### Modifié (design)
+- Nouveau design, clair et coloré : fond blanc, vert vif et jaune éclair, boutons verts.
+- Nouveau logo (éclair jaune dans un carré vert), dessiné en code, et nouvelles icônes (onglet, écran d'accueil, partage).
+- Accueil : bandeau vert avec le dessin d'un téléphone en charge, panneau de recherche qui le chevauche, accès rapide à six modèles récents, liste des fiches sur fond vert pâle.
+- Dessins des chargeurs : petit éclair vert sur les blocs secteur, fond des visuels plus lumineux.
+
 ### Ajouté (référencement)
 - Modèles proches en bas de chaque fiche téléphone (même marque, même gamme d'abord : S25, S25+, S24 Ultra…), dans le site et dans les pages générées.
 - Pages générées : lien « Voir le prix » vers Amazon (lien affilié, `rel="sponsored nofollow"`) pour chaque chargeur, et pied de page lisible sans JavaScript (liens affiliés, mentions légales).

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Guide } from './components/Guide';
 import { Icone } from './components/Icone';
-import { Illustration } from './components/Illustration';
+import { Logo } from './components/Logo';
+import { SceneAccueil } from './components/SceneAccueil';
 import { ChoixOrdinateur, ResultatOrdinateur } from './components/Ordinateur';
 import { Recherche } from './components/Recherche';
 import { RetourHaut } from './components/RetourHaut';
@@ -11,10 +12,14 @@ import { CHARGEURS, CHARGEURS_ORDINATEUR, ORDINATEURS, TELEPHONES, chargerCatalo
 import { detecter, type Detection } from './moteur/detection';
 import { chercher, nomComplet } from './moteur/recherche';
 import type { Appareil } from './moteur/types';
-import logo from './assets/logo-entete.png';
 import { chemin, cheminOrdinateur, cheminTelephone, lireAdresse, type Adresse } from './seo/adresses';
 import styles from './App.module.css';
 import { piedDePage } from './legal';
+
+/** Quelques modèles récents en accès rapide sur l'accueil (fiches vérifiées). */
+const ACCES_RAPIDE = ['apple-iphone-17-pro-max', 'apple-iphone-16', 'samsung-galaxy-s25-ultra', 'samsung-galaxy-s24', 'google-pixel-9', 'samsung-galaxy-a56-5g']
+  .map((id) => TELEPHONES.find((t) => t.id === id))
+  .filter((t): t is (typeof TELEPHONES)[number] => t !== undefined);
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
 const TITRE = 'Shop ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
@@ -91,8 +96,7 @@ export function App() {
       <header className={styles.entete}>
         <div className={styles.enteteInterieur}>
           <a href="/" className={styles.logo} onClick={(e) => { e.preventDefault(); aller({}); remonter(); }}>
-            <img className={styles.logoImage} src={logo} alt="" width={58} height={44} />
-            Shop ton chargeur
+            <Logo />
           </a>
           <nav aria-label="Rubriques" className={styles.nav}>
             <a href="/" onClick={(e) => { e.preventDefault(); aller({}); }}>Téléphones</a>
@@ -108,20 +112,20 @@ export function App() {
           <section className={styles.accueil} aria-labelledby="titre-accueil">
             <div className={styles.hero}>
               <div className={styles.heroTexte}>
-                <h1 id="titre-accueil">Quel chargeur choisir pour ton téléphone ?</h1>
+                <h1 id="titre-accueil">Quel <span className={styles.surligne}>chargeur</span> choisir pour ton téléphone ?</h1>
                 <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
+                <ul className={styles.garanties} aria-label="Nos engagements">
+                  <li><Icone nom="coche" taille={16} />Marques connues uniquement</li>
+                  <li><Icone nom="coche" taille={16} />Prise française</li>
+                  <li><Icone nom="coche" taille={16} />Sans inscription</li>
+                </ul>
               </div>
               <div className={styles.heroVisuel} aria-hidden="true">
-                <Illustration forme="gan" teinte="gris" taille={150} />
-                <Illustration forme="magsafe" teinte="blanc" taille={130} />
+                <SceneAccueil />
               </div>
             </div>
-            <ul className={styles.garanties} aria-label="Nos engagements">
-              <li><Icone nom="coche" taille={16} />Marques connues uniquement</li>
-              <li><Icone nom="coche" taille={16} />Prise française</li>
-              <li><Icone nom="coche" taille={16} />Sans inscription</li>
-            </ul>
 
+            <div className={styles.panneau}>
             <div className={styles.parties} role="group" aria-label="Type d’appareil">
               <button type="button" className={styles.partie} aria-pressed={!partieOrdinateur} onClick={() => aller({})}>
                 <Icone nom="telephone" /> Téléphone
@@ -168,6 +172,24 @@ export function App() {
                   <p>On a les iPhone et les téléphones Android en USB-C. Essaie avec le nom écrit sur la boîte, ou juste une partie (s24, note 13…). Si ton téléphone est plus ancien, en micro-USB, garde son chargeur d’origine. Sinon, un chargeur USB-C avec PPS de 30 à 45 W ira avec presque tout.</p>
                 </details>
               </>
+            )}
+            </div>
+
+            {!partieOrdinateur && (
+              <section className={styles.rapide} aria-labelledby="titre-rapide">
+                <h2 id="titre-rapide">Accès rapide</h2>
+                <ul className={styles.cartesModeles}>
+                  {ACCES_RAPIDE.map((t) => (
+                    <li key={t.id}>
+                      <button type="button" className={styles.carteModele} onClick={() => choisir(t)}>
+                        <span className={styles.carteMarque}>{t.marque}</span>
+                        <span className={styles.carteNom}>{t.modele}</span>
+                        <span className={styles.carteW}><Icone nom="eclair" taille={14} />jusqu’à {t.puissanceMaxW} W</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
           </section>
         )}

@@ -1,48 +1,70 @@
 .entete { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--c-bord); background: color-mix(in srgb, var(--c-surface) 92%, transparent); backdrop-filter: blur(8px); }
-.enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 60px; padding: 0 1rem; }
-.logo { display: flex; align-items: center; gap: .55rem; font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--c-texte); text-decoration: none; white-space: nowrap; }
-.logoImage { display: block; width: auto; height: 36px; }
-.nav { display: flex; gap: 1.1rem; }
-.nav a { font-size: .92rem; font-weight: 600; color: var(--c-texte-doux); text-decoration: none; }
-.nav a:hover { color: var(--c-texte); }
+.enteteInterieur { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: var(--largeur); margin-inline: auto; min-height: 64px; padding: 0 1rem; }
+.logo { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: 1.1rem; letter-spacing: -.015em; color: var(--c-texte); text-decoration: none; white-space: nowrap; }
+.nav { display: flex; gap: .4rem; }
+.nav a { padding: .45rem .8rem; border-radius: 999px; font-size: .92rem; font-weight: 700; color: var(--c-texte-doux); text-decoration: none; }
+.nav a:hover { color: var(--c-accent-fonce); background: var(--c-accent-doux); }
 @media (max-width: 560px) { .nav { display: none; } }
 
-.page { max-width: var(--largeur); margin-inline: auto; padding: 1.5rem 1rem 3rem; }
-.accueil { display: grid; gap: 1.25rem; max-width: var(--largeur-texte); }
-.hero { display: grid; grid-template-columns: 1fr; align-items: center; gap: 1rem; }
-.heroTexte { display: grid; gap: .6rem; }
-.accueil h1 { font-size: clamp(1.9rem, 7.5vw, 3rem); line-height: 1.05; letter-spacing: -.025em; }
-.accroche { font-size: 1.08rem; color: var(--c-texte-doux); max-width: 36rem; }
+.page { max-width: var(--largeur); margin-inline: auto; padding: 1.25rem 1rem 3rem; }
+.accueil { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.accueil > * { min-width: 0; }
+
+/* Bandeau vert du haut : titre, promesse, engagements, et le dessin d'un téléphone en charge. */
+.hero { position: relative; display: grid; align-items: center; gap: 1rem; overflow: hidden; padding: 2rem 1.4rem 4.5rem; border-radius: var(--rayon-hero);
+  background: radial-gradient(circle at 88% 15%, rgb(31 208 135 / .55), transparent 40%), linear-gradient(135deg, var(--c-hero-1), var(--c-hero-2)); color: #fff; }
+.heroTexte { position: relative; display: grid; gap: .8rem; }
+.accueil h1 { font-size: clamp(2rem, 7.5vw, 3.4rem); line-height: 1.03; letter-spacing: -.03em; }
+.surligne { position: relative; white-space: nowrap; }
+.surligne::after { content: ''; position: absolute; left: 0; right: 0; bottom: -.12em; height: .13em; border-radius: 999px; background: var(--c-eclair); }
+.accroche { font-size: 1.1rem; max-width: 34rem; color: rgb(255 255 255 / .92); }
 .heroVisuel { display: none; }
+.garanties { list-style: none; margin: .3rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem; font-size: .86rem; font-weight: 700; }
+.garanties li { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .75rem; border-radius: 999px; background: rgb(255 255 255 / .16); color: #fff; }
+.garanties svg { color: var(--c-eclair); }
 @media (min-width: 900px) {
-  .accueil { max-width: none; grid-template-columns: minmax(0, 44rem) 1fr; column-gap: 2.5rem; }
-  .accueil > * { grid-column: 1; }
-  .hero { grid-column: 1 / -1; grid-template-columns: minmax(0, 44rem) 1fr; gap: 2.5rem; }
-  .heroVisuel { display: flex; align-items: end; justify-content: center; gap: .5rem; padding: 1rem; border-radius: var(--rayon-grand); background: var(--c-visuel); }
+  .hero { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); padding: 3rem 3rem 5.5rem; }
+  .heroVisuel { display: block; max-width: 380px; justify-self: end; width: 100%; }
 }
-.garanties { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; font-size: .86rem; font-weight: 600; color: var(--c-texte-doux); }
-.garanties li { display: inline-flex; align-items: center; gap: .3rem; }
-.garanties svg { color: var(--c-accent-fonce); }
+
+/* Panneau blanc qui chevauche le bandeau : téléphone ou ordinateur, recherche, marques. */
+.panneau { position: relative; z-index: 1; display: grid; gap: 1.1rem; margin: -4rem .5rem 0; padding: 1.2rem; border-radius: var(--rayon-grand);
+  background: var(--c-surface); border: 1px solid var(--c-bord); box-shadow: var(--ombre); }
+@media (min-width: 900px) { .panneau { margin: -4.5rem 2rem 0; padding: 1.6rem 1.8rem; } }
 
 /* Appareil détecté. */
 .detecte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; padding: .9rem 1rem; border-radius: var(--rayon-grand);
-  background: var(--c-surface); border: 1px solid var(--c-bord-fort); font-weight: 700; }
-.detecteLibelle { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-fonce); }
+  background: var(--c-accent-doux); border: 1px solid var(--c-accent-vif); font-weight: 700; }
+.detecteLibelle { display: block; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-fonce); }
 
 /* Raccourcis : modèles de la marque détectée, marques. */
 .raccourcis { display: grid; gap: .5rem; }
 .raccourcisTitre { font-size: .9rem; font-weight: 700; color: var(--c-texte-doux); }
-.puces { display: flex; flex-wrap: wrap; gap: .4rem; }
-.puce { min-height: 42px; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-surface); font-weight: 600; cursor: pointer; }
-.puce:hover { border-color: var(--c-texte); background: var(--c-surface); }
+.puces { display: flex; flex-wrap: wrap; gap: .45rem; }
+.puce { min-height: 42px; padding: 0 1rem; border-radius: 999px; border: 1px solid var(--c-bord); background: var(--c-fond-doux); font-weight: 700; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease; }
+.puce:hover { border-color: var(--c-accent-vif); background: var(--c-accent-doux); color: var(--c-accent-fonce); }
 
 /* Choix du type d'appareil : téléphone ou ordinateur portable. */
-.parties { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; padding: .3rem; border-radius: var(--rayon); background: var(--c-surface); border: 1px solid var(--c-bord); }
-.partie { display: flex; align-items: center; justify-content: center; gap: .45rem; min-height: 46px; padding: 0 .6rem; border-radius: var(--rayon-petit); border: 0; background: transparent;
-  font-weight: 700; font-size: clamp(.85rem, 3.6vw, 1rem); white-space: nowrap; cursor: pointer; }
-.partie[aria-pressed='true'] { background: var(--c-texte); color: var(--c-fond); }
+.parties { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; padding: .3rem; border-radius: 14px; background: var(--c-fond-doux); border: 1px solid var(--c-bord); }
+.partie { display: flex; align-items: center; justify-content: center; gap: .45rem; min-height: 48px; padding: 0 .6rem; border-radius: 10px; border: 0; background: transparent;
+  font-weight: 800; font-size: clamp(.85rem, 3.6vw, 1rem); white-space: nowrap; color: var(--c-texte-doux); cursor: pointer; }
+.partie[aria-pressed='true'] { background: var(--c-accent); color: #fff; box-shadow: 0 4px 12px rgb(0 135 90 / .3); }
 
-.aide { padding: .8rem 1rem; border-radius: var(--rayon); border: 1px solid var(--c-bord); background: var(--c-surface); }
+/* Accès rapide : quelques modèles récents en cartes. */
+.rapide { display: grid; gap: .8rem; }
+.rapide h2 { font-size: 1.3rem; letter-spacing: -.01em; }
+.cartesModeles { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 720px) { .cartesModeles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.carteModele { display: grid; gap: .15rem; width: 100%; padding: 1rem 1.1rem; border-radius: var(--rayon-grand); border: 1px solid var(--c-bord); background: var(--c-surface);
+  text-align: left; cursor: pointer; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+.carteModele:hover { transform: translateY(-2px); border-color: var(--c-accent-vif); box-shadow: var(--ombre); }
+.carteMarque { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--c-texte-doux); }
+.carteNom { font-size: 1.05rem; font-weight: 800; }
+.carteW { display: inline-flex; align-items: center; gap: .3rem; margin-top: .35rem; width: fit-content; padding: .2rem .6rem; border-radius: 999px;
+  background: var(--c-accent-doux); color: var(--c-accent-fonce); font-size: .85rem; font-weight: 800; }
+
+.aide { padding: .8rem 1rem; border-radius: var(--rayon); border: 1px solid var(--c-bord); background: var(--c-fond-doux); }
 .aide summary { font-weight: 700; cursor: pointer; }
 .aide p { margin-top: .6rem; color: var(--c-texte-doux); }
 
@@ -50,10 +72,12 @@
 .pied summary { cursor: pointer; font-weight: 700; }
 .pied details p { margin-top: .5rem; }
 
-/* Index des fiches : tous les téléphones et ordinateurs, par marque. */
-.index { display: grid; gap: .6rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--c-bord); }
-.index h2 { font-size: 1.2rem; margin-top: .6rem; }
-.indexGroupe h3 { font-size: .9rem; margin-bottom: .3rem; color: var(--c-texte-doux); }
-.index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .2rem 1rem; }
+/* Index des fiches : tous les téléphones et ordinateurs, par marque, sur fond vert pâle. */
+.index { display: grid; gap: .8rem; margin-top: 2.5rem; padding: 1.6rem 1.4rem; border-radius: var(--rayon-grand); background: var(--c-fond-doux); }
+.index h2 { font-size: 1.25rem; margin-top: .4rem; }
+.indexGroupe h3 { font-size: .85rem; margin-bottom: .35rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--c-accent-fonce); }
+.index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.1rem; }
 .index a { color: var(--c-texte); font-size: .92rem; text-decoration: none; }
-.index a:hover { text-decoration: underline; }
+.index a:hover { color: var(--c-accent-fonce); text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) { .carteModele:hover { transform: none; } }
