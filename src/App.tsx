@@ -14,6 +14,7 @@ import type { Appareil } from './moteur/types';
 import logo from './assets/logo-entete.png';
 import { chemin, cheminOrdinateur, cheminTelephone, lireAdresse, type Adresse } from './seo/adresses';
 import styles from './App.module.css';
+import { piedDePage } from './legal';
 
 const MARQUES = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus', 'OPPO', 'HONOR', 'Motorola', 'realme', 'Nothing'];
 const TITRE = 'Shop ton chargeur : quel chargeur pour ton téléphone ou ton ordinateur ?';
@@ -172,7 +173,7 @@ export function App() {
         )}
 
         <div ref={resultat}>
-          {telephone && <Resultat key={telephone.id} appareil={telephone} chargeurs={CHARGEURS} onChanger={() => aller({})} />}
+          {telephone && <Resultat key={telephone.id} appareil={telephone} chargeurs={CHARGEURS} onChanger={() => aller({})} onChoisir={choisir} />}
           {!telephone && ordinateur && (
             <ResultatOrdinateur key={ordinateur.id} ordinateur={ordinateur} chargeurs={CHARGEURS_ORDINATEUR} onChanger={() => aller({ pc: 'choix' })} />
           )}
@@ -204,12 +205,12 @@ export function App() {
       </main>
 
       <footer className={styles.pied}>
-        <p><strong>Liens affiliés.</strong> Les liens vers Amazon sont des liens partenaires. Si tu achètes après avoir cliqué, on touche une petite commission, sans que ça te coûte plus cher. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.</p>
-        <p>Tous les chargeurs sont en version prise française. Les puissances viennent des fiches des fabricants. Jette quand même un œil à la fiche du produit avant d’acheter, et au prix, qui change souvent chez le marchand.</p>
+        <p><strong>Liens affiliés.</strong> {piedDePage.affiliation}</p>
+        <p>{piedDePage.prudence}</p>
         <details>
           <summary>Mentions légales et données personnelles</summary>
-          <p>Éditeur du site : [à compléter]. Contact : [à compléter]. Hébergeur : [à compléter].</p>
-          <p>Pas de cookie, pas de suivi. La détection de ton téléphone se fait dans ton navigateur, rien n’est envoyé ni gardé. Une fois sur le site du marchand, ce sont ses règles qui s’appliquent.</p>
+          <p>Éditeur du site : {piedDePage.editeur}. Contact : <a href={`mailto:${piedDePage.email}`}>{piedDePage.email}</a>. Hébergeur : {piedDePage.hebergeur}</p>
+          <p>{piedDePage.donnees}</p>
         </details>
       </footer>
       <RetourHaut />

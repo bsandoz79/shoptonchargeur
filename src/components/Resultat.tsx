@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react';
-import { CHARGEURS_SANS_FIL } from '../data';
+import { CHARGEURS_SANS_FIL, TELEPHONES } from '../data';
 import { proposer, proposerSansFiche } from '../moteur/compatibilite';
 import { pourquoi } from '../moteur/explications';
 import { effetBatterie, effetSansFil } from '../moteur/batterie';
 import { conseilMarque } from '../moteur/marques';
 import { qualitePrix } from '../moteur/qualitePrix';
+import { modelesProches } from '../moteur/proches';
+import { nomComplet } from '../moteur/recherche';
 import { proposerSansFil } from '../moteur/sansFil';
+import { cheminTelephone } from '../seo/adresses';
 import { selectionner, type Candidat, type Selection } from '../moteur/selection';
 import { estVerifie, type Appareil, type Chargeur, type Proposition, type Telephone, type Tri } from '../moteur/types';
 import { Icone } from './Icone';
@@ -113,7 +116,11 @@ function Rayon({ selection, titreAutres, tri, onTri }: { selection: Selection<Pr
  * Fiche de charge d'un téléphone et produits conseillés : chargeur secteur (bloc + câble) ou sans fil. Sans fiche
  * vérifiée : conseil général de la marque et chargeurs polyvalents, sans annoncer de vitesse.
  */
-export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Appareil; chargeurs: Chargeur[]; onChanger: () => void }) {
+export function Resultat({ appareil, chargeurs, onChanger, onChoisir }: {
+  appareil: Appareil; chargeurs: Chargeur[]; onChanger: () => void;
+  /** Toucher un modèle proche : on affiche ses chargeurs. */
+  onChoisir?: (t: Telephone) => void;
+}) {
   const [tri, setTri] = useState<Tri>('vitesse');
   const [onglet, setOnglet] = useState<'secteur' | 'sansfil'>('secteur');
   const filaires = useMemo(
@@ -147,6 +154,7 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
 
   const verifie = estVerifie(appareil);
   const sf = verifie ? appareil.sansFil : undefined;
+  const proches = verifie ? modelesProches(appareil, TELEPHONES) : [];
 
   return (
     <section className={styles.resultat} aria-labelledby="titre-telephone">
@@ -209,6 +217,21 @@ export function Resultat({ appareil, chargeurs, onChanger }: { appareil: Apparei
           </p>
         )}
       </div>
+
+      {proches.length > 0 && (
+        <nav className={styles.proches} aria-labelledby="titre-proches">
+          <h3 id="titre-proches" className={styles.titreSection}>Modèles proches</h3>
+          <ul>
+            {proches.map((t) => (
+              <li key={t.id}>
+                <a href={cheminTelephone(t.id)} onClick={(e) => { if (!onChoisir) return; e.preventDefault(); onChoisir(t); }}>
+                  {t.marque === 'Apple' ? t.modele : nomComplet(t)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </section>
   );
 }

@@ -269,4 +269,22 @@ describe('App', () => {
     render(<App />);
     expect(screen.getByText(/En tant que Partenaire Amazon/)).toBeInTheDocument();
   });
+
+  it('mentions légales : éditeur, contact et hébergeur renseignés', () => {
+    render(<App />);
+    expect(screen.getByText(/Éditeur du site : Baptiste Sandoz/)).toHaveTextContent('o2switch');
+    expect(screen.getByRole('link', { name: 'contact@bsandoz.fr' })).toHaveAttribute('href', 'mailto:contact@bsandoz.fr');
+    expect(document.body).not.toHaveTextContent('[à compléter]');
+  });
+
+  it('fiche d’un téléphone : modèles proches, qui ouvrent leur fiche', async () => {
+    window.history.replaceState(null, '', '/chargeur/samsung-galaxy-s25-ultra/');
+    render(<App />);
+    const proches = screen.getByRole('navigation', { name: 'Modèles proches' });
+    const s25 = within(proches).getByRole('link', { name: 'Samsung Galaxy S25' });
+    expect(s25).toHaveAttribute('href', '/chargeur/samsung-galaxy-s25/');
+    await userEvent.click(s25);
+    expect(screen.getByRole('heading', { level: 2, name: 'Galaxy S25' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/chargeur/samsung-galaxy-s25/');
+  });
 });

@@ -9,6 +9,13 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { SITE } from './adresses';
 import { echapper, toutesLesPages, type Page } from './pages';
+import { piedDePage } from '../legal';
+
+/** Pied de page de chaque page générée : liens affiliés et mentions légales, lisibles sans JavaScript. */
+const pied = `<footer><p><strong>Liens affiliés.</strong> ${echapper(piedDePage.affiliation)}</p>`
+  + `<p>${echapper(piedDePage.prudence)}</p>`
+  + `<h2>Mentions légales et données personnelles</h2><p>Éditeur du site : ${echapper(piedDePage.editeur)}. Contact : <a href="mailto:${piedDePage.email}">${piedDePage.email}</a>. Hébergeur : ${echapper(piedDePage.hebergeur)}</p>`
+  + `<p>${echapper(piedDePage.donnees)}</p></footer>`;
 
 const DIST = join(process.cwd(), 'dist');
 const modele = readFileSync(join(DIST, 'index.html'), 'utf8');
@@ -33,7 +40,7 @@ function html(p: Page): string {
     .replace(/<link rel="canonical"[^>]*>/, '')
     .replace(/<meta property="og:(title|description|url)"[^>]*>/g, '')
     .replace('</head>', `    ${tete}\n  </head>`)
-    .replace('<div id="root"></div>', `<div id="root"><div data-statique>${p.contenu}</div></div>`);
+    .replace('<div id="root"></div>', `<div id="root"><div data-statique>${p.contenu}${pied}</div></div>`);
 }
 
 const pages = toutesLesPages();

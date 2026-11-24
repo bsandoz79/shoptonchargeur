@@ -24,6 +24,18 @@ describe('pages générées pour les moteurs de recherche', () => {
     expect(p.contenu).not.toMatch(/<script/);
   });
 
+  it('page d’un téléphone : liens affiliés vers les produits, modèles proches, introduction différente de la FAQ', () => {
+    const p = pageTelephone(TELEPHONES.find((t) => t.id === 'samsung-galaxy-s25-ultra')!);
+    expect(p.contenu).toMatch(/<a href="https:\/\/www\.amazon\.fr\/[^"]+" rel="sponsored nofollow">Voir le prix de [^<]+ sur Amazon<\/a>/);
+    const proches = /<h2>Modèles proches<\/h2><ul>(.*?)<\/ul>/.exec(p.contenu)![1];
+    expect(proches).toContain('Chargeur Samsung Galaxy S25</a>');
+    expect(proches).toContain('Chargeur Samsung Galaxy S25+</a>');
+    expect(proches).not.toContain('S25 Ultra');
+    const intro = /<h1>[^<]+<\/h1><p>([^<]+)<\/p>/.exec(p.contenu)![1];
+    const premiereReponse = /<h2>Questions fréquentes<\/h2><h3>[^<]+<\/h3><p>([^<]+)<\/p>/.exec(p.contenu)![1];
+    expect(intro).not.toBe(premiereReponse);
+  });
+
   it('page d’un ordinateur à prise ronde : chargeur de la marque, pas d’USB-C', () => {
     const p = pageOrdinateur(ORDINATEURS.find((o) => o.id === 'hp-victus')!);
     expect(p.contenu).toMatch(/pas en USB-C/);
