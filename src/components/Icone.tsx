@@ -10,6 +10,7 @@ const TRACES = {
   ordinateur: <><rect x="4" y="5" width="16" height="11" rx="1.5" /><path d="M2.5 19.5h19" /></>,
   haut: <path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" />,
   croix: <path d="M6 6l12 12M18 6 6 18" />,
+  fleche: <path d="M5 12h14M13 6l6 6-6 6" />,
 } as const;
 
 export type NomIcone = keyof typeof TRACES;

@@ -1,7 +1,7 @@
 /* Carte produit, façon boutique : visuel sur fond clair, informations dessous, bouton pleine largeur. */
 .carte { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--rayon-grand); background: var(--c-surface); border: 1px solid var(--c-bord);
   transition: border-color .15s ease, box-shadow .15s ease; }
-.carte:hover { border-color: var(--c-bord-fort); box-shadow: 0 10px 28px rgb(16 24 20 / .07); }
+.carte:hover { border-color: var(--c-bord-fort); }
 .choix { border-color: var(--c-texte); }
 
 /* Produits à acheter en priorité : bandeau titre, cadre marqué, visuel à gauche sur grand écran. */
@@ -15,8 +15,8 @@
   .vedette .visuel { padding: 1.5rem .5rem; }
 }
 
-.visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: radial-gradient(circle at 50% 40%, var(--c-surface) 0%, var(--c-visuel) 70%); }
-.etiquette { position: absolute; top: .75rem; left: .75rem; padding: 3px 10px; border-radius: 999px; background: var(--c-texte); color: var(--c-fond);
+.visuel { position: relative; display: grid; place-items: center; padding: 1.1rem .5rem .4rem; background: var(--c-visuel); }
+.etiquette { position: absolute; top: .75rem; left: .75rem; padding: 3px 8px; border-radius: 4px; background: var(--c-texte); color: var(--c-fond);
   font-size: .72rem; font-weight: 800; letter-spacing: .02em; }
 
 .corps { display: flex; flex-direction: column; gap: .55rem; padding: 1rem 1.05rem 1.1rem; }

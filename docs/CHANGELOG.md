@@ -2,10 +2,10 @@
 
 ## [Non publié]
 ### Modifié (design)
-- Nouveau design, clair et coloré : fond blanc, vert vif et jaune éclair, boutons verts.
-- Nouveau logo (éclair jaune dans un carré vert), dessiné en code, et nouvelles icônes (onglet, écran d'accueil, partage).
-- Accueil : bandeau vert avec le dessin d'un téléphone en charge, panneau de recherche qui le chevauche, accès rapide à six modèles récents, liste des fiches sur fond vert pâle.
-- Dessins des chargeurs : petit éclair vert sur les blocs secteur, fond des visuels plus lumineux.
+- Design plat et typographique : fond blanc, texte presque noir, lignes fines, un seul vert pour les boutons. Plus de dégradés, d'étincelles ni d'ombres décoratives.
+- Logo à plat (éclair blanc dans un carré vert) et nouvelles icônes (onglet, écran d'accueil, partage).
+- Accueil : grand titre et recherche à gauche, liste des modèles récents à droite avec leur puissance alignée, onglets soulignés Téléphone / Ordinateur portable.
+- Champ de recherche cerclé de noir, cartes produits sans ombre, fonds des visuels unis.
 
 ### Ajouté (référencement)
 - Modèles proches en bas de chaque fiche téléphone (même marque, même gamme d'abord : S25, S25+, S24 Ultra…), dans le site et dans les pages générées.

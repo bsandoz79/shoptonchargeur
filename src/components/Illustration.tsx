@@ -97,7 +97,7 @@ export function Illustration({ forme = 'cube', teinte = 'blanc', taille = 160 }:
   }
   return (
     <svg viewBox="0 0 200 150" width={taille} height={taille * 0.75} role="presentation" aria-hidden="true" focusable="false">
-      <ellipse cx="100" cy="132" rx="70" ry="7" fill="#00573a" opacity=".12" />
+      <ellipse cx="100" cy="132" rx="70" ry="7" fill="#000" opacity=".07" />
       {dessin}
     </svg>
   );
