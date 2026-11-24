@@ -1,22 +1,12 @@
 /**
- * Logo de Shop ton chargeur : un éclair blanc dans un carré vert, à plat, puis le nom.
- * Dessiné en code (net à toutes les tailles). La même marque sert aux icônes du site (public/*.png).
+ * Logo de Shop ton chargeur : le monogramme « STC », espacé, en titane brossé. Le nom complet reste lu par les
+ * lecteurs d'écran. Les icônes du site (public/*.png) reprennent le monogramme sur fond noir.
  */
-export function MarqueLogo({ taille = 30 }: { taille?: number }) {
-  return (
-    <svg viewBox="0 0 48 48" width={taille} height={taille} aria-hidden="true" focusable="false">
-      <rect width="48" height="48" rx="11" fill="#0a7a4b" />
-      <path d="M27 8 L13 27 H22.5 L20 40 L35 20 H25.5 Z" fill="#ffffff" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/** Logo complet de l'en-tête : la marque et le nom du site. */
 export function Logo() {
   return (
     <>
-      <MarqueLogo />
-      <span>Shop ton chargeur</span>
+      <span aria-hidden="true" className="monogramme">STC</span>
+      <span className="sr-only">Shop ton chargeur</span>
     </>
   );
 }

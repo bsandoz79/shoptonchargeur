@@ -29,7 +29,7 @@ function Boite({ x, y, l, h, p, t, ports, broches = true }: { x: number; y: numb
         return <rect key={i} x={x + l / 2 - 11} y={py} width="22" height="7" rx="3.5" fill={t.port} />;
       })}
       {/* Éclair vert, en bas de la face avant (pas de place sous trois ports). */}
-      {ports < 3 && <path transform={`translate(${x + l / 2 - 5} ${y + h - 20})`} d="M6 0 L0 9 H4.5 L3 16 L10 6 H5.5 Z" fill="#19c37d" />}
+      {ports < 3 && <path transform={`translate(${x + l / 2 - 5} ${y + h - 20})`} d="M6 0 L0 9 H4.5 L3 16 L10 6 H5.5 Z" fill="#8e8e93" />}
     </g>
   );
 }

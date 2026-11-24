@@ -111,6 +111,7 @@ export function App() {
           <section className={styles.accueil} aria-labelledby="titre-accueil">
             <div className={`${styles.haut} ${partieOrdinateur ? styles.seul : ''}`}>
             <div className={styles.outil}>
+            <p className={styles.surtitre}>Téléphones et ordinateurs portables</p>
             <h1 id="titre-accueil">Quel chargeur choisir pour ton téléphone&nbsp;?</h1>
             <p className={styles.accroche}>Tape ton modèle. On te montre le chargeur conseillé par la marque, le meilleur rapport qualité/prix et ce qui va le plus vite.</p>
             <div className={styles.parties} role="group" aria-label="Type d’appareil">

@@ -2,10 +2,11 @@
 
 ## [Non publié]
 ### Modifié (design)
-- Design plat et typographique : fond blanc, texte presque noir, lignes fines, un seul vert pour les boutons. Plus de dégradés, d'étincelles ni d'ombres décoratives.
-- Logo à plat (éclair blanc dans un carré vert) et nouvelles icônes (onglet, écran d'accueil, partage).
-- Accueil : grand titre et recherche à gauche, liste des modèles récents à droite avec leur puissance alignée, onglets soulignés Téléphone / Ordinateur portable.
-- Champ de recherche cerclé de noir, cartes produits sans ombre, fonds des visuels unis.
+- Design premium noir et blanc, effet titane brossé : en-tête et haut de l'accueil en noir, titre et détails en dégradé titane, contenu sur fond blanc.
+- Nouveau logo : le monogramme « STC », espacé, en titane. Nouvelles icônes (onglet, écran d'accueil, partage) sur fond noir.
+- Accueil : grand titre et recherche à gauche, modèles récents à droite avec leur puissance alignée, onglets Téléphone / Ordinateur portable.
+- Boutons noirs laqués et arrondis (titane sur fond noir), champ de recherche arrondi, bandeau « Meilleur rapport qualité/prix » en titane.
+- Version sombre de l'appareil : tout le site passe en noir.
 
 ### Ajouté (référencement)
 - Modèles proches en bas de chaque fiche téléphone (même marque, même gamme d'abord : S25, S25+, S24 Ultra…), dans le site et dans les pages générées.
